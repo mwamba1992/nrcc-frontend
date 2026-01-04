@@ -1,0 +1,219 @@
+// =============================================================================
+// NRCC System Design System - Theme Variables
+// Based on Tanzania Roads Fund Board Branding
+// =============================================================================
+
+// -----------------------------------------------------------------------------
+// Primary Colors (Tanzania Official Colors)
+// -----------------------------------------------------------------------------
+$primary-green: #1EB53A;
+$primary-blue: #00A3DD;
+$primary-gold: #FCD116;
+$primary-black: #000000;
+
+// -----------------------------------------------------------------------------
+// Secondary/Shade Colors
+// -----------------------------------------------------------------------------
+$secondary-dark-green: #168A2E;
+$secondary-light-green: #4DC466;
+$secondary-dark-blue: #007BA7;
+$secondary-light-blue: #33B5E5;
+$secondary-dark-gold: #E5BD00;
+
+// -----------------------------------------------------------------------------
+// Neutral Colors
+// -----------------------------------------------------------------------------
+$white: #FFFFFF;
+$gray-50: #FAFAFA;
+$gray-100: #F5F5F5;
+$gray-200: #EEEEEE;
+$gray-300: #E0E0E0;
+$gray-400: #BDBDBD;
+$gray-500: #9E9E9E;
+$gray-600: #757575;
+$gray-700: #616161;
+$gray-800: #424242;
+$gray-900: #212121;
+$black: #000000;
+
+// -----------------------------------------------------------------------------
+// Semantic Colors
+// -----------------------------------------------------------------------------
+$success: $primary-green;
+$success-light: #E8F5E9;
+$success-dark: #2E7D32;
+
+$info: $primary-blue;
+$info-light: #E1F5FE;
+$info-dark: #01579B;
+
+$warning: $primary-gold;
+$warning-light: #FFF9E1;
+$warning-dark: #F57F17;
+
+$danger: #DC3545;
+$danger-light: #FFEBEE;
+$danger-dark: #C62828;
+
+// -----------------------------------------------------------------------------
+// Text Colors
+// -----------------------------------------------------------------------------
+$text-primary: $gray-900;
+$text-secondary: $gray-700;
+$text-muted: $gray-600;
+$text-disabled: $gray-500;
+$text-white: $white;
+
+// -----------------------------------------------------------------------------
+// Background Colors
+// -----------------------------------------------------------------------------
+$bg-primary: $white;
+$bg-secondary: $gray-50;
+$bg-tertiary: $gray-100;
+$bg-dark: $gray-900;
+
+// -----------------------------------------------------------------------------
+// Border Colors
+// -----------------------------------------------------------------------------
+$border-light: $gray-200;
+$border-medium: $gray-300;
+$border-dark: $gray-400;
+
+// -----------------------------------------------------------------------------
+// Gradients (Modern Design)
+// -----------------------------------------------------------------------------
+$gradient-primary: linear-gradient(135deg, $primary-blue 0%, $secondary-dark-blue 100%);
+$gradient-success: linear-gradient(135deg, $primary-green 0%, $secondary-dark-green 100%);
+$gradient-sidebar: linear-gradient(180deg, $primary-blue 0%, #0077B6 50%, $secondary-dark-blue 100%);
+
+// -----------------------------------------------------------------------------
+// Shadows
+// -----------------------------------------------------------------------------
+$shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+$shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+$shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+$shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+$shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+$shadow-card: 0 2px 8px rgba(0, 0, 0, 0.08);
+
+// -----------------------------------------------------------------------------
+// Typography
+// -----------------------------------------------------------------------------
+$font-family-base: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+$font-family-heading: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+$font-family-mono: 'Courier New', Courier, monospace;
+
+// Font Sizes
+$font-size-xs: 0.75rem;    // 12px
+$font-size-sm: 0.875rem;   // 14px
+$font-size-base: 1rem;     // 16px
+$font-size-lg: 1.125rem;   // 18px
+$font-size-xl: 1.25rem;    // 20px
+$font-size-2xl: 1.5rem;    // 24px
+$font-size-3xl: 1.875rem;  // 30px
+$font-size-4xl: 2.25rem;   // 36px
+$font-size-5xl: 3rem;      // 48px
+
+// Font Weights
+$font-weight-light: 300;
+$font-weight-normal: 400;
+$font-weight-medium: 500;
+$font-weight-semibold: 600;
+$font-weight-bold: 700;
+
+// Line Heights
+$line-height-tight: 1.25;
+$line-height-normal: 1.5;
+$line-height-relaxed: 1.75;
+
+// -----------------------------------------------------------------------------
+// Spacing Scale
+// -----------------------------------------------------------------------------
+$spacing-0: 0;
+$spacing-1: 0.25rem;  // 4px
+$spacing-2: 0.5rem;   // 8px
+$spacing-3: 0.75rem;  // 12px
+$spacing-4: 1rem;     // 16px
+$spacing-5: 1.25rem;  // 20px
+$spacing-6: 1.5rem;   // 24px
+$spacing-8: 2rem;     // 32px
+$spacing-10: 2.5rem;  // 40px
+$spacing-12: 3rem;    // 48px
+$spacing-16: 4rem;    // 64px
+$spacing-20: 5rem;    // 80px
+
+// -----------------------------------------------------------------------------
+// Border Radius
+// -----------------------------------------------------------------------------
+$radius-sm: 0.25rem;  // 4px
+$radius-md: 0.375rem; // 6px
+$radius-lg: 0.5rem;   // 8px
+$radius-xl: 0.75rem;  // 12px
+$radius-2xl: 1rem;    // 16px
+$radius-full: 9999px; // Fully rounded
+
+// -----------------------------------------------------------------------------
+// Transitions
+// -----------------------------------------------------------------------------
+$transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+$transition-base: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+$transition-slow: 500ms cubic-bezier(0.4, 0, 0.2, 1);
+
+// -----------------------------------------------------------------------------
+// Breakpoints
+// -----------------------------------------------------------------------------
+$breakpoint-sm: 640px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 1024px;
+$breakpoint-xl: 1280px;
+$breakpoint-2xl: 1536px;
+
+// -----------------------------------------------------------------------------
+// Z-Index Scale
+// -----------------------------------------------------------------------------
+$z-index-dropdown: 1000;
+$z-index-sticky: 1020;
+$z-index-fixed: 1030;
+$z-index-modal-backdrop: 1040;
+$z-index-modal: 1050;
+$z-index-popover: 1060;
+$z-index-tooltip: 1070;
+
+// -----------------------------------------------------------------------------
+// Component Specific Variables
+// -----------------------------------------------------------------------------
+
+// Buttons
+$btn-padding-y: $spacing-3;
+$btn-padding-x: $spacing-6;
+$btn-border-radius: $radius-lg;
+$btn-font-weight: $font-weight-medium;
+
+// Inputs
+$input-padding-y: $spacing-3;
+$input-padding-x: $spacing-4;
+$input-border-radius: $radius-md;
+$input-border-color: $border-medium;
+$input-focus-border-color: $primary-blue;
+
+// Cards
+$card-padding: $spacing-6;
+$card-border-radius: $radius-xl;
+$card-shadow: $shadow-card;
+
+// Sidebar
+$sidebar-width: 280px;
+$sidebar-collapsed-width: 80px;
+$sidebar-bg: $gradient-sidebar;
+$sidebar-text-color: $white;
+
+// Header
+$header-height: 64px;
+$header-bg: $white;
+$header-shadow: $shadow-sm;
+
+// Table
+$table-border-color: $border-light;
+$table-hover-bg: $gray-50;
+$table-striped-bg: $gray-50;

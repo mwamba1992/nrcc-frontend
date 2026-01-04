@@ -1,0 +1,137 @@
+@import '../../../../styles/variables';
+@import '../../../../styles/mixins';
+
+.app-header {
+  background: $white;
+  border-bottom: 3px solid $primary-green;
+  box-shadow: $shadow-sm;
+  position: sticky;
+  top: 0;
+  z-index: $z-index-sticky;
+
+  .container-fluid {
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .header-content {
+    @include flex-between;
+    padding: $spacing-4 0;
+    gap: $spacing-6;
+
+    @include respond-to-max('md') {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: $spacing-4;
+    }
+  }
+}
+
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: $spacing-4;
+
+  .brand-logo {
+    flex-shrink: 0;
+
+    .logo-placeholder {
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+
+  .brand-text {
+    .brand-title {
+      font-size: $font-size-lg;
+      font-weight: $font-weight-bold;
+      color: $text-primary;
+      margin: 0;
+      line-height: 1.2;
+
+      @include respond-to-max('md') {
+        font-size: $font-size-base;
+      }
+    }
+
+    .brand-subtitle {
+      font-size: $font-size-base;
+      font-weight: $font-weight-semibold;
+      color: $text-secondary;
+      margin: $spacing-1 0 0;
+
+      @include respond-to-max('md') {
+        font-size: $font-size-sm;
+      }
+    }
+
+    .brand-description {
+      font-size: $font-size-sm;
+      color: $text-muted;
+      margin: $spacing-1 0 0;
+
+      @include respond-to-max('md') {
+        font-size: $font-size-xs;
+      }
+    }
+  }
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: $spacing-3;
+
+  @include respond-to-max('md') {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  button {
+    display: inline-flex;
+    align-items: center;
+    gap: $spacing-2;
+    padding: $spacing-3 $spacing-5;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+    border-radius: $radius-lg;
+    cursor: pointer;
+    transition: all $transition-base;
+    border: none;
+    white-space: nowrap;
+
+    svg {
+      flex-shrink: 0;
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+
+  .btn-sign-in {
+    background: transparent;
+    color: $text-secondary;
+    border: 1px solid $border-medium;
+
+    &:hover {
+      background: $gray-50;
+      border-color: $primary-blue;
+      color: $primary-blue;
+    }
+  }
+
+  .btn-register {
+    background: $primary-green;
+    color: $white;
+    box-shadow: $shadow-sm;
+
+    &:hover {
+      background: $secondary-dark-green;
+      box-shadow: $shadow-md;
+    }
+  }
+}
