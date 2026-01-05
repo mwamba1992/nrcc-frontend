@@ -1,2 +1,68 @@
 // App level styles (if needed)
 // Global styles are in src/styles.scss
+@import '../styles/variables';
+@import '../styles/mixins';
+
+// Government Bar - Official Header
+.government-bar {
+  background: linear-gradient(135deg, #0a3d1f 0%, #05200f 100%);
+  color: rgba($white, 0.9);
+  font-size: $font-size-xs;
+  padding: $spacing-2 0;
+
+  .gov-bar-content {
+    @include flex-between;
+    align-items: center;
+    gap: $spacing-4;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 $spacing-6;
+
+    @include respond-to-max('md') {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: $spacing-2;
+      padding: 0 $spacing-4;
+    }
+  }
+
+  .gov-bar-left {
+    display: flex;
+    align-items: center;
+    gap: $spacing-2;
+
+    svg {
+      color: $primary-gold;
+      flex-shrink: 0;
+    }
+  }
+
+  .gov-bar-right {
+    display: flex;
+    align-items: center;
+    gap: $spacing-3;
+  }
+
+  .gov-link {
+    display: flex;
+    align-items: center;
+    gap: $spacing-1;
+    background: transparent;
+    border: none;
+    color: rgba($white, 0.8);
+    font-size: $font-size-xs;
+    cursor: pointer;
+    transition: color 0.2s ease-out;
+    padding: $spacing-1 $spacing-2;
+
+    svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    &:hover {
+      color: $white;
+      text-decoration: underline;
+    }
+  }
+}

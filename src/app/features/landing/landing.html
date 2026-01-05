@@ -1,6 +1,6 @@
 <div class="landing-page">
   <!-- Hero Section -->
-  <section class="hero-section">
+  <section class="hero-section hero-with-image">
     <div class="hero-background">
       <div class="gradient-orb orb-1"></div>
       <div class="gradient-orb orb-2"></div>
@@ -24,6 +24,68 @@
           Submit your road upgrade application from District to Regional or Trunk class.
           Our digital platform makes the process simple and transparent.
         </p>
+
+        <!-- Process Flow - Creative Design -->
+        <div class="process-flow">
+          <div class="process-step step-1">
+            <div class="step-circle">
+              <div class="step-number">1</div>
+              <div class="step-icon">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                </svg>
+              </div>
+            </div>
+            <div class="step-label">
+              <h5>Prepare</h5>
+              <p>Documents</p>
+            </div>
+          </div>
+
+          <div class="process-connector">
+            <svg width="40" height="24" viewBox="0 0 40 24" fill="none">
+              <path d="M0 12H35M35 12L28 5M35 12L28 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+
+          <div class="process-step step-2">
+            <div class="step-circle">
+              <div class="step-number">2</div>
+              <div class="step-icon">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                  <polyline points="22 4 12 14.01 9 11.01"/>
+                </svg>
+              </div>
+            </div>
+            <div class="step-label">
+              <h5>Submit</h5>
+              <p>Application</p>
+            </div>
+          </div>
+
+          <div class="process-connector">
+            <svg width="40" height="24" viewBox="0 0 40 24" fill="none">
+              <path d="M0 12H35M35 12L28 5M35 12L28 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+
+          <div class="process-step step-3">
+            <div class="step-circle">
+              <div class="step-number">3</div>
+              <div class="step-icon">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                </svg>
+              </div>
+            </div>
+            <div class="step-label">
+              <h5>Track</h5>
+              <p>Status</p>
+            </div>
+          </div>
+        </div>
 
         <div class="hero-actions">
           <button class="btn-primary" (click)="startApplication()">
@@ -77,7 +139,7 @@
 
       <div class="services-grid">
         <!-- Public Application -->
-        <div class="service-card public-card" (click)="applyNow('public')">
+        <div class="service-card" (click)="applyNow('public')">
           <div class="card-header">
             <div class="service-icon">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -90,17 +152,9 @@
             <span class="badge popular">Popular</span>
           </div>
           <h3>Public Application</h3>
-          <div class="who-uses">
-            <strong>Who should use this:</strong>
-            <ul>
-              <li>Individual citizens</li>
-              <li>Community groups</li>
-              <li>Members of Parliament</li>
-              <li>Ward councillors</li>
-            </ul>
-          </div>
+          <p>For individuals, groups, or MPs seeking road upgrades</p>
           <button class="card-button">
-            <span>Apply Now</span>
+            Apply Now
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <line x1="5" y1="12" x2="19" y2="12"/>
               <polyline points="12 5 19 12 12 19"/>
@@ -109,7 +163,7 @@
         </div>
 
         <!-- Regional Roads Board -->
-        <div class="service-card official-card" (click)="applyNow('regional')">
+        <div class="service-card featured" (click)="applyNow('regional')">
           <div class="card-header">
             <div class="service-icon">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -117,19 +171,12 @@
                 <polyline points="9 22 9 12 15 12 15 22"/>
               </svg>
             </div>
-            <span class="badge official">Official Use</span>
+            <span class="badge official">Official</span>
           </div>
           <h3>Regional Roads Board</h3>
-          <div class="who-uses">
-            <strong>Who should use this:</strong>
-            <ul>
-              <li>Regional Roads Board members</li>
-              <li>Regional Secretariat staff</li>
-              <li>Authorized representatives</li>
-            </ul>
-          </div>
+          <p>Official board submissions with approval workflow</p>
           <button class="card-button">
-            <span>Submit Application</span>
+            Submit Application
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <line x1="5" y1="12" x2="19" y2="12"/>
               <polyline points="12 5 19 12 12 19"/>
@@ -138,7 +185,7 @@
         </div>
 
         <!-- Track Application -->
-        <div class="service-card utility-card" (click)="trackApplication()">
+        <div class="service-card" (click)="trackApplication()">
           <div class="card-header">
             <div class="service-icon">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -148,15 +195,9 @@
             </div>
           </div>
           <h3>Track Application</h3>
-          <div class="who-uses">
-            <strong>Who should use this:</strong>
-            <ul>
-              <li>Applicants checking status</li>
-              <li>Anyone with reference number</li>
-            </ul>
-          </div>
+          <p>Monitor your application status in real-time</p>
           <button class="card-button">
-            <span>Track Now</span>
+            Track Now
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <line x1="5" y1="12" x2="19" y2="12"/>
               <polyline points="12 5 19 12 12 19"/>
@@ -165,7 +206,7 @@
         </div>
 
         <!-- NRCC Portal -->
-        <div class="service-card official-card nrcc-card" (click)="nrccPortal()">
+        <div class="service-card" (click)="nrccPortal()">
           <div class="card-header">
             <div class="service-icon">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -173,19 +214,12 @@
                 <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
               </svg>
             </div>
-            <span class="badge members">Committee Only</span>
+            <span class="badge members">Members</span>
           </div>
-          <h3>NRCC Member Portal</h3>
-          <div class="who-uses">
-            <strong>Who should use this:</strong>
-            <ul>
-              <li>NRCC committee members</li>
-              <li>NRCC secretariat staff</li>
-              <li>Technical review team</li>
-            </ul>
-          </div>
+          <h3>NRCC Portal</h3>
+          <p>Exclusive portal for NRCC members and officials</p>
           <button class="card-button">
-            <span>Access Portal</span>
+            Access Portal
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <line x1="5" y1="12" x2="19" y2="12"/>
               <polyline points="12 5 19 12 12 19"/>
@@ -203,15 +237,10 @@
         <div class="footer-grid">
           <div class="footer-about">
             <div class="footer-logo">
-              <svg width="40" height="40" viewBox="0 0 50 50" fill="none">
-                <circle cx="25" cy="25" r="24" fill="#1EB53A" opacity="0.15"/>
-                <path d="M25 10L30 20H20L25 10Z" fill="#1EB53A"/>
-                <path d="M25 30L30 40H20L25 30Z" fill="#FCD116"/>
-                <circle cx="25" cy="25" r="3" fill="#00A3DD"/>
-              </svg>
+              <img src="/emblem.png" alt="Tanzania Coat of Arms" width="50" height="50">
               <div class="logo-text">
                 <h3>Roads Fund Board</h3>
-                <p>NRCC Management System</p>
+                <p>Road Classification Portal</p>
               </div>
             </div>
             <p class="footer-description">

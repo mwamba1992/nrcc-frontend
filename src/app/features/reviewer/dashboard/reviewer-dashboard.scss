@@ -1,0 +1,322 @@
+@import '../../../../styles/variables';
+@import '../../../../styles/mixins';
+
+.dashboard-page.reviewer {
+  min-height: 100vh;
+  background: $bg-primary;
+}
+
+.dashboard-header {
+  background: linear-gradient(135deg, #0a3d1f 0%, #05200f 100%);
+  border-bottom: 3px solid $primary-gold;
+  box-shadow: $shadow-md;
+  position: sticky;
+  top: 0;
+  z-index: $z-index-sticky;
+
+  .header-content {
+    @include flex-between;
+    padding: $spacing-5 0;
+    gap: $spacing-4;
+
+    @include respond-to-max('md') {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+
+  .header-brand {
+    display: flex;
+    align-items: center;
+    gap: $spacing-4;
+
+    img {
+      flex-shrink: 0;
+    }
+
+    .brand-text {
+      h1 {
+        font-size: $font-size-xl;
+        font-weight: $font-weight-bold;
+        color: $white;
+        margin: 0;
+        line-height: 1.2;
+      }
+
+      p {
+        font-size: $font-size-sm;
+        color: rgba($white, 0.8);
+        margin: $spacing-1 0 0;
+      }
+    }
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: $spacing-4;
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: $spacing-2;
+      padding: $spacing-2 $spacing-4;
+      background: rgba($white, 0.1);
+      border-radius: $radius-md;
+      font-size: $font-size-sm;
+      color: rgba($white, 0.9);
+      border: 1px solid rgba($white, 0.2);
+
+      svg {
+        color: $primary-gold;
+      }
+    }
+
+    .btn-logout {
+      display: flex;
+      align-items: center;
+      gap: $spacing-2;
+      padding: $spacing-2 $spacing-4;
+      background: transparent;
+      border: 1px solid rgba($white, 0.3);
+      border-radius: $radius-md;
+      color: rgba($white, 0.9);
+      font-size: $font-size-sm;
+      font-weight: $font-weight-medium;
+      cursor: pointer;
+      transition: all 0.2s ease-out;
+
+      &:hover {
+        border-color: #dc3545;
+        color: $white;
+        background: rgba(#dc3545, 0.2);
+      }
+    }
+  }
+}
+
+.dashboard-main {
+  padding: $spacing-8 0;
+
+  .welcome-section {
+    margin-bottom: $spacing-8;
+
+    h2 {
+      font-size: $font-size-3xl;
+      font-weight: $font-weight-bold;
+      color: $text-primary;
+      margin: 0 0 $spacing-2;
+    }
+
+    p {
+      font-size: $font-size-base;
+      color: $text-secondary;
+      margin: 0;
+    }
+  }
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: $spacing-5;
+  margin-bottom: $spacing-10;
+}
+
+.stat-card {
+  display: flex;
+  align-items: center;
+  gap: $spacing-4;
+  padding: $spacing-5;
+  background: $white;
+  border: 1px solid $border-light;
+  border-radius: $radius-xl;
+  box-shadow: $shadow-sm;
+  transition: all 0.2s ease-out;
+
+  &:hover {
+    box-shadow: $shadow-md;
+    transform: translateY(-2px);
+  }
+
+  .stat-icon {
+    width: 56px;
+    height: 56px;
+    @include flex-center;
+    border-radius: $radius-lg;
+    flex-shrink: 0;
+
+    &.pending {
+      background: rgba($primary-blue, 0.1);
+      color: $primary-blue;
+    }
+
+    &.approved {
+      background: rgba($primary-green, 0.1);
+      color: $primary-green;
+    }
+
+    &.review {
+      background: rgba($primary-gold, 0.1);
+      color: darken($primary-gold, 15%);
+    }
+
+    &.total {
+      background: rgba(#6c757d, 0.1);
+      color: #6c757d;
+    }
+  }
+
+  .stat-info {
+    h3 {
+      font-size: $font-size-3xl;
+      font-weight: $font-weight-bold;
+      color: $text-primary;
+      margin: 0 0 $spacing-1;
+      line-height: 1;
+    }
+
+    p {
+      font-size: $font-size-sm;
+      color: $text-secondary;
+      margin: 0;
+    }
+  }
+}
+
+.quick-actions {
+  margin-bottom: $spacing-10;
+
+  h3 {
+    font-size: $font-size-2xl;
+    font-weight: $font-weight-bold;
+    color: $text-primary;
+    margin: 0 0 $spacing-5;
+  }
+
+  .actions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: $spacing-4;
+  }
+
+  .action-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: $spacing-3;
+    padding: $spacing-6;
+    background: $white;
+    border: 1px solid $border-light;
+    border-radius: $radius-xl;
+    cursor: pointer;
+    transition: all 0.2s ease-out;
+    text-align: left;
+
+    svg {
+      color: $primary-green;
+    }
+
+    h4 {
+      font-size: $font-size-lg;
+      font-weight: $font-weight-semibold;
+      color: $text-primary;
+      margin: 0;
+    }
+
+    p {
+      font-size: $font-size-sm;
+      color: $text-secondary;
+      margin: 0;
+      line-height: $line-height-relaxed;
+    }
+
+    &:hover {
+      border-color: $primary-green;
+      box-shadow: $shadow-lg;
+      transform: translateY(-2px);
+
+      svg {
+        transform: scale(1.1);
+      }
+    }
+  }
+}
+
+.recent-applications {
+  .section-header {
+    @include flex-between;
+    align-items: center;
+    margin-bottom: $spacing-5;
+    gap: $spacing-4;
+
+    @include respond-to-max('md') {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    h3 {
+      font-size: $font-size-2xl;
+      font-weight: $font-weight-bold;
+      color: $text-primary;
+      margin: 0;
+    }
+
+    .filters {
+      display: flex;
+      gap: $spacing-2;
+
+      .filter-btn {
+        padding: $spacing-2 $spacing-4;
+        background: $white;
+        border: 1px solid $border-medium;
+        border-radius: $radius-md;
+        color: $text-secondary;
+        font-size: $font-size-sm;
+        font-weight: $font-weight-medium;
+        cursor: pointer;
+        transition: all 0.2s ease-out;
+
+        &:hover {
+          border-color: $primary-green;
+          color: $primary-green;
+        }
+
+        &.active {
+          background: $primary-green;
+          border-color: $primary-green;
+          color: $white;
+        }
+      }
+    }
+  }
+
+  .empty-state {
+    background: $white;
+    border: 2px dashed $border-medium;
+    border-radius: $radius-xl;
+    padding: $spacing-10 $spacing-6;
+    text-align: center;
+
+    svg {
+      color: $text-muted;
+      margin-bottom: $spacing-4;
+    }
+
+    h4 {
+      font-size: $font-size-xl;
+      font-weight: $font-weight-semibold;
+      color: $text-primary;
+      margin: 0 0 $spacing-2;
+    }
+
+    p {
+      font-size: $font-size-base;
+      color: $text-secondary;
+      margin: 0;
+      max-width: 400px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
+}

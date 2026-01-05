@@ -10,9 +10,36 @@
 // Hero Section - Compact (30% height reduction)
 .hero-section {
   background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 50%, #f0f8f4 100%);
-  padding: $spacing-8 0 $spacing-7;
+  padding: $spacing-8 0 $spacing-6;
   position: relative;
   overflow: hidden;
+
+  // Background image overlay for hero-with-image
+  &.hero-with-image {
+    // Use Unsplash placeholder for Tanzania road landscape
+    // Alternative: Replace with your own image in /public/hero-road.jpg
+    background:
+      linear-gradient(180deg,
+        rgba(255, 255, 255, 0.1) 0%,
+        rgba(255, 255, 255, 0.85) 40%,
+        rgba(255, 255, 255, 0.9) 100%
+      ),
+      url('https://images.unsplash.com/photo-1563656157432-67560011e209?w=1600&q=80') center/cover,
+      linear-gradient(to bottom, #87CEEB, #228B22);
+    background-size: cover, cover, cover;
+    background-position: center;
+    min-height: 420px;
+
+    @include respond-to-max('md') {
+      min-height: 380px;
+    }
+
+    // Fallback if image doesn't load
+    .hero-content {
+      position: relative;
+      z-index: 2;
+    }
+  }
 
   .hero-background {
     position: absolute;
@@ -93,6 +120,146 @@
     margin-right: auto;
   }
 
+  // Process Flow Section - Compact Modern Design
+  .process-flow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $spacing-1;
+    margin-bottom: $spacing-4;
+    padding: $spacing-3 0;
+
+    @include respond-to-max('md') {
+      flex-wrap: wrap;
+      gap: $spacing-2;
+    }
+
+    .process-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: $spacing-2;
+
+      @include respond-to-max('md') {
+        flex: 1 1 90px;
+      }
+
+      .step-circle {
+        position: relative;
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        @include flex-center;
+        flex-direction: column;
+        background: linear-gradient(135deg, rgba($primary-green, 0.1), rgba($primary-blue, 0.05));
+        border: 2px solid rgba($primary-green, 0.2);
+        box-shadow: 0 2px 8px rgba($primary-green, 0.1);
+
+        .step-number {
+          position: absolute;
+          top: -5px;
+          right: -5px;
+          width: 22px;
+          height: 22px;
+          @include flex-center;
+          background: $primary-green;
+          color: $white;
+          border-radius: 50%;
+          font-size: 11px;
+          font-weight: $font-weight-bold;
+          border: 2px solid $white;
+        }
+
+        .step-icon {
+          color: $primary-green;
+
+          svg {
+            width: 24px;
+            height: 24px;
+          }
+        }
+
+        @include respond-to-max('md') {
+          width: 56px;
+          height: 56px;
+
+          .step-icon svg {
+            width: 20px;
+            height: 20px;
+          }
+
+          .step-number {
+            width: 20px;
+            height: 20px;
+            font-size: 10px;
+          }
+        }
+      }
+
+      .step-label {
+        text-align: center;
+
+        h5 {
+          font-size: $font-size-xs;
+          font-weight: $font-weight-semibold;
+          color: $text-primary;
+          margin: 0 0 2px;
+        }
+
+        p {
+          font-size: 11px;
+          color: $text-muted;
+          margin: 0;
+        }
+
+        @include respond-to-max('md') {
+          h5 {
+            font-size: 11px;
+          }
+
+          p {
+            font-size: 9px;
+          }
+        }
+      }
+
+      // Color variations for each step
+      &.step-1 .step-circle {
+        background: linear-gradient(135deg, rgba(#1EB53A, 0.12), rgba(#1EB53A, 0.05));
+      }
+
+      &.step-2 .step-circle {
+        background: linear-gradient(135deg, rgba(#00A3DD, 0.12), rgba(#00A3DD, 0.05));
+      }
+
+      &.step-3 .step-circle {
+        background: linear-gradient(135deg, rgba(#FCD116, 0.15), rgba(#FCD116, 0.05));
+
+        .step-icon {
+          color: darken(#FCD116, 20%);
+        }
+      }
+    }
+
+    .process-connector {
+      display: flex;
+      align-items: center;
+      color: $primary-green;
+      opacity: 0.35;
+      margin: 0 -$spacing-1;
+
+      @include respond-to-max('md') {
+        display: none;
+      }
+
+      svg {
+        stroke: currentColor;
+        width: 32px;
+        height: 20px;
+      }
+    }
+  }
+
   .hero-actions {
     display: flex;
     gap: $spacing-3;
@@ -108,11 +275,27 @@
       font-weight: $font-weight-semibold;
       border-radius: $radius-lg;
       cursor: pointer;
-      transition: all $transition-base;
+      transition: all 0.2s ease-out;
       border: none;
+
+      // Accessibility: Focus state
+      &:focus-visible {
+        outline: 3px solid $primary-green;
+        outline-offset: 3px;
+      }
 
       &:active {
         transform: scale(0.98);
+      }
+
+      // Reduced motion for accessibility
+      @media (prefers-reduced-motion: reduce) {
+        transition: background-color 0.2s ease-out, color 0.2s ease-out, box-shadow 0.2s ease-out;
+
+        &:hover,
+        &:active {
+          transform: none;
+        }
       }
     }
 
@@ -126,14 +309,14 @@
 
       &:hover {
         box-shadow: 0 6px 20px rgba($primary-green, 0.45);
-        transform: translateY(-2px);
+        transform: translateY(-1px);
       }
     }
 
     .btn-secondary {
       background: transparent;
-      color: $text-muted;
-      border: 1px solid $border-light;
+      color: $text-secondary;
+      border: 1px solid $border-medium;
       padding: $spacing-3 $spacing-5;
       font-size: $font-size-sm;
 
@@ -169,12 +352,12 @@
 
 // Services Section - Compact
 .services-section {
-  padding: $spacing-12 0;
+  padding: $spacing-10 0;
   background: $white;
 
   .section-header {
     text-align: center;
-    margin-bottom: $spacing-8;
+    margin-bottom: $spacing-6;
 
     h2 {
       font-size: $font-size-2xl;
@@ -193,7 +376,7 @@
   .services-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: $spacing-5;
+    gap: $spacing-4;
     max-width: 1100px;
     margin: 0 auto;
 
@@ -205,54 +388,73 @@
 
   .service-card {
     background: $white;
-    border: 2px solid $border-light;
+    border: 1px solid $border-light;
     border-radius: $radius-xl;
     padding: $spacing-6;
-    transition: all $transition-base;
+    transition: all 0.2s ease-out;
     cursor: pointer;
     position: relative;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0 1px 3px rgba($black, 0.08);
 
-    &:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 8px 24px rgba($black, 0.12);
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: $gradient-primary;
+      border-radius: $radius-xl $radius-xl 0 0;
+      transform: scaleX(0);
+      transition: transform 0.2s ease-out;
     }
 
-    // Public Application Card - Blue accent
-    &.public-card {
-      border-left: 4px solid $primary-blue;
+    // Accessibility: Focus state for keyboard navigation
+    &:focus-visible {
+      outline: 3px solid $primary-green;
+      outline-offset: 2px;
+    }
 
-      &:hover {
-        border-left-color: $primary-blue;
-        box-shadow: 0 8px 24px rgba($primary-blue, 0.2);
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: $shadow-lg;
+      border-color: $primary-blue;
+
+      &::before {
+        transform: scaleX(1);
       }
 
       .service-icon {
-        background: linear-gradient(135deg, rgba($primary-blue, 0.12), rgba($primary-blue, 0.06));
-
-        svg {
-          color: $primary-blue;
-        }
-      }
-
-      .card-button {
-        &:hover {
-          background: $primary-blue;
-          border-color: $primary-blue;
-        }
+        transform: scale(1.05);
+        background: linear-gradient(135deg, rgba($primary-green, 0.2), rgba($primary-blue, 0.2));
+        box-shadow: 0 4px 12px rgba($primary-green, 0.15);
       }
     }
 
-    // Official Cards - Green accent (Regional & NRCC)
-    &.official-card {
-      border-left: 4px solid $primary-green;
+    &:active {
+      transform: translateY(0);
+    }
+
+    // Reduced motion for accessibility
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+
+      &::before {
+        transition: none;
+      }
 
       &:hover {
-        border-left-color: $primary-green;
-        box-shadow: 0 8px 24px rgba($primary-green, 0.2);
+        transform: none;
       }
+
+      .service-icon {
+        transition: none;
+        transform: none !important;
+      }
+    }
+
+    &.featured {
+      border-color: $primary-green;
+      box-shadow: 0 2px 12px rgba($primary-green, 0.1);
 
       .service-icon {
         background: $gradient-success;
@@ -262,27 +464,9 @@
         }
       }
 
-      .badge {
+      .badge.official {
         background: $primary-green;
         color: $white;
-      }
-    }
-
-    // Utility Card - Neutral (Track Application)
-    &.utility-card {
-      border-left: 4px solid $gray-400;
-
-      &:hover {
-        border-left-color: $gray-500;
-        box-shadow: 0 8px 24px rgba($black, 0.15);
-      }
-
-      .service-icon {
-        background: linear-gradient(135deg, rgba($gray-400, 0.12), rgba($gray-400, 0.06));
-
-        svg {
-          color: $gray-600;
-        }
       }
     }
 
@@ -299,7 +483,7 @@
       background: linear-gradient(135deg, rgba($primary-green, 0.15), rgba($primary-blue, 0.15));
       border-radius: $radius-lg;
       @include flex-center;
-      transition: all $transition-base;
+      transition: all 0.2s ease-out;
       box-shadow: 0 2px 8px rgba($primary-green, 0.08);
 
       svg {
@@ -333,96 +517,84 @@
 
     h3 {
       font-size: $font-size-lg;
-      font-weight: $font-weight-bold;
+      font-weight: $font-weight-semibold;
       color: $text-primary;
-      margin-bottom: $spacing-4;
+      margin-bottom: $spacing-2;
     }
 
-    .who-uses {
-      flex: 1;
-      margin-bottom: $spacing-5;
-
-      strong {
-        display: block;
-        font-size: $font-size-xs;
-        font-weight: $font-weight-semibold;
-        color: $text-secondary;
-        text-transform: uppercase;
-        letter-spacing: 0.03em;
-        margin-bottom: $spacing-2;
-      }
-
-      ul {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-
-        li {
-          font-size: $font-size-sm;
-          color: $text-secondary;
-          line-height: 1.5;
-          padding-left: $spacing-4;
-          position: relative;
-          margin-bottom: $spacing-1;
-
-          &::before {
-            content: '•';
-            position: absolute;
-            left: $spacing-1;
-            color: currentColor;
-            font-weight: $font-weight-bold;
-          }
-        }
-      }
+    p {
+      font-size: $font-size-sm;
+      color: $text-secondary;
+      line-height: $line-height-relaxed;
+      margin-bottom: $spacing-4;
+      min-height: 40px;
     }
 
     .card-button {
       @include flex-center;
       justify-content: space-between;
       width: 100%;
-      padding: $spacing-3 $spacing-4;
+      padding: $spacing-2 $spacing-4;
       background: $bg-secondary;
-      border: 2px solid transparent;
-      border-radius: $radius-lg;
-      color: $text-primary;
+      border: none;
+      border-radius: $radius-md;
+      color: $primary-green;
       font-size: $font-size-sm;
-      font-weight: $font-weight-semibold;
+      font-weight: $font-weight-medium;
       cursor: pointer;
-      transition: all $transition-base;
-      margin-top: auto;
+      transition: all 0.2s ease-out;
 
       svg {
-        transition: transform $transition-base;
+        transition: transform 0.2s ease-out;
+      }
+
+      // Accessibility: Focus state
+      &:focus-visible {
+        outline: 2px solid $primary-green;
+        outline-offset: 2px;
       }
 
       &:hover {
         background: $primary-green;
-        border-color: $primary-green;
         color: $white;
 
         svg {
           transform: translateX(4px);
         }
       }
+
+      &:active {
+        transform: scale(0.98);
+      }
+
+      // Reduced motion for accessibility
+      @media (prefers-reduced-motion: reduce) {
+        transition: background-color 0.2s ease-out, color 0.2s ease-out;
+
+        svg {
+          transition: none;
+          transform: none !important;
+        }
+      }
     }
   }
 }
 
-// Footer - Enhanced
+// Footer - Enhanced with Tanzania Green Theme
 .landing-footer {
   margin-top: auto;
-  background: linear-gradient(180deg, #1a1a1a 0%, #0f0f0f 100%);
-  color: $gray-400;
+  background: linear-gradient(to bottom, #0a3d1f 0%, #05200f 100%);
+  color: rgba($white, 0.7);
 
   .footer-top {
-    padding: $spacing-12 0 $spacing-8;
-    border-bottom: 1px solid rgba($white, 0.08);
+    padding: $spacing-10 0 $spacing-8;
+    border-bottom: 1px solid rgba($white, 0.1);
   }
 
   .footer-grid {
     display: grid;
-    grid-template-columns: 1.2fr 1.8fr;
-    gap: $spacing-12;
+    grid-template-columns: 1.3fr 1.7fr;
+    gap: $spacing-10;
 
     @include respond-to-max('lg') {
       grid-template-columns: 1fr;
@@ -446,40 +618,57 @@
         }
 
         p {
-          color: $gray-500;
+          color: rgba($white, 0.5);
           font-size: $font-size-xs;
           margin: 0;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
         }
       }
     }
 
     .footer-description {
-      color: $gray-400;
+      color: rgba($white, 0.65);
       font-size: $font-size-sm;
       line-height: $line-height-relaxed;
       margin-bottom: $spacing-5;
-      max-width: 380px;
+      max-width: 400px;
     }
 
     .footer-social {
       display: flex;
-      gap: $spacing-3;
+      gap: $spacing-2;
 
       a {
-        width: 36px;
-        height: 36px;
+        width: 40px;
+        height: 40px;
         @include flex-center;
-        background: rgba($white, 0.05);
-        border: 1px solid rgba($white, 0.1);
-        border-radius: $radius-md;
-        color: $gray-400;
-        transition: all $transition-base;
+        background: rgba($white, 0.08);
+        border: 1px solid rgba($white, 0.12);
+        border-radius: $radius-lg;
+        color: rgba($white, 0.6);
+        transition: all 0.2s ease-out;
 
         &:hover {
           background: $primary-green;
           border-color: $primary-green;
           color: $white;
           transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba($primary-green, 0.3);
+        }
+
+        &:focus-visible {
+          outline: 2px solid $primary-green;
+          outline-offset: 2px;
+        }
+
+        // Reduced motion for accessibility
+        @media (prefers-reduced-motion: reduce) {
+          transition: background-color 0.2s ease-out, color 0.2s ease-out, box-shadow 0.2s ease-out;
+
+          &:hover {
+            transform: none;
+          }
         }
       }
     }
@@ -488,7 +677,7 @@
   .footer-links-group {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: $spacing-8;
+    gap: $spacing-6;
 
     @include respond-to-max('md') {
       grid-template-columns: 1fr;
@@ -500,10 +689,10 @@
     h4 {
       color: $white;
       font-size: $font-size-sm;
-      font-weight: $font-weight-semibold;
+      font-weight: $font-weight-bold;
       margin-bottom: $spacing-4;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.08em;
     }
 
     ul {
@@ -516,15 +705,53 @@
 
         a {
           display: inline-block;
-          color: $gray-400;
+          color: rgba($white, 0.65);
           font-size: $font-size-sm;
           text-decoration: none;
-          transition: all $transition-base;
+          transition: all 0.2s ease-out;
           position: relative;
 
+          &::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: $primary-green;
+            transition: width 0.2s ease-out;
+          }
+
           &:hover {
-            color: $primary-green;
+            color: $white;
             padding-left: $spacing-2;
+
+            &::before {
+              width: 20px;
+            }
+          }
+
+          &:focus-visible {
+            outline: 2px solid $primary-green;
+            outline-offset: 2px;
+            color: $white;
+          }
+
+          // Reduced motion for accessibility
+          @media (prefers-reduced-motion: reduce) {
+            transition: color 0.2s ease-out;
+
+            &::before {
+              transition: none;
+            }
+
+            &:hover {
+              padding-left: 0;
+
+              &::before {
+                width: 0;
+              }
+            }
           }
         }
       }
@@ -542,7 +769,7 @@
         }
 
         span {
-          color: $gray-400;
+          color: rgba($white, 0.7);
           font-size: $font-size-sm;
           line-height: 1.4;
         }
@@ -552,7 +779,7 @@
 
   .footer-bottom {
     padding: $spacing-5 0;
-    background: rgba($black, 0.3);
+    background: rgba($black, 0.4);
 
     .footer-bottom-content {
       display: flex;
@@ -567,7 +794,7 @@
       }
 
       p {
-        color: $gray-500;
+        color: rgba($white, 0.5);
         font-size: $font-size-xs;
         margin: 0;
       }
@@ -579,17 +806,22 @@
         font-size: $font-size-xs;
 
         a {
-          color: $gray-500;
+          color: rgba($white, 0.5);
           text-decoration: none;
-          transition: color $transition-base;
+          transition: color 0.2s ease-out;
 
           &:hover {
             color: $primary-green;
           }
+
+          &:focus-visible {
+            outline: 2px solid $primary-green;
+            outline-offset: 2px;
+          }
         }
 
         .separator {
-          color: $gray-600;
+          color: rgba($white, 0.3);
         }
       }
     }

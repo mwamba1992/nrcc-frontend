@@ -11,15 +11,20 @@
     <!-- Modal Header -->
     <div class="modal-header">
       <div class="modal-logo">
-        <svg width="48" height="48" viewBox="0 0 50 50" fill="none">
-          <circle cx="25" cy="25" r="24" fill="#1EB53A" opacity="0.15"/>
-          <path d="M25 10L30 20H20L25 10Z" fill="#1EB53A"/>
-          <path d="M25 30L30 40H20L25 30Z" fill="#FCD116"/>
-          <circle cx="25" cy="25" r="3" fill="#00A3DD"/>
-        </svg>
+        <img src="/emblem.png" alt="Tanzania Coat of Arms" width="50" height="50">
       </div>
       <h2 class="modal-title">Welcome Back</h2>
       <p class="modal-subtitle">Sign in to access your NRCC account</p>
+    </div>
+
+    <!-- Error Message -->
+    <div class="error-message" *ngIf="errorMessage">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"/>
+        <line x1="12" y1="8" x2="12" y2="12"/>
+        <line x1="12" y1="16" x2="12.01" y2="16"/>
+      </svg>
+      {{ errorMessage }}
     </div>
 
     <!-- Modal Body -->
@@ -85,9 +90,10 @@
         <a href="#" class="forgot-password">Forgot password?</a>
       </div>
 
-      <button type="submit" class="btn-submit">
-        Sign In
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <button type="submit" class="btn-submit" [disabled]="isLoading">
+        <span *ngIf="!isLoading">Sign In</span>
+        <span *ngIf="isLoading">Signing in...</span>
+        <svg *ngIf="!isLoading" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <line x1="5" y1="12" x2="19" y2="12"/>
           <polyline points="12 5 19 12 12 19"/>
         </svg>
