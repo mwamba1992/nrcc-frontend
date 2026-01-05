@@ -173,4 +173,11 @@
       Create New Application
     </button>
   </div>
+
+  <!-- New Application Modal -->
+  <app-new-application
+    [isOpen]="showNewApplicationModal"
+    (closeModal)="closeNewApplicationModal()"
+    (applicationSubmitted)="onApplicationSubmitted()"
+  ></app-new-application>
 </app-applicant-layout>

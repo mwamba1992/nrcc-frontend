@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { Application, ApplicationStatus } from '../../../core/models/application.model';
 import { ApplicantLayoutComponent } from '../../../shared/components/applicant-layout/applicant-layout';
+import { NewApplicationComponent } from '../new-application/new-application';
 
 @Component({
   selector: 'app-applications-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, ApplicantLayoutComponent],
+  imports: [CommonModule, RouterModule, ApplicantLayoutComponent, NewApplicationComponent],
   templateUrl: './applications-list.html',
   styleUrl: './applications-list.scss'
 })
@@ -17,6 +18,7 @@ export class ApplicationsListComponent implements OnInit {
   isLoading = true;
   selectedStatus: string = 'all';
   searchTerm: string = '';
+  showNewApplicationModal = false;
 
   ApplicationStatus = ApplicationStatus;
 
@@ -112,6 +114,16 @@ export class ApplicationsListComponent implements OnInit {
   }
 
   createNewApplication(): void {
-    this.router.navigate(['/applicant/applications/new']);
+    this.showNewApplicationModal = true;
+  }
+
+  closeNewApplicationModal(): void {
+    this.showNewApplicationModal = false;
+  }
+
+  onApplicationSubmitted(): void {
+    this.showNewApplicationModal = false;
+    // Reload applications list
+    this.loadApplications();
   }
 }

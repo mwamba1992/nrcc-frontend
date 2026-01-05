@@ -1,381 +1,61 @@
 @import '../../../../styles/variables';
 @import '../../../../styles/mixins';
 
-.dashboard-container {
-  display: flex;
-  min-height: 100vh;
-  background: #f5f6fa;
-}
-
-// SIDEBAR
-.sidebar {
-  width: 280px;
-  background: $white;
-  border-right: 1px solid #e5e7eb;
-  display: flex;
-  flex-direction: column;
-  position: fixed;
-  left: 0;
-  top: 0;
-  height: 100vh;
-  overflow-y: auto;
-  z-index: 100;
-
-  @include respond-to-max('lg') {
-    transform: translateX(-100%);
-    transition: transform 0.3s ease;
-  }
-}
-
-.sidebar-logo {
-  display: flex;
-  align-items: center;
-  gap: $spacing-3;
-  padding: $spacing-4 $spacing-4;
-  border-bottom: 1px solid #e5e7eb;
-
-  img {
-    flex-shrink: 0;
-  }
-
-  .logo-text {
-    h3 {
-      font-size: $font-size-base;
-      font-weight: $font-weight-bold;
-      color: $text-primary;
-      margin: 0 0 2px;
-      line-height: 1.2;
-    }
-
-    p {
-      font-size: 11px;
-      color: $text-muted;
-      margin: 0;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      line-height: 1.2;
-    }
-  }
-}
-
-.quick-access {
-  padding: $spacing-4;
-  background: $primary-green;
-  margin: $spacing-4;
-  border-radius: $radius-lg;
-
-  .quick-access-header {
-    display: flex;
-    align-items: center;
-    gap: $spacing-2;
-    color: $white;
-
-    svg {
-      flex-shrink: 0;
-    }
-
-    h4 {
-      font-size: $font-size-sm;
-      font-weight: $font-weight-semibold;
-      margin: 0 0 2px;
-    }
-
-    p {
-      font-size: 11px;
-      opacity: 0.9;
-      margin: 0;
-    }
-  }
-}
-
-.sidebar-nav {
-  flex: 1;
-  padding: $spacing-2 0;
-
-  .nav-section {
-    margin-bottom: $spacing-5;
-
-    h5 {
-      font-size: 11px;
-      font-weight: $font-weight-bold;
-      color: $text-muted;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      padding: 0 $spacing-4;
-      margin: 0 0 $spacing-2;
-    }
-
-    .nav-link {
-      display: flex;
-      align-items: center;
-      gap: $spacing-3;
-      padding: $spacing-3 $spacing-4;
-      color: $text-secondary;
-      text-decoration: none;
-      font-size: $font-size-sm;
-      transition: all 0.2s ease;
-      border-left: 3px solid transparent;
-
-      svg {
-        flex-shrink: 0;
-        color: $text-muted;
-      }
-
-      &:hover {
-        background: rgba($primary-green, 0.05);
-        color: $primary-green;
-
-        svg {
-          color: $primary-green;
-        }
-      }
-
-      &.active {
-        background: rgba($primary-green, 0.1);
-        color: $primary-green;
-        font-weight: $font-weight-semibold;
-        border-left-color: $primary-green;
-
-        svg {
-          color: $primary-green;
-        }
-      }
-    }
-  }
-}
-
-.sidebar-help {
-  margin: $spacing-4;
-  padding: $spacing-4;
-  background: #f0fdf4;
-  border: 1px solid #bbf7d0;
-  border-radius: $radius-lg;
-  display: flex;
-  gap: $spacing-3;
-
-  svg {
-    flex-shrink: 0;
-    color: $primary-green;
-  }
-
-  h5 {
-    font-size: $font-size-sm;
-    font-weight: $font-weight-semibold;
-    color: $text-primary;
-    margin: 0 0 4px;
-  }
-
-  p {
-    font-size: 12px;
-    color: $text-secondary;
-    margin: 0;
-  }
-}
-
-// MAIN CONTENT
-.main-content {
-  flex: 1;
-  margin-left: 280px;
-  min-height: 100vh;
-
-  @include respond-to-max('lg') {
-    margin-left: 0;
-  }
-}
-
-.top-header {
-  background: $white;
-  border-bottom: 1px solid #e5e7eb;
-  padding: $spacing-4 $spacing-6;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: sticky;
-  top: 0;
-  z-index: 90;
-
-  .header-left {
-    display: flex;
-    align-items: center;
-    gap: $spacing-4;
-
-    .menu-toggle {
-      display: block; // Always visible like in Lilongwe
-      background: none;
-      border: none;
-      padding: $spacing-2;
-      cursor: pointer;
-      color: $text-secondary;
-
-      &:hover {
-        color: $primary-green;
-      }
-    }
-
-    .header-brand {
-      display: flex; // Always visible like in Lilongwe
-      align-items: center;
-      gap: $spacing-3;
-
-      img {
-        flex-shrink: 0;
-      }
-
-      .brand-info {
-        h3 {
-          font-size: $font-size-base;
-          font-weight: $font-weight-bold;
-          color: $text-primary;
-          margin: 0 0 2px;
-        }
-
-        p {
-          font-size: 11px;
-          color: $text-muted;
-          margin: 0;
-          text-transform: uppercase;
-          letter-spacing: 0.05em;
-        }
-      }
-    }
-  }
-
-  .header-right {
-    display: flex;
-    align-items: center;
-    gap: $spacing-3;
-
-    .user-info {
-      display: flex;
-      align-items: center;
-      gap: $spacing-3;
-
-      .user-avatar {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        background: $primary-green;
-        color: $white;
-        @include flex-center;
-        font-weight: $font-weight-bold;
-        font-size: $font-size-sm;
-      }
-
-      .user-details {
-        h4 {
-          font-size: $font-size-sm;
-          font-weight: $font-weight-semibold;
-          color: $text-primary;
-          margin: 0 0 2px;
-        }
-
-        p {
-          font-size: 12px;
-          color: $text-muted;
-          margin: 0;
-        }
-      }
-    }
-
-    .icon-btn {
-      width: 40px;
-      height: 40px;
-      @include flex-center;
-      background: $bg-secondary;
-      border: none;
-      border-radius: $radius-md;
-      cursor: pointer;
-      color: $text-secondary;
-      transition: all 0.2s ease;
-
-      &:hover {
-        background: $primary-green;
-        color: $white;
-      }
-    }
-  }
-}
-
 // WELCOME BANNER
 .welcome-banner {
-  background: linear-gradient(135deg, $primary-green 0%, darken($primary-green, 10%) 100%);
+  background: linear-gradient(135deg, #166534 0%, #15803d 50%, #16a34a 100%);
   margin: $spacing-6;
-  padding: $spacing-8 $spacing-6;
-  border-radius: $radius-xl;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  color: $white;
+  padding: $spacing-6;
+  border-radius: $radius-lg;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
   position: relative;
   overflow: hidden;
 
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+    border-radius: 50%;
+    transform: translate(30%, -30%);
+  }
+
   @include respond-to-max('md') {
-    flex-direction: column;
-    text-align: center;
+    margin: $spacing-4;
+    padding: $spacing-5;
   }
 
   .welcome-content {
-    flex: 1;
+    position: relative;
     z-index: 2;
 
     h1 {
-      font-size: $font-size-3xl;
+      font-size: 26px;
       font-weight: $font-weight-bold;
-      margin: 0 0 $spacing-3;
+      margin: 0 0 $spacing-2;
       color: $white;
+      letter-spacing: -0.01em;
 
       @include respond-to-max('md') {
-        font-size: $font-size-2xl;
+        font-size: $font-size-xl;
       }
     }
 
     p {
-      font-size: $font-size-base;
-      margin: 0 0 $spacing-5;
+      font-size: 14px;
+      margin: 0;
       opacity: 0.95;
-      max-width: 600px;
+      color: $white;
+      max-width: 700px;
+      line-height: 1.5;
 
       @include respond-to-max('md') {
         max-width: 100%;
+        font-size: 13px;
       }
-    }
-
-    .welcome-features {
-      display: flex;
-      gap: $spacing-6;
-      flex-wrap: wrap;
-
-      @include respond-to-max('md') {
-        justify-content: center;
-      }
-
-      .feature-item {
-        display: flex;
-        align-items: center;
-        gap: $spacing-2;
-        font-size: $font-size-sm;
-        opacity: 0.95;
-
-        svg {
-          flex-shrink: 0;
-        }
-      }
-    }
-  }
-
-  .welcome-icon {
-    opacity: 0.15;
-    position: absolute;
-    right: 60px;
-    top: 50%;
-    transform: translateY(-50%);
-
-    @include respond-to-max('md') {
-      display: none;
-    }
-
-    svg {
-      color: $white;
     }
   }
 }
@@ -383,35 +63,23 @@
 // STATISTICS CARDS
 .stats-container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: $spacing-5;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: $spacing-4;
   padding: 0 $spacing-6 $spacing-6;
 
   .stat-card {
     background: $white;
-    padding: $spacing-6;
-    border-radius: $radius-xl;
+    padding: $spacing-5;
+    border-radius: $radius-lg;
     border: 1px solid #e5e7eb;
     position: relative;
     overflow: hidden;
-    transition: all 0.3s ease;
-
-    &::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-      opacity: 0.08;
-      transition: all 0.3s ease;
-    }
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 
     &:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 12px 24px rgba($black, 0.12);
-      border-color: transparent;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba($black, 0.08);
+      border-color: #d1d5db;
     }
 
     .stat-header {
@@ -419,43 +87,39 @@
       justify-content: space-between;
       align-items: flex-start;
       margin-bottom: $spacing-4;
-      position: relative;
-      z-index: 1;
 
       h4 {
-        font-size: $font-size-sm;
+        font-size: 11px;
         font-weight: $font-weight-semibold;
-        color: $text-secondary;
+        color: #6b7280;
         margin: 0;
         text-transform: uppercase;
-        letter-spacing: 0.05em;
+        letter-spacing: 0.06em;
       }
 
       .stat-icon {
-        width: 48px;
-        height: 48px;
+        width: 40px;
+        height: 40px;
         @include flex-center;
-        border-radius: $radius-lg;
-        transition: all 0.3s ease;
+        border-radius: $radius-md;
+        transition: all 0.25s ease;
       }
     }
 
     h2 {
-      font-size: 2.5rem;
+      font-size: 32px;
       font-weight: $font-weight-bold;
       color: $text-primary;
       margin: 0 0 $spacing-2;
-      position: relative;
-      z-index: 1;
+      letter-spacing: -0.02em;
     }
 
     .stat-change {
       display: flex;
       align-items: center;
       gap: $spacing-2;
-      font-size: $font-size-sm;
-      position: relative;
-      z-index: 1;
+      font-size: 12px;
+      color: #6b7280;
 
       &.positive {
         color: #10b981;
@@ -466,64 +130,36 @@
       }
 
       svg {
-        width: 16px;
-        height: 16px;
+        width: 14px;
+        height: 14px;
       }
     }
 
     &.blue {
-      background: linear-gradient(135deg, rgba(#3b82f6, 0.05) 0%, rgba(#3b82f6, 0.02) 100%);
-      &::before { background: #3b82f6; }
       .stat-icon {
-        background: rgba(#3b82f6, 0.15);
+        background: rgba(#3b82f6, 0.1);
         color: #3b82f6;
-      }
-      &:hover {
-        border-color: #3b82f6;
-        background: linear-gradient(135deg, rgba(#3b82f6, 0.08) 0%, rgba(#3b82f6, 0.03) 100%);
-        .stat-icon { background: #3b82f6; color: $white; }
       }
     }
 
     &.green {
-      background: linear-gradient(135deg, rgba($primary-green, 0.05) 0%, rgba($primary-green, 0.02) 100%);
-      &::before { background: $primary-green; }
       .stat-icon {
-        background: rgba($primary-green, 0.15);
-        color: $primary-green;
-      }
-      &:hover {
-        border-color: $primary-green;
-        background: linear-gradient(135deg, rgba($primary-green, 0.08) 0%, rgba($primary-green, 0.03) 100%);
-        .stat-icon { background: $primary-green; color: $white; }
+        background: rgba(#16a34a, 0.1);
+        color: #16a34a;
       }
     }
 
     &.gray {
-      background: linear-gradient(135deg, rgba(#6b7280, 0.05) 0%, rgba(#6b7280, 0.02) 100%);
-      &::before { background: #6b7280; }
       .stat-icon {
-        background: rgba(#6b7280, 0.15);
+        background: rgba(#6b7280, 0.1);
         color: #6b7280;
-      }
-      &:hover {
-        border-color: #6b7280;
-        background: linear-gradient(135deg, rgba(#6b7280, 0.08) 0%, rgba(#6b7280, 0.03) 100%);
-        .stat-icon { background: #6b7280; color: $white; }
       }
     }
 
     &.orange {
-      background: linear-gradient(135deg, rgba(#f59e0b, 0.05) 0%, rgba(#f59e0b, 0.02) 100%);
-      &::before { background: #f59e0b; }
       .stat-icon {
-        background: rgba(#f59e0b, 0.15);
+        background: rgba(#f59e0b, 0.1);
         color: #f59e0b;
-      }
-      &:hover {
-        border-color: #f59e0b;
-        background: linear-gradient(135deg, rgba(#f59e0b, 0.08) 0%, rgba(#f59e0b, 0.03) 100%);
-        .stat-icon { background: #f59e0b; color: $white; }
       }
     }
   }
@@ -534,16 +170,11 @@
   padding: 0 $spacing-6 $spacing-6;
 
   .section-header {
-    display: flex;
-    align-items: center;
-    gap: $spacing-2;
     margin-bottom: $spacing-5;
 
-    svg { color: $primary-green; }
-
     h3 {
-      font-size: $font-size-xl;
-      font-weight: $font-weight-bold;
+      font-size: $font-size-lg;
+      font-weight: $font-weight-semibold;
       color: $text-primary;
       margin: 0;
     }
@@ -551,53 +182,37 @@
 
   .services-grid {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
     gap: $spacing-4;
-
-    @include respond-to-max('xl') {
-      grid-template-columns: repeat(3, 1fr);
-    }
-
-    @include respond-to-max('md') {
-      grid-template-columns: repeat(2, 1fr);
-    }
-
-    @include respond-to-max('sm') {
-      grid-template-columns: 1fr;
-    }
 
     .service-card {
       background: $white;
-      padding: $spacing-6;
-      border-radius: $radius-xl;
+      padding: $spacing-5;
+      border-radius: $radius-lg;
       border: 1px solid #e5e7eb;
-      text-align: center;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      align-items: center;
+      gap: $spacing-4;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
       cursor: pointer;
-      position: relative;
 
       &:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 12px 28px rgba($black, 0.12);
-        border-color: transparent;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 16px rgba($black, 0.08);
+        border-color: #d1d5db;
 
         .service-icon {
           transform: scale(1.05);
         }
-
-        .service-arrow {
-          opacity: 1;
-          transform: translateX(2px);
-        }
       }
 
       .service-icon {
-        width: 64px;
-        height: 64px;
+        width: 48px;
+        height: 48px;
+        flex-shrink: 0;
         @include flex-center;
-        margin: 0 auto $spacing-4;
-        border-radius: $radius-xl;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border-radius: $radius-md;
+        transition: all 0.25s ease;
 
         &.blue-icon {
           background: rgba(#3b82f6, 0.1);
@@ -611,45 +226,27 @@
           background: rgba(#f59e0b, 0.1);
           color: #f59e0b;
         }
-        &.pink-icon {
-          background: rgba(#ec4899, 0.1);
-          color: #ec4899;
-        }
         &.green-icon {
-          background: rgba($primary-green, 0.1);
-          color: $primary-green;
+          background: rgba(#16a34a, 0.1);
+          color: #16a34a;
         }
       }
 
-      h4 {
-        font-size: $font-size-base;
-        font-weight: $font-weight-semibold;
-        color: $text-primary;
-        margin: 0 0 $spacing-2;
-      }
+      .service-content {
+        flex: 1;
 
-      p {
-        font-size: 13px;
-        color: $text-secondary;
-        line-height: 1.5;
-        margin: 0 0 $spacing-3;
-        min-height: 40px;
-      }
+        h4 {
+          font-size: $font-size-base;
+          font-weight: $font-weight-semibold;
+          color: $text-primary;
+          margin: 0 0 $spacing-1;
+        }
 
-      .service-arrow {
-        @include flex-center;
-        width: 28px;
-        height: 28px;
-        margin: 0 auto;
-        border-radius: 50%;
-        background: $bg-secondary;
-        color: $text-muted;
-        opacity: 0.6;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-
-        svg {
-          width: 14px;
-          height: 14px;
+        p {
+          font-size: 13px;
+          color: $text-secondary;
+          line-height: 1.4;
+          margin: 0;
         }
       }
     }

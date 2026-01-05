@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { User } from '../../../core/models/user.model';
+import { ApplicantLayoutComponent } from '../../../shared/components/applicant-layout/applicant-layout';
 
 @Component({
   selector: 'app-applicant-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ApplicantLayoutComponent],
   templateUrl: './applicant-dashboard.html',
   styleUrl: './applicant-dashboard.scss'
 })
@@ -39,10 +40,6 @@ export class ApplicantDashboardComponent implements OnInit {
       approved: 0,
       pending: 1
     };
-  }
-
-  logout(): void {
-    this.authService.logout();
   }
 
   navigateToApplications(): void {

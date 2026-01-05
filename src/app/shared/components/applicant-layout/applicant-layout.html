@@ -1,14 +1,48 @@
 <div class="dashboard-container">
-  <!-- Sidebar Navigation -->
-  <aside class="sidebar">
-    <!-- Logo Section -->
-    <div class="sidebar-logo">
-      <img src="/emblem.png" alt="Tanzania Coat of Arms" width="45" height="45">
-      <div class="logo-text">
-        <h3>Roads Fund Board</h3>
-        <p>NRCC Portal</p>
+  <!-- Top Header - Full Width -->
+  <header class="top-header">
+    <div class="header-left">
+      <button class="menu-toggle">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="3" y1="12" x2="21" y2="12"/>
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      </button>
+      <img src="/emblem.png" alt="Tanzania Coat of Arms">
+      <div class="header-brand">
+        <div>
+          <h3>Roads Fund Board</h3>
+          <p>NRCC Portal</p>
+        </div>
       </div>
     </div>
+    <div class="header-right">
+      <div class="user-info">
+        <div class="user-avatar">{{ currentUser?.firstName?.charAt(0) }}{{ currentUser?.lastName?.charAt(0) }}</div>
+        <div class="user-details">
+          <h4>{{ currentUser?.email }}</h4>
+          <p>Applicant</p>
+        </div>
+      </div>
+      <button class="icon-btn" title="Profile">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
+      </button>
+      <button class="icon-btn" (click)="logout()" title="Logout">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+          <polyline points="16 17 21 12 16 7"/>
+          <line x1="21" y1="12" x2="9" y2="12"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Sidebar Navigation - Below Header -->
+  <aside class="sidebar">
 
     <!-- Quick Access -->
     <div class="quick-access">
@@ -78,44 +112,8 @@
     </div>
   </aside>
 
-  <!-- Main Content Area -->
+  <!-- Main Content Area - Beside Sidebar, Below Header -->
   <div class="main-content">
-    <!-- Top Header -->
-    <header class="top-header">
-      <div class="header-left">
-        <button class="menu-toggle">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="3" y1="12" x2="21" y2="12"/>
-            <line x1="3" y1="6" x2="21" y2="6"/>
-            <line x1="3" y1="18" x2="21" y2="18"/>
-          </svg>
-        </button>
-      </div>
-      <div class="header-right">
-        <div class="user-info">
-          <div class="user-avatar">{{ currentUser?.firstName?.charAt(0) }}{{ currentUser?.lastName?.charAt(0) }}</div>
-          <div class="user-details">
-            <h4>{{ currentUser?.email }}</h4>
-            <p>Applicant</p>
-          </div>
-        </div>
-        <button class="icon-btn" title="Profile">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-            <circle cx="12" cy="7" r="4"/>
-          </svg>
-        </button>
-        <button class="icon-btn" (click)="logout()" title="Logout">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-            <polyline points="16 17 21 12 16 7"/>
-            <line x1="21" y1="12" x2="9" y2="12"/>
-          </svg>
-        </button>
-      </div>
-    </header>
-
-    <!-- Page Content (ng-content projection) -->
     <ng-content></ng-content>
   </div>
 </div>

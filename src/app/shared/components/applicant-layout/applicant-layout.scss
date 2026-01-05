@@ -3,23 +3,25 @@
 
 .dashboard-container {
   display: flex;
+  flex-direction: column;
   min-height: 100vh;
-  background: #f5f6fa;
+  background: #f6f8fa;
 }
 
 // SIDEBAR
 .sidebar {
-  width: 280px;
-  background: $white;
+  width: 240px;
+  background: #f9fafb;
   border-right: 1px solid #e5e7eb;
   display: flex;
   flex-direction: column;
   position: fixed;
   left: 0;
-  top: 0;
-  height: 100vh;
+  top: 60px;
+  height: calc(100vh - 60px);
   overflow-y: auto;
-  z-index: 100;
+  z-index: 90;
+  padding: $spacing-5 $spacing-4;
 
   @include respond-to-max('lg') {
     transform: translateX(-100%);
@@ -27,98 +29,81 @@
   }
 }
 
-.sidebar-logo {
-  display: flex;
-  align-items: center;
-  gap: $spacing-3;
-  padding: $spacing-4 $spacing-4;
-  border-bottom: 1px solid #e5e7eb;
-
-  img {
-    flex-shrink: 0;
-  }
-
-  .logo-text {
-    h3 {
-      font-size: $font-size-base;
-      font-weight: $font-weight-bold;
-      color: $text-primary;
-      margin: 0 0 2px;
-      line-height: 1.2;
-    }
-
-    p {
-      font-size: 11px;
-      color: $text-muted;
-      margin: 0;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      line-height: 1.2;
-    }
-  }
-}
-
 .quick-access {
   padding: $spacing-4;
-  background: $primary-green;
-  margin: $spacing-4;
-  border-radius: $radius-lg;
+  background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+  margin-bottom: $spacing-5;
+  border-radius: 10px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 
   .quick-access-header {
     display: flex;
     align-items: center;
-    gap: $spacing-2;
+    gap: $spacing-3;
     color: $white;
 
     svg {
       flex-shrink: 0;
+      width: 22px;
+      height: 22px;
+      background: rgba(255, 255, 255, 0.2);
+      padding: 6px;
+      border-radius: 8px;
     }
 
-    h4 {
-      font-size: $font-size-sm;
-      font-weight: $font-weight-semibold;
-      margin: 0 0 2px;
-    }
+    div {
+      h4 {
+        font-size: 14px;
+        font-weight: $font-weight-bold;
+        margin: 0 0 2px;
+      }
 
-    p {
-      font-size: 11px;
-      opacity: 0.9;
-      margin: 0;
+      p {
+        font-size: 12px;
+        opacity: 0.9;
+        margin: 0;
+      }
     }
   }
 }
 
 .sidebar-nav {
   flex: 1;
-  padding: $spacing-2 0;
+  padding: 0;
+  margin-left: -$spacing-4;
+  margin-right: -$spacing-4;
 
   .nav-section {
     margin-bottom: $spacing-5;
 
     h5 {
       font-size: 11px;
-      font-weight: $font-weight-bold;
-      color: $text-muted;
+      font-weight: 700;
+      color: #6b7280;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
-      padding: 0 $spacing-4;
-      margin: 0 0 $spacing-2;
+      letter-spacing: 0.1em;
+      padding: 0 $spacing-5;
+      margin: 0 0 $spacing-3;
     }
 
     .nav-link {
       display: flex;
       align-items: center;
       gap: $spacing-3;
-      padding: $spacing-3 $spacing-4;
-      color: $text-secondary;
+      padding: 11px $spacing-5;
+      color: #4b5563;
       text-decoration: none;
-      font-size: $font-size-sm;
+      font-size: 14px;
       transition: all 0.2s ease;
       border-left: 3px solid transparent;
+      font-weight: 400;
+      position: relative;
 
       svg {
         flex-shrink: 0;
-        color: $text-muted;
+        color: #6b7280;
+        width: 20px;
+        height: 20px;
       }
 
       &:hover {
@@ -131,9 +116,9 @@
       }
 
       &.active {
-        background: rgba($primary-green, 0.1);
+        background: rgba($primary-green, 0.08);
         color: $primary-green;
-        font-weight: $font-weight-semibold;
+        font-weight: 500;
         border-left-color: $primary-green;
 
         svg {
@@ -145,97 +130,99 @@
 }
 
 .sidebar-help {
-  margin: $spacing-4;
+  margin: 0 0 0 0;
   padding: $spacing-4;
-  background: #f0fdf4;
-  border: 1px solid #bbf7d0;
-  border-radius: $radius-lg;
+  background: #ecfdf5;
+  border-left: 4px solid $primary-green;
+  border-radius: 0;
   display: flex;
   gap: $spacing-3;
+  align-items: start;
 
   svg {
     flex-shrink: 0;
     color: $primary-green;
+    width: 20px;
+    height: 20px;
+    margin-top: 2px;
   }
 
-  h5 {
-    font-size: $font-size-sm;
-    font-weight: $font-weight-semibold;
-    color: $text-primary;
-    margin: 0 0 4px;
-  }
+  div {
+    h5 {
+      font-size: 14px;
+      font-weight: $font-weight-bold;
+      color: #065f46;
+      margin: 0 0 4px;
+    }
 
-  p {
-    font-size: 12px;
-    color: $text-secondary;
-    margin: 0;
-  }
-}
-
-// MAIN CONTENT
-.main-content {
-  flex: 1;
-  margin-left: 280px;
-  min-height: 100vh;
-
-  @include respond-to-max('lg') {
-    margin-left: 0;
+    p {
+      font-size: 12px;
+      color: #047857;
+      margin: 0;
+      line-height: 1.4;
+    }
   }
 }
 
+// TOP HEADER - Full width, positioned above sidebar
 .top-header {
   background: $white;
-  border-bottom: 1px solid #e5e7eb;
-  padding: $spacing-4 $spacing-6;
+  border-bottom: 2px solid #16a34a;
+  padding: 0 $spacing-6;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  position: sticky;
+  position: fixed;
   top: 0;
-  z-index: 90;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 110;
+  height: 60px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
 
   .header-left {
     display: flex;
     align-items: center;
-    gap: $spacing-4;
+    gap: $spacing-3;
 
     .menu-toggle {
-      display: block; // Always visible like in Lilongwe
+      display: block;
       background: none;
       border: none;
       padding: $spacing-2;
       cursor: pointer;
-      color: $text-secondary;
+      color: #586069;
 
       &:hover {
         color: $primary-green;
       }
     }
 
-    .header-brand {
-      display: flex; // Always visible like in Lilongwe
-      align-items: center;
-      gap: $spacing-3;
+    img {
+      flex-shrink: 0;
+      width: 40px;
+      height: 40px;
+    }
 
-      img {
-        flex-shrink: 0;
+    .header-brand {
+      display: flex;
+      align-items: center;
+      gap: $spacing-2;
+
+      h3 {
+        font-size: 17px;
+        font-weight: $font-weight-bold;
+        color: #24292e;
+        margin: 0;
+        line-height: 1;
       }
 
-      .brand-info {
-        h3 {
-          font-size: $font-size-base;
-          font-weight: $font-weight-bold;
-          color: $text-primary;
-          margin: 0 0 2px;
-        }
-
-        p {
-          font-size: 11px;
-          color: $text-muted;
-          margin: 0;
-          text-transform: uppercase;
-          letter-spacing: 0.05em;
-        }
+      p {
+        font-size: 12px;
+        color: #6a737d;
+        margin: 0;
+        font-weight: 400;
       }
     }
   }
@@ -258,20 +245,20 @@
         color: $white;
         @include flex-center;
         font-weight: $font-weight-bold;
-        font-size: $font-size-sm;
+        font-size: 14px;
       }
 
       .user-details {
         h4 {
-          font-size: $font-size-sm;
+          font-size: 14px;
           font-weight: $font-weight-semibold;
-          color: $text-primary;
+          color: #24292e;
           margin: 0 0 2px;
         }
 
         p {
           font-size: 12px;
-          color: $text-muted;
+          color: #6a737d;
           margin: 0;
         }
       }
@@ -281,18 +268,34 @@
       width: 40px;
       height: 40px;
       @include flex-center;
-      background: $bg-secondary;
-      border: none;
-      border-radius: $radius-md;
+      background: #f6f8fa;
+      border: 1px solid #e1e4e8;
+      border-radius: 6px;
       cursor: pointer;
-      color: $text-secondary;
+      color: #586069;
       transition: all 0.2s ease;
 
       &:hover {
         background: $primary-green;
         color: $white;
+        border-color: $primary-green;
       }
     }
+  }
+}
+
+// MAIN CONTENT - Below header, beside sidebar
+.main-content {
+  flex: 1;
+  margin-left: 240px;
+  margin-top: 60px;
+  min-height: calc(100vh - 60px);
+  width: calc(100% - 240px);
+  background: #f6f8fa;
+
+  @include respond-to-max('lg') {
+    margin-left: 0;
+    width: 100%;
   }
 }
 

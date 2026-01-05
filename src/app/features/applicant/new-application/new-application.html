@@ -1,0 +1,355 @@
+<app-modal
+  [isOpen]="isOpen"
+  [size]="'lg'"
+  [showFooter]="false"
+  [showHeader]="false"
+  (closeModal)="cancel()"
+>
+  <div modal-body>
+    <div class="form-container">
+    <!-- Header -->
+    <div class="form-header">
+      <div class="header-content">
+        <h1>New Application</h1>
+        <p>Submit a road reclassification request</p>
+      </div>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="progress-section">
+      <div class="progress-header">
+        <span class="progress-text">Step {{ currentStep }} of {{ totalSteps }}</span>
+        <span class="progress-percentage">{{ getProgressPercentage() }}% Complete</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" [style.width.%]="getProgressPercentage()"></div>
+      </div>
+      <div class="progress-steps">
+        <div
+          *ngFor="let step of [1, 2, 3, 4]"
+          class="progress-step"
+          [class.completed]="isStepCompleted(step)"
+          [class.active]="currentStep === step"
+          (click)="goToStep(step)"
+        >
+          <div class="step-circle">
+            <svg *ngIf="isStepCompleted(step)" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+            <span *ngIf="!isStepCompleted(step)">{{ step }}</span>
+          </div>
+          <span class="step-label">
+            {{ step === 1 ? 'Basic Info' : step === 2 ? 'Classification' : step === 3 ? 'Details' : 'Documents' }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Form Content -->
+    <form [formGroup]="applicationForm" class="application-form">
+      <!-- Step 1: Basic Information -->
+      <div *ngIf="currentStep === 1" class="form-step">
+        <div class="step-header">
+          <h2>Basic Information</h2>
+          <p>Enter the basic details about the road</p>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group full-width">
+            <label for="roadName">Road Name *</label>
+            <input
+              type="text"
+              id="roadName"
+              formControlName="roadName"
+              placeholder="Enter road name"
+              [class.error]="applicationForm.get('roadName')?.invalid && applicationForm.get('roadName')?.touched"
+            />
+            <span class="error-message" *ngIf="applicationForm.get('roadName')?.invalid && applicationForm.get('roadName')?.touched">
+              Road name is required (minimum 3 characters)
+            </span>
+          </div>
+
+          <div class="form-group">
+            <label for="district">District *</label>
+            <select
+              id="district"
+              formControlName="district"
+              [class.error]="applicationForm.get('district')?.invalid && applicationForm.get('district')?.touched"
+            >
+              <option value="">Select district</option>
+              <option *ngFor="let district of districts" [value]="district">{{ district }}</option>
+            </select>
+            <span class="error-message" *ngIf="applicationForm.get('district')?.invalid && applicationForm.get('district')?.touched">
+              District is required
+            </span>
+          </div>
+
+          <div class="form-group">
+            <label for="region">Region *</label>
+            <select
+              id="region"
+              formControlName="region"
+              [class.error]="applicationForm.get('region')?.invalid && applicationForm.get('region')?.touched"
+            >
+              <option value="">Select region</option>
+              <option *ngFor="let region of regions" [value]="region">{{ region }}</option>
+            </select>
+            <span class="error-message" *ngIf="applicationForm.get('region')?.invalid && applicationForm.get('region')?.touched">
+              Region is required
+            </span>
+          </div>
+
+          <div class="form-group">
+            <label for="roadLength">Road Length (km) *</label>
+            <input
+              type="number"
+              id="roadLength"
+              formControlName="roadLength"
+              placeholder="0.0"
+              step="0.1"
+              min="0"
+              [class.error]="applicationForm.get('roadLength')?.invalid && applicationForm.get('roadLength')?.touched"
+            />
+            <span class="error-message" *ngIf="applicationForm.get('roadLength')?.invalid && applicationForm.get('roadLength')?.touched">
+              Road length is required
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2: Classification -->
+      <div *ngIf="currentStep === 2" class="form-step">
+        <div class="step-header">
+          <h2>Classification Details</h2>
+          <p>Specify current and proposed road classification</p>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="currentClassification">Current Classification *</label>
+            <select
+              id="currentClassification"
+              formControlName="currentClassification"
+              [class.error]="applicationForm.get('currentClassification')?.invalid && applicationForm.get('currentClassification')?.touched"
+            >
+              <option value="">Select current classification</option>
+              <option *ngFor="let classification of currentClassifications" [value]="classification">{{ classification }}</option>
+            </select>
+            <span class="error-message" *ngIf="applicationForm.get('currentClassification')?.invalid && applicationForm.get('currentClassification')?.touched">
+              Current classification is required
+            </span>
+          </div>
+
+          <div class="form-group">
+            <label for="proposedClassification">Proposed Classification *</label>
+            <select
+              id="proposedClassification"
+              formControlName="proposedClassification"
+              [class.error]="applicationForm.get('proposedClassification')?.invalid && applicationForm.get('proposedClassification')?.touched"
+            >
+              <option value="">Select proposed classification</option>
+              <option *ngFor="let classification of proposedClassifications" [value]="classification">{{ classification }}</option>
+            </select>
+            <span class="error-message" *ngIf="applicationForm.get('proposedClassification')?.invalid && applicationForm.get('proposedClassification')?.touched">
+              Proposed classification is required
+            </span>
+          </div>
+        </div>
+
+        <div class="classification-preview" *ngIf="applicationForm.get('currentClassification')?.value && applicationForm.get('proposedClassification')?.value">
+          <div class="preview-header">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="16" x2="12" y2="12"/>
+              <line x1="12" y1="8" x2="12.01" y2="8"/>
+            </svg>
+            <span>Classification Change Preview</span>
+          </div>
+          <div class="preview-content">
+            <div class="preview-item current">
+              <span class="preview-label">Current</span>
+              <span class="preview-value">{{ applicationForm.get('currentClassification')?.value }}</span>
+            </div>
+            <div class="preview-arrow">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="5" y1="12" x2="19" y2="12"/>
+                <polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </div>
+            <div class="preview-item proposed">
+              <span class="preview-label">Proposed</span>
+              <span class="preview-value">{{ applicationForm.get('proposedClassification')?.value }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3: Details -->
+      <div *ngIf="currentStep === 3" class="form-step">
+        <div class="step-header">
+          <h2>Application Details</h2>
+          <p>Provide description and justification for the reclassification</p>
+        </div>
+
+        <div class="form-grid single-column">
+          <div class="form-group">
+            <label for="description">Description *</label>
+            <textarea
+              id="description"
+              formControlName="description"
+              rows="4"
+              placeholder="Describe the road and the reason for reclassification request..."
+              [class.error]="applicationForm.get('description')?.invalid && applicationForm.get('description')?.touched"
+            ></textarea>
+            <div class="char-count">
+              {{ applicationForm.get('description')?.value?.length || 0 }} characters (minimum 50)
+            </div>
+            <span class="error-message" *ngIf="applicationForm.get('description')?.invalid && applicationForm.get('description')?.touched">
+              Description is required (minimum 50 characters)
+            </span>
+          </div>
+
+          <div class="form-group">
+            <label for="justification">Justification *</label>
+            <textarea
+              id="justification"
+              formControlName="justification"
+              rows="4"
+              placeholder="Provide justification for the reclassification (e.g., traffic volume, strategic importance)..."
+              [class.error]="applicationForm.get('justification')?.invalid && applicationForm.get('justification')?.touched"
+            ></textarea>
+            <div class="char-count">
+              {{ applicationForm.get('justification')?.value?.length || 0 }} characters (minimum 50)
+            </div>
+            <span class="error-message" *ngIf="applicationForm.get('justification')?.invalid && applicationForm.get('justification')?.touched">
+              Justification is required (minimum 50 characters)
+            </span>
+          </div>
+
+          <div class="form-group">
+            <label for="trafficVolume">Daily Traffic Volume (optional)</label>
+            <input
+              type="number"
+              id="trafficVolume"
+              formControlName="trafficVolume"
+              placeholder="e.g., 5000"
+              min="0"
+            />
+            <span class="help-text">Estimated number of vehicles per day</span>
+          </div>
+
+          <div class="form-group">
+            <label for="strategicImportance">Strategic Importance (optional)</label>
+            <textarea
+              id="strategicImportance"
+              formControlName="strategicImportance"
+              rows="3"
+              placeholder="Describe any strategic importance of this road..."
+            ></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 4: Documents -->
+      <div *ngIf="currentStep === 4" class="form-step">
+        <div class="step-header">
+          <h2>Upload Documents</h2>
+          <p>Upload supporting documents for your application (at least 1 required)</p>
+        </div>
+
+        <div class="upload-section">
+          <label for="file-upload" class="upload-area">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="17 8 12 3 7 8"/>
+              <line x1="12" y1="3" x2="12" y2="15"/>
+            </svg>
+            <h3>Click to upload or drag and drop</h3>
+            <p>PDF, DOC, DOCX, JPG, PNG (max 10MB per file)</p>
+            <input
+              type="file"
+              id="file-upload"
+              multiple
+              accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+              (change)="onFileSelect($event)"
+            />
+          </label>
+
+          <div class="uploaded-files" *ngIf="uploadedDocuments.length > 0">
+            <h3>Uploaded Documents ({{ uploadedDocuments.length }})</h3>
+            <div class="file-list">
+              <div *ngFor="let doc of uploadedDocuments; let i = index" class="file-item">
+                <div class="file-icon" [class]="getFileIcon(doc.type)">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                  </svg>
+                </div>
+                <div class="file-info">
+                  <h4>{{ doc.name }}</h4>
+                  <p>{{ formatFileSize(doc.size) }}</p>
+                </div>
+                <button type="button" class="btn-remove" (click)="removeDocument(i)">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="3 6 5 6 21 6"/>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="upload-help" *ngIf="uploadedDocuments.length === 0">
+            <p><strong>Suggested documents:</strong></p>
+            <ul>
+              <li>Traffic assessment report</li>
+              <li>Road condition photos</li>
+              <li>Environmental impact assessment</li>
+              <li>Technical drawings or maps</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <!-- Form Actions -->
+    <div class="form-actions">
+      <button
+        type="button"
+        class="btn-secondary"
+        *ngIf="currentStep > 1"
+        (click)="previousStep()"
+      >
+        Previous
+      </button>
+      <button
+        type="button"
+        class="btn-cancel"
+        (click)="cancel()"
+      >
+        Cancel
+      </button>
+      <button
+        type="button"
+        class="btn-primary"
+        *ngIf="currentStep < totalSteps"
+        (click)="nextStep()"
+      >
+        Next
+      </button>
+      <button
+        type="button"
+        class="btn-submit"
+        *ngIf="currentStep === totalSteps"
+        (click)="submitApplication()"
+        [disabled]="!isStepValid()"
+      >
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+        Submit Application
+      </button>
+    </div>
+  </div>
+  </div>
+</app-modal>

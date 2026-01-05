@@ -7,8 +7,11 @@
   justify-content: space-between;
   align-items: center;
   padding: $spacing-6;
+  margin: $spacing-6 $spacing-6 0;
   background: $white;
-  border-bottom: 1px solid #e5e7eb;
+  border-radius: $radius-xl;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
 
   .page-title {
     display: flex;
@@ -18,19 +21,25 @@
     svg {
       color: $primary-green;
       flex-shrink: 0;
+      width: 28px;
+      height: 28px;
     }
 
-    h1 {
-      font-size: $font-size-2xl;
-      font-weight: $font-weight-bold;
-      color: $text-primary;
-      margin: 0 0 4px;
-    }
+    div {
+      h1 {
+        font-size: 26px;
+        font-weight: $font-weight-bold;
+        color: $text-primary;
+        margin: 0 0 4px;
+        letter-spacing: -0.02em;
+      }
 
-    p {
-      font-size: $font-size-sm;
-      color: $text-secondary;
-      margin: 0;
+      p {
+        font-size: 14px;
+        color: $text-secondary;
+        margin: 0;
+        line-height: 1.4;
+      }
     }
   }
 
@@ -38,58 +47,78 @@
     display: flex;
     align-items: center;
     gap: $spacing-2;
-    padding: $spacing-3 $spacing-5;
+    padding: 11px $spacing-5;
     background: $primary-green;
     color: $white;
     border: none;
-    border-radius: $radius-md;
-    font-size: $font-size-sm;
+    border-radius: $radius-lg;
+    font-size: 14px;
     font-weight: $font-weight-semibold;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 1px 2px rgba($black, 0.05);
 
     &:hover {
       background: darken($primary-green, 5%);
       transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba($primary-green, 0.3);
+      box-shadow: 0 8px 16px rgba($primary-green, 0.3);
+    }
+
+    &:active {
+      transform: translateY(0);
     }
 
     svg {
       flex-shrink: 0;
+      width: 18px;
+      height: 18px;
     }
   }
 }
 
 // FILTER SECTION
 .filter-section {
-  padding: $spacing-6;
+  padding: $spacing-5 $spacing-6;
+  margin: $spacing-4 $spacing-6 0;
   background: $white;
-  border-bottom: 1px solid #e5e7eb;
+  border-radius: $radius-xl;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
 
   .search-box {
     display: flex;
     align-items: center;
     gap: $spacing-3;
-    padding: $spacing-3 $spacing-4;
-    background: $bg-secondary;
-    border-radius: $radius-md;
+    padding: 11px $spacing-4;
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: $radius-lg;
     margin-bottom: $spacing-4;
+    transition: all 0.2s ease;
+
+    &:focus-within {
+      border-color: $primary-green;
+      background: $white;
+      box-shadow: 0 0 0 3px rgba($primary-green, 0.1);
+    }
 
     svg {
-      color: $text-muted;
+      color: #9ca3af;
       flex-shrink: 0;
+      width: 18px;
+      height: 18px;
     }
 
     input {
       flex: 1;
       border: none;
       background: transparent;
-      font-size: $font-size-sm;
+      font-size: 14px;
       color: $text-primary;
       outline: none;
 
       &::placeholder {
-        color: $text-muted;
+        color: #9ca3af;
       }
     }
   }
@@ -100,24 +129,27 @@
     flex-wrap: wrap;
 
     .filter-btn {
-      padding: $spacing-2 $spacing-4;
-      border: 1px solid #e5e7eb;
+      padding: 9px $spacing-4;
+      border: 1.5px solid #e5e7eb;
       background: $white;
-      border-radius: $radius-md;
-      font-size: $font-size-sm;
-      color: $text-secondary;
+      border-radius: $radius-lg;
+      font-size: 13px;
+      font-weight: $font-weight-medium;
+      color: #6b7280;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 
       &:hover {
         border-color: $primary-green;
         color: $primary-green;
+        background: rgba($primary-green, 0.05);
       }
 
       &.active {
         background: $primary-green;
         color: $white;
         border-color: $primary-green;
+        box-shadow: 0 2px 4px rgba($primary-green, 0.2);
       }
     }
   }
@@ -154,79 +186,109 @@
 // APPLICATIONS GRID
 .applications-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-  gap: $spacing-4;
+  grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+  gap: $spacing-5;
   padding: $spacing-6;
+
+  @include respond-to-max('md') {
+    grid-template-columns: 1fr;
+  }
 
   .application-card {
     background: $white;
-    border-radius: $radius-lg;
-    border: 1px solid #e5e7eb;
-    padding: $spacing-5;
+    border-radius: $radius-xl;
+    border: 1.5px solid #e5e7eb;
+    padding: $spacing-6;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 1px 3px rgba($black, 0.05);
 
     &:hover {
-      border-color: $primary-green;
-      box-shadow: 0 4px 12px rgba($primary-green, 0.1);
-      transform: translateY(-2px);
+      border-color: rgba($primary-green, 0.3);
+      box-shadow: 0 12px 24px rgba($black, 0.1);
+      transform: translateY(-3px);
+
+      .card-footer .btn-view {
+        background: rgba($primary-green, 0.1);
+        padding-right: $spacing-4;
+
+        svg {
+          transform: translateX(2px);
+        }
+      }
     }
 
     .card-header {
       display: flex;
       justify-content: space-between;
       align-items: start;
-      margin-bottom: $spacing-4;
+      margin-bottom: $spacing-5;
       padding-bottom: $spacing-4;
-      border-bottom: 1px solid #e5e7eb;
+      border-bottom: 1.5px solid #f3f4f6;
 
       .card-title {
+        flex: 1;
+        padding-right: $spacing-3;
+
         h3 {
-          font-size: $font-size-lg;
-          font-weight: $font-weight-semibold;
+          font-size: 18px;
+          font-weight: $font-weight-bold;
           color: $text-primary;
-          margin: 0 0 $spacing-1;
+          margin: 0 0 6px;
+          letter-spacing: -0.01em;
+          line-height: 1.3;
         }
 
         .reference-number {
-          display: block;
+          display: inline-block;
           font-size: 12px;
-          color: $text-muted;
-          font-family: monospace;
+          color: #6b7280;
+          font-family: 'Courier New', monospace;
+          background: #f9fafb;
+          padding: 3px 8px;
+          border-radius: 4px;
+          font-weight: $font-weight-medium;
         }
       }
 
       .status-badge {
-        padding: $spacing-1 $spacing-3;
-        border-radius: $radius-md;
+        padding: 6px $spacing-3;
+        border-radius: $radius-lg;
         font-size: 11px;
-        font-weight: $font-weight-semibold;
+        font-weight: $font-weight-bold;
         text-transform: uppercase;
-        letter-spacing: 0.03em;
+        letter-spacing: 0.05em;
+        white-space: nowrap;
+        box-shadow: 0 1px 2px rgba($black, 0.05);
 
         &.status-pending {
           background: #fef3c7;
           color: #92400e;
+          border: 1px solid #fde68a;
         }
 
         &.status-review {
           background: #dbeafe;
           color: #1e40af;
+          border: 1px solid #bfdbfe;
         }
 
         &.status-approved {
           background: #d1fae5;
           color: #065f46;
+          border: 1px solid #a7f3d0;
         }
 
         &.status-rejected {
           background: #fee2e2;
           color: #991b1b;
+          border: 1px solid #fecaca;
         }
 
         &.status-changes {
           background: #fed7aa;
           color: #9a3412;
+          border: 1px solid #fdba74;
         }
       }
     }
@@ -241,25 +303,33 @@
           gap: $spacing-3;
 
           svg {
-            color: $text-muted;
+            color: #9ca3af;
             flex-shrink: 0;
-            margin-top: 2px;
+            margin-top: 3px;
+            width: 16px;
+            height: 16px;
+          }
+
+          div {
+            flex: 1;
           }
 
           .label {
             display: block;
             font-size: 11px;
-            color: $text-muted;
-            margin-bottom: $spacing-1;
+            color: #9ca3af;
+            margin-bottom: 4px;
             text-transform: uppercase;
-            letter-spacing: 0.03em;
+            letter-spacing: 0.05em;
+            font-weight: $font-weight-semibold;
           }
 
           .value {
             display: block;
-            font-size: $font-size-sm;
+            font-size: 14px;
             color: $text-primary;
-            font-weight: $font-weight-medium;
+            font-weight: $font-weight-semibold;
+            line-height: 1.4;
           }
         }
       }
@@ -268,11 +338,12 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: $spacing-3;
-        padding: $spacing-4;
-        background: $bg-secondary;
-        border-radius: $radius-md;
-        margin-bottom: $spacing-4;
+        gap: $spacing-4;
+        padding: $spacing-5;
+        background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+        border: 1px solid #e5e7eb;
+        border-radius: $radius-lg;
+        margin-bottom: $spacing-5;
 
         .classification-box {
           flex: 1;
@@ -281,23 +352,27 @@
           .label {
             display: block;
             font-size: 11px;
-            color: $text-muted;
-            margin-bottom: $spacing-2;
+            color: #6b7280;
+            margin-bottom: 6px;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.06em;
+            font-weight: $font-weight-bold;
           }
 
           .classification {
             display: block;
-            font-size: $font-size-sm;
+            font-size: 15px;
             color: $text-primary;
-            font-weight: $font-weight-semibold;
+            font-weight: $font-weight-bold;
+            line-height: 1.3;
           }
         }
 
         svg {
           color: $primary-green;
           flex-shrink: 0;
+          width: 20px;
+          height: 20px;
         }
       }
 
@@ -305,32 +380,44 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+        padding-top: $spacing-2;
+        border-top: 1px solid #f3f4f6;
+        margin-top: $spacing-1;
 
         .date-info {
           display: flex;
           align-items: center;
           gap: $spacing-2;
           font-size: 12px;
-          color: $text-muted;
+          color: #6b7280;
+          font-weight: $font-weight-medium;
 
           svg {
-            color: $text-muted;
+            color: #9ca3af;
+            width: 14px;
+            height: 14px;
           }
         }
 
         .btn-view {
           display: flex;
           align-items: center;
-          gap: $spacing-1;
+          gap: 6px;
           background: none;
           border: none;
           color: $primary-green;
-          font-size: $font-size-sm;
-          font-weight: $font-weight-medium;
+          font-size: 14px;
+          font-weight: $font-weight-semibold;
           cursor: pointer;
           padding: $spacing-2 $spacing-3;
           border-radius: $radius-md;
-          transition: all 0.2s ease;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+          svg {
+            width: 14px;
+            height: 14px;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          }
 
           &:hover {
             background: rgba($primary-green, 0.1);
