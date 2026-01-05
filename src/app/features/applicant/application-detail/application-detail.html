@@ -1,0 +1,357 @@
+<app-applicant-layout>
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Loading application details...</p>
+  </div>
+
+  <!-- Application Details -->
+  <div *ngIf="!isLoading && application" class="detail-container">
+    <!-- Header Section -->
+    <div class="detail-header">
+      <button class="btn-back" (click)="goBack()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
+        Back to Applications
+      </button>
+
+      <div class="header-content">
+        <div class="header-left">
+          <h1>{{ application.roadName }}</h1>
+          <p class="reference">{{ application.referenceNumber }}</p>
+          <span class="status-badge" [class]="getStatusClass(application.status)">
+            {{ getStatusLabel(application.status) }}
+          </span>
+        </div>
+        <div class="header-actions">
+          <button class="btn-secondary">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7 10 12 15 17 10"/>
+              <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            Download Report
+          </button>
+          <button class="btn-primary">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+            </svg>
+            Edit Application
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab Navigation -->
+    <div class="tabs">
+      <button
+        class="tab"
+        [class.active]="activeTab === 'overview'"
+        (click)="setActiveTab('overview')"
+      >
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="16" x2="12" y2="12"/>
+          <line x1="12" y1="8" x2="12.01" y2="8"/>
+        </svg>
+        Overview
+      </button>
+      <button
+        class="tab"
+        [class.active]="activeTab === 'workflow'"
+        (click)="setActiveTab('workflow')"
+      >
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+        </svg>
+        Approval Workflow
+      </button>
+      <button
+        class="tab"
+        [class.active]="activeTab === 'documents'"
+        (click)="setActiveTab('documents')"
+      >
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+        </svg>
+        Documents
+      </button>
+      <button
+        class="tab"
+        [class.active]="activeTab === 'comments'"
+        (click)="setActiveTab('comments')"
+      >
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        </svg>
+        Comments
+        <span class="badge">{{ comments.length }}</span>
+      </button>
+    </div>
+
+    <!-- Tab Content -->
+    <div class="tab-content">
+      <!-- Overview Tab -->
+      <div *ngIf="activeTab === 'overview'" class="overview-content">
+        <div class="content-grid">
+          <!-- Application Information -->
+          <div class="info-card">
+            <div class="card-header">
+              <h3>Application Information</h3>
+            </div>
+            <div class="card-body">
+              <div class="info-group">
+                <label>Road Name</label>
+                <p>{{ application.roadName }}</p>
+              </div>
+              <div class="info-group">
+                <label>Reference Number</label>
+                <p>{{ application.referenceNumber }}</p>
+              </div>
+              <div class="info-group">
+                <label>Location</label>
+                <p>{{ application.district }}, {{ application.region }}</p>
+              </div>
+              <div class="info-group">
+                <label>Road Length</label>
+                <p>{{ application.roadLength }} km</p>
+              </div>
+              <div class="info-group">
+                <label>Submitted Date</label>
+                <p>{{ application.submittedDate | date:'medium' }}</p>
+              </div>
+              <div class="info-group">
+                <label>Last Updated</label>
+                <p>{{ application.lastUpdated | date:'medium' }}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Classification Details -->
+          <div class="info-card">
+            <div class="card-header">
+              <h3>Classification Details</h3>
+            </div>
+            <div class="card-body">
+              <div class="classification-visual">
+                <div class="class-item current">
+                  <span class="label">Current Classification</span>
+                  <span class="value">{{ application.currentClassification }}</span>
+                </div>
+                <div class="arrow">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="5" y1="12" x2="19" y2="12"/>
+                    <polyline points="12 5 19 12 12 19"/>
+                  </svg>
+                </div>
+                <div class="class-item proposed">
+                  <span class="label">Proposed Classification</span>
+                  <span class="value">{{ application.proposedClassification }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Description & Justification -->
+        <div class="info-card full-width">
+          <div class="card-header">
+            <h3>Description & Justification</h3>
+          </div>
+          <div class="card-body">
+            <div class="info-group">
+              <label>Description</label>
+              <p>{{ application.description }}</p>
+            </div>
+            <div class="info-group">
+              <label>Justification</label>
+              <p>{{ application.justification }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Workflow Tab -->
+      <div *ngIf="activeTab === 'workflow'" class="workflow-content">
+        <div class="workflow-card">
+          <div class="card-header">
+            <h3>Approval Timeline</h3>
+            <p>Track your application through each review stage</p>
+          </div>
+          <div class="card-body">
+            <div class="timeline">
+              <div
+                *ngFor="let step of approvalSteps; let i = index"
+                class="timeline-item"
+                [class.completed]="step.status === 'completed'"
+                [class.current]="step.status === 'current'"
+                [class.pending]="step.status === 'pending'"
+              >
+                <div class="timeline-marker">
+                  <div class="marker-dot">
+                    <svg *ngIf="step.status === 'completed'" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                      <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                    <span *ngIf="step.status === 'current'">{{ i + 1 }}</span>
+                    <span *ngIf="step.status === 'pending'">{{ i + 1 }}</span>
+                  </div>
+                  <div class="marker-line" *ngIf="i < approvalSteps.length - 1"></div>
+                </div>
+                <div class="timeline-content">
+                  <div class="content-header">
+                    <h4>{{ step.level }}</h4>
+                    <span class="status-label" [class]="step.status">
+                      {{ step.status === 'completed' ? 'Completed' : step.status === 'current' ? 'In Progress' : 'Pending' }}
+                    </span>
+                  </div>
+                  <p class="reviewer">{{ step.reviewer }}</p>
+                  <p class="date" *ngIf="step.date">{{ step.date | date:'medium' }}</p>
+                  <div class="decision" *ngIf="step.decision">
+                    <span class="decision-badge" [class]="step.decision">
+                      {{ step.decision === 'approved' ? 'Approved' : step.decision === 'rejected' ? 'Rejected' : 'Changes Required' }}
+                    </span>
+                  </div>
+                  <div class="step-comments" *ngIf="step.comments">
+                    <p>{{ step.comments }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Documents Tab -->
+      <div *ngIf="activeTab === 'documents'" class="documents-content">
+        <div class="documents-card">
+          <div class="card-header">
+            <h3>Application Documents</h3>
+            <button class="btn-primary-sm">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="17 8 12 3 7 8"/>
+                <line x1="12" y1="3" x2="12" y2="15"/>
+              </svg>
+              Upload Document
+            </button>
+          </div>
+          <div class="card-body">
+            <div class="documents-list">
+              <div class="document-item">
+                <div class="doc-icon pdf">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                  </svg>
+                </div>
+                <div class="doc-info">
+                  <h4>Traffic Assessment Report</h4>
+                  <p>2.4 MB • PDF • Uploaded Jan 3, 2026</p>
+                </div>
+                <button class="btn-icon" (click)="downloadDocument('traffic-report.pdf')">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                    <polyline points="7 10 12 15 17 10"/>
+                    <line x1="12" y1="15" x2="12" y2="3"/>
+                  </svg>
+                </button>
+              </div>
+
+              <div class="document-item">
+                <div class="doc-icon pdf">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                  </svg>
+                </div>
+                <div class="doc-info">
+                  <h4>Environmental Impact Assessment</h4>
+                  <p>3.1 MB • PDF • Uploaded Jan 3, 2026</p>
+                </div>
+                <button class="btn-icon" (click)="downloadDocument('environmental-assessment.pdf')">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                    <polyline points="7 10 12 15 17 10"/>
+                    <line x1="12" y1="15" x2="12" y2="3"/>
+                  </svg>
+                </button>
+              </div>
+
+              <div class="document-item">
+                <div class="doc-icon image">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                    <circle cx="8.5" cy="8.5" r="1.5"/>
+                    <polyline points="21 15 16 10 5 21"/>
+                  </svg>
+                </div>
+                <div class="doc-info">
+                  <h4>Road Condition Photos</h4>
+                  <p>5.2 MB • ZIP • Uploaded Jan 3, 2026</p>
+                </div>
+                <button class="btn-icon" (click)="downloadDocument('photos.zip')">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                    <polyline points="7 10 12 15 17 10"/>
+                    <line x1="12" y1="15" x2="12" y2="3"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Comments Tab -->
+      <div *ngIf="activeTab === 'comments'" class="comments-content">
+        <div class="comments-card">
+          <div class="card-header">
+            <h3>Discussion</h3>
+            <p>{{ comments.length }} {{ comments.length === 1 ? 'comment' : 'comments' }}</p>
+          </div>
+          <div class="card-body">
+            <!-- Comment List -->
+            <div class="comments-list">
+              <div *ngFor="let comment of comments" class="comment-item">
+                <div class="comment-avatar">
+                  {{ comment.author.charAt(0) }}
+                </div>
+                <div class="comment-content">
+                  <div class="comment-header">
+                    <div>
+                      <h4>{{ comment.author }}</h4>
+                      <span class="role">{{ comment.role }}</span>
+                    </div>
+                    <span class="timestamp">{{ comment.timestamp | date:'short' }}</span>
+                  </div>
+                  <p class="comment-text">{{ comment.content }}</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Add Comment Form -->
+            <div class="add-comment">
+              <div class="comment-avatar">You</div>
+              <div class="comment-form">
+                <textarea
+                  [(ngModel)]="newComment"
+                  placeholder="Add a comment..."
+                  rows="3"
+                ></textarea>
+                <div class="form-actions">
+                  <button class="btn-secondary-sm" (click)="newComment = ''">Cancel</button>
+                  <button class="btn-primary-sm" (click)="addComment()" [disabled]="!newComment.trim()">
+                    Post Comment
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</app-applicant-layout>

@@ -14,6 +14,16 @@ export const routes: Routes = [
     loadComponent: () => import('./features/applicant/dashboard/applicant-dashboard').then(m => m.ApplicantDashboardComponent),
     canActivate: [authGuard, roleGuard([UserRole.APPLICANT])]
   },
+  {
+    path: 'applicant/applications',
+    loadComponent: () => import('./features/applicant/applications/applications-list').then(m => m.ApplicationsListComponent),
+    canActivate: [authGuard, roleGuard([UserRole.APPLICANT])]
+  },
+  {
+    path: 'applicant/applications/:id',
+    loadComponent: () => import('./features/applicant/application-detail/application-detail').then(m => m.ApplicationDetailComponent),
+    canActivate: [authGuard, roleGuard([UserRole.APPLICANT])]
+  },
   // Reviewer Routes - District
   {
     path: 'reviewer/district/dashboard',

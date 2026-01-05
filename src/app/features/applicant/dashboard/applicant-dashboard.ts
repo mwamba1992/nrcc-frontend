@@ -44,4 +44,8 @@ export class ApplicantDashboardComponent implements OnInit {
   logout(): void {
     this.authService.logout();
   }
+
+  navigateToApplications(): void {
+    this.router.navigate(['/applicant/applications']);
+  }
 }
