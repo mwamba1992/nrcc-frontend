@@ -15,32 +15,37 @@
       </div>
     </div>
 
-    <!-- Progress Bar -->
+    <!-- Progress Stepper -->
     <div class="progress-section">
-      <div class="progress-header">
-        <span class="progress-text">Step {{ currentStep }} of {{ totalSteps }}</span>
-        <span class="progress-percentage">{{ getProgressPercentage() }}% Complete</span>
-      </div>
-      <div class="progress-bar">
-        <div class="progress-fill" [style.width.%]="getProgressPercentage()"></div>
-      </div>
-      <div class="progress-steps">
+      <div class="stepper-container">
         <div
-          *ngFor="let step of [1, 2, 3, 4]"
-          class="progress-step"
+          *ngFor="let step of [1, 2, 3, 4]; let i = index"
+          class="stepper-item"
           [class.completed]="isStepCompleted(step)"
           [class.active]="currentStep === step"
           (click)="goToStep(step)"
         >
-          <div class="step-circle">
-            <svg *ngIf="isStepCompleted(step)" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-              <polyline points="20 6 9 17 4 12"/>
-            </svg>
-            <span *ngIf="!isStepCompleted(step)">{{ step }}</span>
+          <div class="stepper-number">{{ step }}</div>
+          <div class="stepper-content">
+            <span class="stepper-label">
+              {{ step === 1 ? 'Basic Info' : step === 2 ? 'Classification' : step === 3 ? 'Details' : 'Documents' }}
+            </span>
           </div>
-          <span class="step-label">
-            {{ step === 1 ? 'Basic Info' : step === 2 ? 'Classification' : step === 3 ? 'Details' : 'Documents' }}
-          </span>
+        </div>
+      </div>
+
+      <div class="progress-info">
+        <div class="info-box">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="16" x2="12" y2="12"/>
+            <line x1="12" y1="8" x2="12.01" y2="8"/>
+          </svg>
+          <span class="info-title">Step {{ currentStep }}: {{ currentStep === 1 ? 'Basic Information' : currentStep === 2 ? 'Classification Details' : currentStep === 3 ? 'Application Details' : 'Upload Documents' }}</span>
+        </div>
+        <div class="progress-status">
+          <span class="step-text">Step {{ currentStep }} of {{ totalSteps }}</span>
+          <span class="progress-percentage">{{ getProgressPercentage() }}% Complete</span>
         </div>
       </div>
     </div>

@@ -1,0 +1,303 @@
+@import '../../../../styles/variables';
+@import '../../../../styles/mixins';
+
+// LAYOUT STRUCTURE
+.dashboard-container {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  grid-template-rows: auto 1fr;
+  min-height: 100vh;
+  background: #f8fafc;
+}
+
+// TOP HEADER - Full Width
+.top-header {
+  grid-column: 1 / -1;
+  background: $white;
+  border-bottom: 1px solid #e5e7eb;
+  padding: $spacing-4 $spacing-6;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: $spacing-4;
+
+    .menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: $text-secondary;
+      cursor: pointer;
+      padding: $spacing-2;
+      border-radius: $radius-md;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: #f3f4f6;
+        color: $primary-green;
+      }
+
+      @include respond-to-max('md') {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+
+    img {
+      width: 45px;
+      height: 45px;
+      object-fit: contain;
+    }
+
+    .header-brand {
+      display: flex;
+      align-items: center;
+      gap: $spacing-3;
+
+      h3 {
+        font-size: 17px;
+        font-weight: $font-weight-bold;
+        color: $text-primary;
+        margin: 0;
+        line-height: 1.2;
+      }
+
+      p {
+        font-size: 12px;
+        color: $text-secondary;
+        margin: 0;
+        font-weight: $font-weight-medium;
+      }
+    }
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: $spacing-4;
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: $spacing-3;
+      padding-right: $spacing-4;
+      border-right: 1px solid #e5e7eb;
+
+      .user-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, $primary-green 0%, darken($primary-green, 10%) 100%);
+        color: $white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: $font-weight-bold;
+        font-size: 14px;
+        text-transform: uppercase;
+        box-shadow: 0 2px 8px rgba($primary-green, 0.2);
+      }
+
+      .user-details {
+        h4 {
+          font-size: 14px;
+          font-weight: $font-weight-semibold;
+          color: $text-primary;
+          margin: 0 0 2px;
+        }
+
+        p {
+          font-size: 12px;
+          color: $text-secondary;
+          margin: 0;
+        }
+      }
+    }
+
+    .icon-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: $radius-md;
+      background: none;
+      border: none;
+      color: $text-secondary;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: #f3f4f6;
+        color: $primary-green;
+      }
+
+      &:active {
+        transform: scale(0.95);
+      }
+    }
+  }
+}
+
+// SIDEBAR NAVIGATION
+.sidebar {
+  background: $white;
+  border-right: 1px solid #e5e7eb;
+  padding: $spacing-6 0;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  position: sticky;
+  top: 73px;
+  height: calc(100vh - 73px);
+
+  @include respond-to-max('md') {
+    display: none;
+  }
+}
+
+// Quick Access Section
+.quick-access {
+  padding: 0 $spacing-5 $spacing-5;
+  border-bottom: 1px solid #f3f4f6;
+  margin-bottom: $spacing-5;
+
+  .quick-access-header {
+    display: flex;
+    align-items: flex-start;
+    gap: $spacing-3;
+
+    svg {
+      color: $primary-green;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    div {
+      h4 {
+        font-size: 14px;
+        font-weight: $font-weight-bold;
+        color: $text-primary;
+        margin: 0 0 4px;
+      }
+
+      p {
+        font-size: 12px;
+        color: $text-secondary;
+        margin: 0;
+        font-weight: $font-weight-medium;
+      }
+    }
+  }
+}
+
+// Navigation Menu
+.sidebar-nav {
+  flex: 1;
+  padding: 0 $spacing-4;
+
+  .nav-section {
+    margin-bottom: $spacing-5;
+
+    h5 {
+      font-size: 11px;
+      font-weight: $font-weight-bold;
+      color: #9ca3af;
+      letter-spacing: 0.05em;
+      margin: 0 0 $spacing-3;
+      padding: 0 $spacing-3;
+      text-transform: uppercase;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: $spacing-3;
+      padding: $spacing-3 $spacing-3;
+      border-radius: $radius-md;
+      color: $text-secondary;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: $font-weight-medium;
+      transition: all 0.2s ease;
+      margin-bottom: $spacing-1;
+      cursor: pointer;
+
+      svg {
+        flex-shrink: 0;
+        color: #9ca3af;
+        transition: color 0.2s ease;
+      }
+
+      &:hover {
+        background: linear-gradient(135deg, rgba($primary-green, 0.08) 0%, rgba($primary-green, 0.05) 100%);
+        color: $primary-green;
+
+        svg {
+          color: $primary-green;
+        }
+      }
+
+      &.active {
+        background: linear-gradient(135deg, $primary-green 0%, darken($primary-green, 5%) 100%);
+        color: $white;
+        box-shadow: 0 2px 8px rgba($primary-green, 0.25);
+
+        svg {
+          color: $white;
+        }
+      }
+    }
+  }
+}
+
+// Help Section
+.sidebar-help {
+  padding: $spacing-4;
+  margin: 0 $spacing-4 $spacing-4;
+  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+  border-radius: $radius-lg;
+  border: 1px solid #bfdbfe;
+  display: flex;
+  align-items: flex-start;
+  gap: $spacing-3;
+
+  svg {
+    color: #3b82f6;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  div {
+    h5 {
+      font-size: 13px;
+      font-weight: $font-weight-bold;
+      color: #1e40af;
+      margin: 0 0 4px;
+    }
+
+    p {
+      font-size: 11px;
+      color: #3b82f6;
+      margin: 0;
+    }
+  }
+}
+
+// MAIN CONTENT AREA
+.main-content {
+  padding: $spacing-6;
+  overflow-y: auto;
+
+  @include respond-to-max('sm') {
+    padding: $spacing-5 $spacing-4;
+  }
+}

@@ -36,104 +36,158 @@
   margin-bottom: $spacing-8;
 }
 
-.progress-header {
+// STEPPER CONTAINER
+.stepper-container {
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: $spacing-3;
-
-  .progress-text {
-    font-size: $font-size-sm;
-    font-weight: $font-weight-medium;
-    color: #374151;
-  }
-
-  .progress-percentage {
-    font-size: $font-size-xs;
-    font-weight: $font-weight-medium;
-    color: #6b7280;
-  }
-}
-
-.progress-bar {
-  height: 4px;
-  background: #e5e7eb;
-  border-radius: 2px;
-  overflow: hidden;
   margin-bottom: $spacing-6;
+  position: relative;
+  padding: 0 $spacing-2;
 
-  .progress-fill {
-    height: 100%;
-    background: $primary-green;
-    transition: width 0.3s ease;
+  &::before {
+    content: '';
+    position: absolute;
+    top: 18px;
+    left: 10%;
+    right: 10%;
+    height: 2px;
+    background: #e5e7eb;
+    z-index: 0;
   }
 }
 
-.progress-steps {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: $spacing-3;
-}
-
-.progress-step {
+.stepper-item {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: $spacing-2;
+  gap: $spacing-3;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all 0.2s ease;
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  max-width: 200px;
 
-  .step-circle {
-    width: 40px;
-    height: 40px;
+  &:not(:last-child) {
+    margin-right: $spacing-4;
+  }
+
+  .stepper-number {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
     border-radius: 50%;
-    border: 2px solid #d1d5db;
-    background: $white;
+    background: #f3f4f6;
+    color: #9ca3af;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: $font-size-sm;
-    font-weight: $font-weight-semibold;
-    color: #9ca3af;
+    font-size: 14px;
+    font-weight: $font-weight-bold;
     transition: all 0.2s ease;
-
-    svg {
-      color: $white;
-      width: 16px;
-      height: 16px;
-    }
+    border: 2px solid transparent;
   }
 
-  .step-label {
-    font-size: $font-size-xs;
-    font-weight: $font-weight-medium;
-    color: #6b7280;
-    text-align: center;
-    transition: all 0.15s ease;
+  .stepper-content {
+    .stepper-label {
+      font-size: 13px;
+      font-weight: $font-weight-medium;
+      color: #9ca3af;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
   }
 
   &.completed {
-    .step-circle {
+    .stepper-number {
       background: $primary-green;
-      border-color: $primary-green;
       color: $white;
+      border-color: $primary-green;
     }
 
-    .step-label {
+    .stepper-content .stepper-label {
       color: #374151;
     }
   }
 
   &.active {
-    .step-circle {
+    .stepper-number {
       background: $primary-green;
-      border-color: $primary-green;
       color: $white;
+      border-color: $primary-green;
+      box-shadow: 0 0 0 4px rgba($primary-green, 0.15);
     }
 
-    .step-label {
-      color: #111827;
+    .stepper-content .stepper-label {
+      color: $primary-green;
+      font-weight: $font-weight-bold;
+    }
+  }
+
+  &:hover:not(.active) {
+    .stepper-number {
+      border-color: $primary-green;
+      transform: scale(1.05);
+    }
+
+    .stepper-content .stepper-label {
+      color: #4b5563;
+    }
+  }
+}
+
+// PROGRESS INFO BOX
+.progress-info {
+  padding: $spacing-4 $spacing-5;
+  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+  border-radius: $radius-lg;
+  border-left: 4px solid #3b82f6;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-6;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: $spacing-3;
+  }
+
+  .info-box {
+    display: flex;
+    align-items: center;
+    gap: $spacing-3;
+
+    svg {
+      color: #3b82f6;
+      flex-shrink: 0;
+    }
+
+    .info-title {
+      font-size: 14px;
       font-weight: $font-weight-semibold;
+      color: #1e40af;
+    }
+  }
+
+  .progress-status {
+    display: flex;
+    align-items: center;
+    gap: $spacing-4;
+
+    .step-text {
+      font-size: 13px;
+      font-weight: $font-weight-medium;
+      color: #374151;
+    }
+
+    .progress-percentage {
+      font-size: 12px;
+      font-weight: $font-weight-semibold;
+      color: #6b7280;
+      padding: 4px 10px;
+      background: rgba(255, 255, 255, 0.7);
+      border-radius: 12px;
     }
   }
 }

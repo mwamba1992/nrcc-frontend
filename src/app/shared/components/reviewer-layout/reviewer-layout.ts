@@ -1,27 +1,24 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { User, UserRole } from '../../../core/models/user.model';
-import { ReviewerLayoutComponent } from '../../../shared/components/reviewer-layout/reviewer-layout';
 
 @Component({
-  selector: 'app-reviewer-dashboard',
+  selector: 'app-reviewer-layout',
   standalone: true,
-  imports: [CommonModule, ReviewerLayoutComponent],
-  templateUrl: './reviewer-dashboard.html',
-  styleUrl: './reviewer-dashboard.scss'
+  imports: [CommonModule, RouterModule],
+  templateUrl: './reviewer-layout.html',
+  styleUrl: './reviewer-layout.scss'
 })
-export class ReviewerDashboardComponent implements OnInit {
+export class ReviewerLayoutComponent {
   currentUser: User | null = null;
   reviewerLevel: string = '';
 
   constructor(
     private authService: AuthService,
     private router: Router
-  ) {}
-
-  ngOnInit(): void {
+  ) {
     this.currentUser = this.authService.currentUser();
     this.setReviewerLevel();
   }
@@ -50,5 +47,13 @@ export class ReviewerDashboardComponent implements OnInit {
 
   logout(): void {
     this.authService.logout();
+  }
+
+  navigateToDashboard(): void {
+    this.router.navigate(['/reviewer/dashboard']);
+  }
+
+  navigateToQueue(): void {
+    this.router.navigate(['/reviewer/applications-queue']);
   }
 }

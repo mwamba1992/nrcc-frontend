@@ -96,13 +96,13 @@
     <div class="tab-content">
       <!-- Overview Tab -->
       <div *ngIf="activeTab === 'overview'" class="overview-content">
-        <div class="content-grid">
-          <!-- Application Information -->
-          <div class="info-card">
-            <div class="card-header">
-              <h3>Application Information</h3>
-            </div>
-            <div class="card-body">
+        <!-- Application Information - Full Width -->
+        <div class="info-card full-width">
+          <div class="card-header">
+            <h3>Application Information</h3>
+          </div>
+          <div class="card-body">
+            <div class="info-grid">
               <div class="info-group">
                 <div class="info-icon">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -176,28 +176,39 @@
                 </div>
               </div>
             </div>
-          </div>
 
-          <!-- Classification Details -->
-          <div class="info-card">
-            <div class="card-header">
-              <h3>Classification Details</h3>
-            </div>
-            <div class="card-body">
-              <div class="classification-visual">
-                <div class="class-item current">
-                  <span class="label">Current Classification</span>
-                  <span class="value">{{ application.currentClassification }}</span>
+            <!-- Classification Details -->
+            <div class="classification-visual">
+              <h4 class="classification-title">Classification Change</h4>
+              <div class="classification-wrapper">
+                <div class="class-box current">
+                  <div class="class-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                      <path d="M9 11l3 3L22 4"/>
+                      <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+                    </svg>
+                  </div>
+                  <span class="class-label">Current Classification</span>
+                  <span class="class-value">{{ application.currentClassification }}</span>
+                  <span class="status-tag">From</span>
                 </div>
-                <div class="arrow">
-                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+
+                <div class="arrow-divider">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                     <line x1="5" y1="12" x2="19" y2="12"/>
                     <polyline points="12 5 19 12 12 19"/>
                   </svg>
                 </div>
-                <div class="class-item proposed">
-                  <span class="label">Proposed Classification</span>
-                  <span class="value">{{ application.proposedClassification }}</span>
+
+                <div class="class-box proposed">
+                  <div class="class-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                      <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                  </div>
+                  <span class="class-label">Proposed Classification</span>
+                  <span class="class-value">{{ application.proposedClassification }}</span>
+                  <span class="status-tag">To</span>
                 </div>
               </div>
             </div>
