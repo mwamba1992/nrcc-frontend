@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild, ElementRef, AfterViewInit, OnChanges, SimpleChanges, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Chart, ChartConfiguration, registerables } from 'chart.js';
 
@@ -22,22 +22,36 @@ export interface ChartData {
   templateUrl: './line-chart.html',
   styleUrl: './line-chart.scss'
 })
-export class LineChartComponent implements OnInit, AfterViewInit {
+export class LineChartComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
   @Input() data!: ChartData;
   @Input() height: string = '300px';
   @Input() title: string = '';
   @ViewChild('chartCanvas', { static: false }) chartCanvas!: ElementRef<HTMLCanvasElement>;
 
   private chart?: Chart;
+  private viewInitialized = false;
 
   ngOnInit(): void {}
 
   ngAfterViewInit(): void {
+    this.viewInitialized = true;
     this.createChart();
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['data'] && this.viewInitialized && this.data && this.data.labels.length > 0) {
+      // Recreate chart when data changes
+      if (this.chart) {
+        this.chart.destroy();
+      }
+      this.createChart();
+    }
+  }
+
   private createChart(): void {
-    if (!this.chartCanvas) return;
+    if (!this.chartCanvas || !this.data || this.data.labels.length === 0) {
+      return;
+    }
 
     const ctx = this.chartCanvas.nativeElement.getContext('2d');
     if (!ctx) return;

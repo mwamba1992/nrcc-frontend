@@ -93,7 +93,9 @@ export class ReviewerDashboardComponent implements OnInit {
 
   loadDashboardData(): void {
     // Simulate API call with mock data
+    console.log('Loading dashboard data...');
     setTimeout(() => {
+      console.log('Data loaded, setting stats...');
       this.stats = {
         pending: 23,
         approved: 45,
@@ -180,6 +182,8 @@ export class ReviewerDashboardComponent implements OnInit {
         }
       ];
 
+      console.log('Chart data:', this.chartData);
+      console.log('Setting isLoading to false');
       this.isLoading = false;
     }, 800);
   }
