@@ -6,6 +6,9 @@
   padding: $spacing-6;
   border: 1px solid #e5e7eb;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 
   .chart-title {
     font-size: 18px;
@@ -13,10 +16,14 @@
     color: $text-primary;
     margin: 0 0 $spacing-5;
     letter-spacing: -0.01em;
+    flex-shrink: 0;
   }
 
   .chart-wrapper {
     position: relative;
     width: 100%;
+    flex: 1;
+    display: flex;
+    align-items: center;
   }
 }

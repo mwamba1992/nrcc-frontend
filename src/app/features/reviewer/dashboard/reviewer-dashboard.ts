@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
@@ -60,7 +60,8 @@ export class ReviewerDashboardComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -163,28 +164,13 @@ export class ReviewerDashboardComponent implements OnInit {
           description: 'Forwarded to regional level',
           user: 'You',
           timestamp: new Date(Date.now() - 1000 * 60 * 60 * 4)
-        },
-        {
-          id: '4',
-          type: 'submitted',
-          title: 'New application received',
-          description: 'Application #RF-2024-004 submitted',
-          user: 'Michael Johnson',
-          timestamp: new Date(Date.now() - 1000 * 60 * 60 * 6)
-        },
-        {
-          id: '5',
-          type: 'comment',
-          title: 'Comment added to application',
-          description: 'Additional documentation requested',
-          user: 'Sarah Williams',
-          timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24)
         }
       ];
 
       console.log('Chart data:', this.chartData);
       console.log('Setting isLoading to false');
       this.isLoading = false;
+      this.cdr.detectChanges();
     }, 800);
   }
 

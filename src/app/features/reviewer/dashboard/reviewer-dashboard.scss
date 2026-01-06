@@ -116,109 +116,155 @@
 
   .stat-card {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     gap: $spacing-4;
-    padding: $spacing-6;
-    background: $white;
-    border: 1.5px solid #e5e7eb;
-    border-radius: $radius-xl;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: $spacing-5;
+    border-radius: $radius-lg;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
     position: relative;
     overflow: hidden;
-
-    // Subtle gradient overlay
-    &::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(135deg, transparent 0%, rgba(0, 0, 0, 0.01) 100%);
-      pointer-events: none;
-    }
+    border: 1px solid #e5e7eb;
+    background: $white;
 
     &:hover {
-      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.08);
-      transform: translateY(-4px);
-      border-color: rgba($primary-green, 0.3);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      transform: translateY(-1px);
+    }
 
-      .stat-icon {
-        transform: scale(1.1) rotate(3deg);
+    // Pending card - Blue theme
+    &.pending-card {
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 3px;
+        background: #3b82f6;
+      }
+
+      .card-icon {
+        background: rgba(59, 130, 246, 0.1);
+        color: #3b82f6;
       }
     }
 
-    .stat-icon {
-      width: 64px;
-      height: 64px;
+    // Approved card - Purple theme
+    &.approved-card {
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 3px;
+        background: #8b5cf6;
+      }
+
+      .card-icon {
+        background: rgba(139, 92, 246, 0.1);
+        color: #8b5cf6;
+      }
+    }
+
+    // Total card - Green theme
+    &.total-card {
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 3px;
+        background: #10b981;
+      }
+
+      .card-icon {
+        background: rgba(16, 185, 129, 0.1);
+        color: #10b981;
+      }
+    }
+
+    .card-icon {
+      width: 48px;
+      height: 48px;
       @include flex-center;
       border-radius: $radius-lg;
       flex-shrink: 0;
-      transition: transform 0.3s ease;
+
+      svg {
+        width: 24px;
+        height: 24px;
+      }
     }
 
-    // Pending card - Blue
-    &.pending-card .stat-icon {
-      background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(37, 99, 235, 0.15) 100%);
-      color: #3b82f6;
-    }
-
-    // Approved card - Green
-    &.approved-card .stat-icon {
-      background: linear-gradient(135deg, rgba($primary-green, 0.1) 0%, rgba($primary-green, 0.15) 100%);
-      color: $primary-green;
-    }
-
-    // Reviewed card - Orange
-    &.reviewed-card .stat-icon {
-      background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(217, 119, 6, 0.15) 100%);
-      color: #f59e0b;
-    }
-
-    // Total card - Gray
-    &.total-card .stat-icon {
-      background: linear-gradient(135deg, rgba(107, 114, 128, 0.1) 0%, rgba(75, 85, 99, 0.15) 100%);
-      color: #6b7280;
-    }
-
-    .stat-info {
+    .card-body {
       flex: 1;
+      min-width: 0;
 
       h3 {
-        font-size: 36px;
+        font-size: 24px;
         font-weight: $font-weight-bold;
-        color: $text-primary;
-        margin: 0 0 4px;
+        color: #111827;
+        margin: 0 0 2px;
         line-height: 1;
         letter-spacing: -0.02em;
       }
 
       p {
-        font-size: 14px;
-        color: $text-secondary;
-        margin: 0 0 6px;
+        font-size: 12px;
+        color: #6b7280;
+        margin: 0 0 2px;
         font-weight: $font-weight-medium;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
       }
 
-      .stat-trend {
-        display: inline-block;
+      .card-subtitle {
+        display: block;
         font-size: 12px;
-        font-weight: $font-weight-semibold;
-        padding: 4px 8px;
-        border-radius: $radius-sm;
-        background: rgba(#10b981, 0.1);
-        color: #10b981;
+        color: #9ca3af;
+        font-weight: $font-weight-normal;
+        line-height: 1.3;
+      }
+    }
 
-        &.positive {
-          background: rgba(#10b981, 0.1);
-          color: #10b981;
-        }
+    .card-trend {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      padding: 4px 8px;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: $font-weight-semibold;
+      flex-shrink: 0;
 
-        &.negative {
-          background: rgba(#ef4444, 0.1);
-          color: #ef4444;
+      &.positive {
+        background: rgba(16, 185, 129, 0.1);
+        color: #059669;
+
+        svg {
+          color: #059669;
         }
+      }
+
+      &.negative {
+        background: rgba(239, 68, 68, 0.1);
+        color: #dc2626;
+
+        svg {
+          transform: rotate(180deg);
+        }
+      }
+
+      svg {
+        width: 12px;
+        height: 12px;
+      }
+
+      span {
+        line-height: 1;
       }
     }
   }
@@ -279,7 +325,7 @@
   // Dashboard Grid for Charts
   .dashboard-grid {
     display: grid;
-    grid-template-columns: 1.5fr 1fr;
+    grid-template-columns: 1fr 1fr;
     gap: $spacing-6;
     margin-bottom: $spacing-10;
 
@@ -289,7 +335,17 @@
 
     .chart-section,
     .activity-section {
-      min-height: 360px;
+      height: 440px;
+      display: flex;
+      flex-direction: column;
+
+      // Make the timeline component fill the available space
+      app-activity-timeline,
+      app-line-chart {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+      }
     }
   }
 

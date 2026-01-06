@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
@@ -57,7 +57,8 @@ export class ApplicantDashboardComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -139,6 +140,7 @@ export class ApplicantDashboardComponent implements OnInit {
       ];
 
       this.isLoading = false;
+      this.cdr.detectChanges();
     }, 600);
   }
 

@@ -38,58 +38,47 @@
       <!-- Stats Cards -->
       <div class="stats-grid" *ngIf="!isLoading">
         <div class="stat-card pending-card">
-          <div class="stat-icon">
+          <div class="card-icon">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="12" cy="12" r="10"/>
               <polyline points="12 6 12 12 16 14"/>
             </svg>
           </div>
-          <div class="stat-info">
+          <div class="card-body">
             <h3>{{ stats.pending }}</h3>
             <p>Pending Review</p>
-            <span class="stat-trend positive" *ngIf="stats.trend.pending > 0">
-              +{{ stats.trend.pending }}% this month
-            </span>
+            <span class="card-subtitle">Applications awaiting review</span>
+          </div>
+          <div class="card-trend positive" *ngIf="stats.trend.pending > 0">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+              <polyline points="18 15 12 9 6 15"></polyline>
+            </svg>
+            <span>+{{ stats.trend.pending }}%</span>
           </div>
         </div>
 
         <div class="stat-card approved-card">
-          <div class="stat-icon">
+          <div class="card-icon">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
               <polyline points="22 4 12 14.01 9 11.01"/>
             </svg>
           </div>
-          <div class="stat-info">
+          <div class="card-body">
             <h3>{{ stats.approved }}</h3>
             <p>Approved This Month</p>
-            <span class="stat-trend positive" *ngIf="stats.trend.approved > 0">
-              +{{ stats.trend.approved }}% this month
-            </span>
+            <span class="card-subtitle">Successfully approved applications</span>
           </div>
-        </div>
-
-        <div class="stat-card reviewed-card">
-          <div class="stat-icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-              <polyline points="14 2 14 8 20 8"/>
-              <line x1="16" y1="13" x2="8" y2="13"/>
-              <line x1="16" y1="17" x2="8" y2="17"/>
-              <polyline points="10 9 9 9 8 9"/>
+          <div class="card-trend positive" *ngIf="stats.trend.approved > 0">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+              <polyline points="18 15 12 9 6 15"></polyline>
             </svg>
-          </div>
-          <div class="stat-info">
-            <h3>{{ stats.reviewed }}</h3>
-            <p>Reviewed This Month</p>
-            <span class="stat-trend positive" *ngIf="stats.trend.reviewed > 0">
-              +{{ stats.trend.reviewed }}% this month
-            </span>
+            <span>+{{ stats.trend.approved }}%</span>
           </div>
         </div>
 
         <div class="stat-card total-card">
-          <div class="stat-icon">
+          <div class="card-icon">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M3 3h7v7H3z"/>
               <path d="M14 3h7v7h-7z"/>
@@ -97,86 +86,25 @@
               <path d="M3 14h7v7H3z"/>
             </svg>
           </div>
-          <div class="stat-info">
+          <div class="card-body">
             <h3>{{ stats.total }}</h3>
             <p>Total Applications</p>
+            <span class="card-subtitle">{{ stats.reviewed }} applications reviewed</span>
+          </div>
+          <div class="card-trend positive" *ngIf="stats.trend.reviewed > 0">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+              <polyline points="18 15 12 9 6 15"></polyline>
+            </svg>
+            <span>+{{ stats.trend.reviewed }}%</span>
           </div>
         </div>
       </div>
 
       <!-- Skeleton Loaders for Stats -->
       <div class="stats-grid" *ngIf="isLoading">
-        <app-skeleton-loader type="card" [count]="1" height="120px"></app-skeleton-loader>
-        <app-skeleton-loader type="card" [count]="1" height="120px"></app-skeleton-loader>
-        <app-skeleton-loader type="card" [count]="1" height="120px"></app-skeleton-loader>
-        <app-skeleton-loader type="card" [count]="1" height="120px"></app-skeleton-loader>
-      </div>
-
-      <!-- Performance Metrics -->
-      <div class="metrics-row" *ngIf="!isLoading">
-        <div class="metric-card">
-          <div class="metric-label">Avg Review Time</div>
-          <div class="metric-value">{{ stats.avgReviewTime }}</div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-label">SLA Compliance</div>
-          <div class="metric-value">{{ stats.slaCompliance }}%</div>
-          <div class="metric-progress">
-            <div class="progress-bar" [style.width.%]="stats.slaCompliance"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Quick Actions -->
-      <div class="quick-actions">
-        <h3>Quick Actions</h3>
-        <div class="actions-grid">
-          <button class="action-card">
-            <div class="action-icon green">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                <polyline points="14 2 14 8 20 8"/>
-              </svg>
-            </div>
-            <h4>Review Applications</h4>
-            <p>View and process pending applications</p>
-          </button>
-
-          <button class="action-card">
-            <div class="action-icon blue">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="11" cy="11" r="8"/>
-                <path d="m21 21-4.35-4.35"/>
-              </svg>
-            </div>
-            <h4>Search Applications</h4>
-            <p>Find specific applications by ID or location</p>
-          </button>
-
-          <button class="action-card">
-            <div class="action-icon purple">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="12" y1="1" x2="12" y2="23"/>
-                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
-              </svg>
-            </div>
-            <h4>Reports</h4>
-            <p>Generate and view statistical reports</p>
-          </button>
-
-          <button class="action-card">
-            <div class="action-icon orange">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect x="3" y="3" width="7" height="7"/>
-                <rect x="14" y="3" width="7" height="7"/>
-                <rect x="14" y="14" width="7" height="7"/>
-                <rect x="3" y="14" width="7" height="7"/>
-              </svg>
-            </div>
-            <h4>Dashboard Settings</h4>
-            <p>Configure your reviewer preferences</p>
-          </button>
-        </div>
+        <app-skeleton-loader type="card" [count]="1" height="88px"></app-skeleton-loader>
+        <app-skeleton-loader type="card" [count]="1" height="88px"></app-skeleton-loader>
+        <app-skeleton-loader type="card" [count]="1" height="88px"></app-skeleton-loader>
       </div>
 
       <!-- Data Visualization Section -->

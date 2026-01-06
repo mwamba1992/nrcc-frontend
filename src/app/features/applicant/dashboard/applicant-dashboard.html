@@ -10,80 +10,80 @@
     <!-- Statistics Cards -->
     <div class="stats-container" *ngIf="!isLoading">
       <div class="stat-card blue">
-        <div class="stat-header">
-          <h4>Total Applications</h4>
-          <div class="stat-icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-              <polyline points="14 2 14 8 20 8"/>
-            </svg>
-          </div>
-        </div>
-        <h2>{{ stats.total }}</h2>
-        <div class="stat-change positive" *ngIf="stats.trend.total > 0">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
-            <polyline points="17 6 23 6 23 12"/>
+        <div class="card-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
           </svg>
-          <span>+{{ stats.trend.total }}% from last month</span>
+        </div>
+        <div class="card-body">
+          <h3>{{ stats.total }}</h3>
+          <p>Total Applications</p>
+          <span class="card-subtitle">All submitted applications</span>
+        </div>
+        <div class="card-trend positive" *ngIf="stats.trend.total > 0">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+            <polyline points="18 15 12 9 6 15"></polyline>
+          </svg>
+          <span>+{{ stats.trend.total }}%</span>
         </div>
       </div>
 
       <div class="stat-card green">
-        <div class="stat-header">
-          <h4>Amount Paid</h4>
-          <div class="stat-icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <line x1="12" y1="1" x2="12" y2="23"/>
-              <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
-            </svg>
-          </div>
+        <div class="card-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="1" x2="12" y2="23"/>
+            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+          </svg>
         </div>
-        <h2>TZS {{ stats.amountPaid | number }}</h2>
-        <div class="stat-change">
-          <span>Total fees paid</span>
+        <div class="card-body">
+          <h3>{{ stats.amountPaid | number }}</h3>
+          <p>Amount Paid (TZS)</p>
+          <span class="card-subtitle">Total fees paid</span>
         </div>
       </div>
 
-      <div class="stat-card gray">
-        <div class="stat-header">
-          <h4>Approved</h4>
-          <div class="stat-icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-              <polyline points="22 4 12 14.01 9 11.01"/>
-            </svg>
-          </div>
+      <div class="stat-card purple">
+        <div class="card-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+            <polyline points="22 4 12 14.01 9 11.01"/>
+          </svg>
         </div>
-        <h2>{{ stats.approved }}</h2>
-        <div class="stat-change positive" *ngIf="stats.trend.approved > 0">
-          <span>+{{ stats.trend.approved }}% success rate</span>
+        <div class="card-body">
+          <h3>{{ stats.approved }}</h3>
+          <p>Approved</p>
+          <span class="card-subtitle">Successfully approved</span>
+        </div>
+        <div class="card-trend positive" *ngIf="stats.trend.approved > 0">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+            <polyline points="18 15 12 9 6 15"></polyline>
+          </svg>
+          <span>+{{ stats.trend.approved }}%</span>
         </div>
       </div>
 
       <div class="stat-card orange">
-        <div class="stat-header">
-          <h4>In Review</h4>
-          <div class="stat-icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10"/>
-              <polyline points="12 6 12 12 16 14"/>
-            </svg>
-          </div>
+        <div class="card-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <polyline points="12 6 12 12 16 14"/>
+          </svg>
         </div>
-        <h2>{{ stats.inReview }}</h2>
-        <div class="stat-change">
-          <span>Under review</span>
+        <div class="card-body">
+          <h3>{{ stats.inReview }}</h3>
+          <p>In Review</p>
+          <span class="card-subtitle">Currently under review</span>
         </div>
       </div>
     </div>
 
     <!-- Skeleton Loaders for Stats -->
     <div class="stats-container" *ngIf="isLoading">
-      <app-skeleton-loader type="card" [count]="1" height="140px"></app-skeleton-loader>
-      <app-skeleton-loader type="card" [count]="1" height="140px"></app-skeleton-loader>
-      <app-skeleton-loader type="card" [count]="1" height="140px"></app-skeleton-loader>
-      <app-skeleton-loader type="card" [count]="1" height="140px"></app-skeleton-loader>
+      <app-skeleton-loader type="card" [count]="1" height="88px"></app-skeleton-loader>
+      <app-skeleton-loader type="card" [count]="1" height="88px"></app-skeleton-loader>
+      <app-skeleton-loader type="card" [count]="1" height="88px"></app-skeleton-loader>
+      <app-skeleton-loader type="card" [count]="1" height="88px"></app-skeleton-loader>
     </div>
 
     <!-- Data Visualization Section -->
