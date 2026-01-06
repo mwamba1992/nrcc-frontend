@@ -1,0 +1,36 @@
+<div class="activity-timeline">
+  <div class="timeline-header">
+    <h3>{{ title }}</h3>
+  </div>
+
+  <div class="timeline-list" *ngIf="activities.length > 0">
+    <div *ngFor="let activity of displayActivities; let last = last"
+         class="timeline-item"
+         [class.last-item]="last">
+
+      <div class="timeline-marker" [attr.data-type]="getColorForType(activity.type)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path [attr.d]="getIconForType(activity.type)"/>
+        </svg>
+      </div>
+
+      <div class="timeline-content">
+        <div class="timeline-title">{{ activity.title }}</div>
+        <div class="timeline-description" *ngIf="activity.description">
+          {{ activity.description }}
+        </div>
+        <div class="timeline-meta">
+          <span class="timeline-user" *ngIf="activity.user">{{ activity.user }}</span>
+          <span class="timeline-time">{{ getTimeAgo(activity.timestamp) }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="empty-state" *ngIf="activities.length === 0">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+    </svg>
+    <p>No recent activity</p>
+  </div>
+</div>

@@ -8,7 +8,7 @@
     </div>
 
     <!-- Statistics Cards -->
-    <div class="stats-container">
+    <div class="stats-container" *ngIf="!isLoading">
       <div class="stat-card blue">
         <div class="stat-header">
           <h4>Total Applications</h4>
@@ -20,12 +20,12 @@
           </div>
         </div>
         <h2>{{ stats.total }}</h2>
-        <div class="stat-change positive">
+        <div class="stat-change positive" *ngIf="stats.trend.total > 0">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
             <polyline points="17 6 23 6 23 12"/>
           </svg>
-          <span>New submission</span>
+          <span>+{{ stats.trend.total }}% from last month</span>
         </div>
       </div>
 
@@ -41,13 +41,13 @@
         </div>
         <h2>TZS {{ stats.amountPaid | number }}</h2>
         <div class="stat-change">
-          <span>Payment processing</span>
+          <span>Total fees paid</span>
         </div>
       </div>
 
       <div class="stat-card gray">
         <div class="stat-header">
-          <h4>Licenses Issued</h4>
+          <h4>Approved</h4>
           <div class="stat-icon">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
@@ -56,14 +56,14 @@
           </div>
         </div>
         <h2>{{ stats.approved }}</h2>
-        <div class="stat-change">
-          <span>All time approved</span>
+        <div class="stat-change positive" *ngIf="stats.trend.approved > 0">
+          <span>+{{ stats.trend.approved }}% success rate</span>
         </div>
       </div>
 
       <div class="stat-card orange">
         <div class="stat-header">
-          <h4>Pending Reviews</h4>
+          <h4>In Review</h4>
           <div class="stat-icon">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="12" cy="12" r="10"/>
@@ -71,11 +71,44 @@
             </svg>
           </div>
         </div>
-        <h2>{{ stats.pending }}</h2>
+        <h2>{{ stats.inReview }}</h2>
         <div class="stat-change">
-          <span>Awaiting review</span>
+          <span>Under review</span>
         </div>
       </div>
+    </div>
+
+    <!-- Skeleton Loaders for Stats -->
+    <div class="stats-container" *ngIf="isLoading">
+      <app-skeleton-loader type="card" [count]="1" height="140px"></app-skeleton-loader>
+      <app-skeleton-loader type="card" [count]="1" height="140px"></app-skeleton-loader>
+      <app-skeleton-loader type="card" [count]="1" height="140px"></app-skeleton-loader>
+      <app-skeleton-loader type="card" [count]="1" height="140px"></app-skeleton-loader>
+    </div>
+
+    <!-- Data Visualization Section -->
+    <div class="dashboard-grid" *ngIf="!isLoading">
+      <div class="chart-section">
+        <app-line-chart
+          [data]="chartData"
+          [title]="'Your Application History'"
+          [height]="'300px'">
+        </app-line-chart>
+      </div>
+
+      <div class="activity-section">
+        <app-activity-timeline
+          [activities]="recentActivities"
+          [title]="'Recent Activity'"
+          [maxItems]="5">
+        </app-activity-timeline>
+      </div>
+    </div>
+
+    <!-- Skeleton loaders for charts -->
+    <div class="dashboard-grid" *ngIf="isLoading">
+      <app-skeleton-loader type="chart" height="340px"></app-skeleton-loader>
+      <app-skeleton-loader type="chart" height="340px"></app-skeleton-loader>
     </div>
 
     <!-- Quick Actions -->

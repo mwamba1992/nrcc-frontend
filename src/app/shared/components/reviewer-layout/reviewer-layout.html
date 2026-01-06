@@ -18,6 +18,12 @@
       </div>
     </div>
     <div class="header-right">
+      <app-notification-center
+        [notifications]="notifications"
+        (notificationClick)="onNotificationClick($event)"
+        (markAsRead)="onMarkAsRead($event)"
+        (clearAll)="onClearAllNotifications()">
+      </app-notification-center>
       <div class="user-info">
         <div class="user-avatar">{{ currentUser?.firstName?.charAt(0) }}{{ currentUser?.lastName?.charAt(0) }}</div>
         <div class="user-details">
@@ -112,6 +118,29 @@
             <line x1="12" y1="15" x2="12" y2="3"/>
           </svg>
           <span>Export Reports</span>
+        </a>
+      </div>
+
+      <div class="nav-section">
+        <h5>SETTINGS</h5>
+        <a class="nav-link" style="cursor: pointer;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+          <span>User Management</span>
+        </a>
+        <a class="nav-link" style="cursor: pointer;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M12 1v6m0 6v6"/>
+            <path d="M1 12h6m6 0h6"/>
+            <path d="m4.93 4.93 4.24 4.24m5.66 5.66 4.24 4.24"/>
+            <path d="m19.07 4.93-4.24 4.24m-5.66 5.66-4.24 4.24"/>
+          </svg>
+          <span>System Settings</span>
         </a>
       </div>
     </nav>

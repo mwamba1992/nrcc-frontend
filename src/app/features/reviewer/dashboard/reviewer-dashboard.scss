@@ -3,226 +3,514 @@
 
 .reviewer-dashboard {
   .dashboard-content {
-    .welcome-section {
-      margin-bottom: $spacing-8;
+    padding: 0 $spacing-6 $spacing-6;
 
-      h2 {
-        font-size: $font-size-3xl;
-        font-weight: $font-weight-bold;
-        color: $text-primary;
-        margin: 0 0 $spacing-2;
+    // Welcome Banner with gradient
+    .welcome-banner {
+      background: linear-gradient(135deg, $primary-green 0%, darken($primary-green, 8%) 100%);
+      border-radius: $radius-xl;
+      padding: $spacing-8 $spacing-6;
+      margin: $spacing-6 0 $spacing-8;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba($primary-green, 0.25);
+
+      // Background pattern
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background-image:
+          repeating-linear-gradient(45deg, transparent, transparent 50px, rgba(255, 255, 255, 0.03) 50px, rgba(255, 255, 255, 0.03) 100px);
+        pointer-events: none;
       }
 
-      p {
-        font-size: $font-size-base;
-        color: $text-secondary;
-        margin: 0;
+      .banner-content {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: $spacing-6;
+
+        @include respond-to-max('md') {
+          flex-direction: column;
+          text-align: center;
+        }
       }
-    }
-  }
-}
 
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: $spacing-5;
-  margin-bottom: $spacing-10;
-}
+      .banner-text {
+        flex: 1;
 
-.stat-card {
-  display: flex;
-  align-items: center;
-  gap: $spacing-4;
-  padding: $spacing-5;
-  background: $white;
-  border: 1px solid $border-light;
-  border-radius: $radius-xl;
-  box-shadow: $shadow-sm;
-  transition: all 0.2s ease-out;
+        h1 {
+          font-size: 32px;
+          font-weight: $font-weight-bold;
+          color: $white;
+          margin: 0 0 $spacing-3;
+          letter-spacing: -0.02em;
 
-  &:hover {
-    box-shadow: $shadow-md;
-    transform: translateY(-2px);
-  }
-
-  .stat-icon {
-    width: 56px;
-    height: 56px;
-    @include flex-center;
-    border-radius: $radius-lg;
-    flex-shrink: 0;
-
-    &.pending {
-      background: rgba($primary-blue, 0.1);
-      color: $primary-blue;
-    }
-
-    &.approved {
-      background: rgba($primary-green, 0.1);
-      color: $primary-green;
-    }
-
-    &.review {
-      background: rgba($primary-gold, 0.1);
-      color: darken($primary-gold, 15%);
-    }
-
-    &.total {
-      background: rgba(#6c757d, 0.1);
-      color: #6c757d;
-    }
-  }
-
-  .stat-info {
-    h3 {
-      font-size: $font-size-3xl;
-      font-weight: $font-weight-bold;
-      color: $text-primary;
-      margin: 0 0 $spacing-1;
-      line-height: 1;
-    }
-
-    p {
-      font-size: $font-size-sm;
-      color: $text-secondary;
-      margin: 0;
-    }
-  }
-}
-
-.quick-actions {
-  margin-bottom: $spacing-10;
-
-  h3 {
-    font-size: $font-size-2xl;
-    font-weight: $font-weight-bold;
-    color: $text-primary;
-    margin: 0 0 $spacing-5;
-  }
-
-  .actions-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: $spacing-4;
-  }
-
-  .action-card {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: $spacing-3;
-    padding: $spacing-6;
-    background: $white;
-    border: 1px solid $border-light;
-    border-radius: $radius-xl;
-    cursor: pointer;
-    transition: all 0.2s ease-out;
-    text-align: left;
-
-    svg {
-      color: $primary-green;
-    }
-
-    h4 {
-      font-size: $font-size-lg;
-      font-weight: $font-weight-semibold;
-      color: $text-primary;
-      margin: 0;
-    }
-
-    p {
-      font-size: $font-size-sm;
-      color: $text-secondary;
-      margin: 0;
-      line-height: $line-height-relaxed;
-    }
-
-    &:hover {
-      border-color: $primary-green;
-      box-shadow: $shadow-lg;
-      transform: translateY(-2px);
-
-      svg {
-        transform: scale(1.1);
-      }
-    }
-  }
-}
-
-.recent-applications {
-  .section-header {
-    @include flex-between;
-    align-items: center;
-    margin-bottom: $spacing-5;
-    gap: $spacing-4;
-
-    @include respond-to-max('md') {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-
-    h3 {
-      font-size: $font-size-2xl;
-      font-weight: $font-weight-bold;
-      color: $text-primary;
-      margin: 0;
-    }
-
-    .filters {
-      display: flex;
-      gap: $spacing-2;
-
-      .filter-btn {
-        padding: $spacing-2 $spacing-4;
-        background: $white;
-        border: 1px solid $border-medium;
-        border-radius: $radius-md;
-        color: $text-secondary;
-        font-size: $font-size-sm;
-        font-weight: $font-weight-medium;
-        cursor: pointer;
-        transition: all 0.2s ease-out;
-
-        &:hover {
-          border-color: $primary-green;
-          color: $primary-green;
+          @include respond-to-max('md') {
+            font-size: 26px;
+          }
         }
 
-        &.active {
-          background: $primary-green;
-          border-color: $primary-green;
+        p {
+          font-size: 16px;
+          color: rgba($white, 0.95);
+          margin: 0 0 $spacing-5;
+          max-width: 600px;
+          line-height: 1.5;
+
+          @include respond-to-max('md') {
+            max-width: 100%;
+          }
+        }
+
+        .banner-stats {
+          display: flex;
+          gap: $spacing-6;
+          flex-wrap: wrap;
+
+          @include respond-to-max('md') {
+            justify-content: center;
+          }
+
+          .banner-stat-item {
+            display: flex;
+            align-items: center;
+            gap: $spacing-2;
+            color: rgba($white, 0.9);
+            font-size: 14px;
+            font-weight: $font-weight-medium;
+
+            svg {
+              flex-shrink: 0;
+            }
+          }
+        }
+      }
+
+      .banner-icon {
+        opacity: 0.2;
+
+        @include respond-to-max('md') {
+          display: none;
+        }
+
+        svg {
           color: $white;
         }
       }
     }
   }
 
-  .empty-state {
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: $spacing-5;
+    margin-bottom: $spacing-10;
+  }
+
+  .stat-card {
+    display: flex;
+    align-items: flex-start;
+    gap: $spacing-4;
+    padding: $spacing-6;
     background: $white;
-    border: 2px dashed $border-medium;
+    border: 1.5px solid #e5e7eb;
     border-radius: $radius-xl;
-    padding: $spacing-10 $spacing-6;
-    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
 
-    svg {
-      color: $text-muted;
-      margin-bottom: $spacing-4;
+    // Subtle gradient overlay
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, transparent 0%, rgba(0, 0, 0, 0.01) 100%);
+      pointer-events: none;
     }
 
-    h4 {
-      font-size: $font-size-xl;
+    &:hover {
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.08);
+      transform: translateY(-4px);
+      border-color: rgba($primary-green, 0.3);
+
+      .stat-icon {
+        transform: scale(1.1) rotate(3deg);
+      }
+    }
+
+    .stat-icon {
+      width: 64px;
+      height: 64px;
+      @include flex-center;
+      border-radius: $radius-lg;
+      flex-shrink: 0;
+      transition: transform 0.3s ease;
+    }
+
+    // Pending card - Blue
+    &.pending-card .stat-icon {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(37, 99, 235, 0.15) 100%);
+      color: #3b82f6;
+    }
+
+    // Approved card - Green
+    &.approved-card .stat-icon {
+      background: linear-gradient(135deg, rgba($primary-green, 0.1) 0%, rgba($primary-green, 0.15) 100%);
+      color: $primary-green;
+    }
+
+    // Reviewed card - Orange
+    &.reviewed-card .stat-icon {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(217, 119, 6, 0.15) 100%);
+      color: #f59e0b;
+    }
+
+    // Total card - Gray
+    &.total-card .stat-icon {
+      background: linear-gradient(135deg, rgba(107, 114, 128, 0.1) 0%, rgba(75, 85, 99, 0.15) 100%);
+      color: #6b7280;
+    }
+
+    .stat-info {
+      flex: 1;
+
+      h3 {
+        font-size: 36px;
+        font-weight: $font-weight-bold;
+        color: $text-primary;
+        margin: 0 0 4px;
+        line-height: 1;
+        letter-spacing: -0.02em;
+      }
+
+      p {
+        font-size: 14px;
+        color: $text-secondary;
+        margin: 0 0 6px;
+        font-weight: $font-weight-medium;
+      }
+
+      .stat-trend {
+        display: inline-block;
+        font-size: 12px;
+        font-weight: $font-weight-semibold;
+        padding: 4px 8px;
+        border-radius: $radius-sm;
+        background: rgba(#10b981, 0.1);
+        color: #10b981;
+
+        &.positive {
+          background: rgba(#10b981, 0.1);
+          color: #10b981;
+        }
+
+        &.negative {
+          background: rgba(#ef4444, 0.1);
+          color: #ef4444;
+        }
+      }
+    }
+  }
+
+  // Metrics Row
+  .metrics-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: $spacing-5;
+    margin-bottom: $spacing-10;
+  }
+
+  .metric-card {
+    background: $white;
+    border: 1.5px solid #e5e7eb;
+    border-radius: $radius-xl;
+    padding: $spacing-6;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    transition: all 0.3s ease;
+
+    &:hover {
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .metric-label {
+      font-size: 13px;
       font-weight: $font-weight-semibold;
-      color: $text-primary;
-      margin: 0 0 $spacing-2;
+      color: $text-secondary;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: $spacing-2;
     }
 
-    p {
-      font-size: $font-size-base;
-      color: $text-secondary;
-      margin: 0;
-      max-width: 400px;
-      margin-left: auto;
-      margin-right: auto;
+    .metric-value {
+      font-size: 28px;
+      font-weight: $font-weight-bold;
+      color: $text-primary;
+      margin-bottom: $spacing-3;
+      letter-spacing: -0.02em;
+    }
+
+    .metric-progress {
+      height: 6px;
+      background: #f3f4f6;
+      border-radius: 3px;
+      overflow: hidden;
+
+      .progress-bar {
+        height: 100%;
+        background: linear-gradient(90deg, $primary-green 0%, darken($primary-green, 10%) 100%);
+        border-radius: 3px;
+        transition: width 0.6s ease;
+      }
+    }
+  }
+
+  // Dashboard Grid for Charts
+  .dashboard-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: $spacing-6;
+    margin-bottom: $spacing-10;
+
+    @include respond-to-max('lg') {
+      grid-template-columns: 1fr;
+    }
+
+    .chart-section,
+    .activity-section {
+      min-height: 360px;
+    }
+  }
+
+  .quick-actions {
+    margin-bottom: $spacing-10;
+
+    h3 {
+      font-size: 22px;
+      font-weight: $font-weight-bold;
+      color: $text-primary;
+      margin: 0 0 $spacing-6;
+      letter-spacing: -0.01em;
+    }
+
+    .actions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: $spacing-5;
+    }
+
+    .action-card {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: $spacing-4;
+      padding: $spacing-6;
+      background: $white;
+      border: 1.5px solid #e5e7eb;
+      border-radius: $radius-xl;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      text-align: left;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, $primary-green 0%, darken($primary-green, 10%) 100%);
+        transform: scaleX(0);
+        transition: transform 0.3s ease;
+      }
+
+      .action-icon {
+        width: 64px;
+        height: 64px;
+        @include flex-center;
+        border-radius: $radius-lg;
+        transition: transform 0.3s ease;
+
+        &.green {
+          background: linear-gradient(135deg, rgba($primary-green, 0.1) 0%, rgba($primary-green, 0.15) 100%);
+          color: $primary-green;
+        }
+
+        &.blue {
+          background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(37, 99, 235, 0.15) 100%);
+          color: #3b82f6;
+        }
+
+        &.purple {
+          background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(124, 58, 237, 0.15) 100%);
+          color: #8b5cf6;
+        }
+
+        &.orange {
+          background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(217, 119, 6, 0.15) 100%);
+          color: #f59e0b;
+        }
+
+        svg {
+          transition: transform 0.3s ease;
+        }
+      }
+
+      h4 {
+        font-size: 17px;
+        font-weight: $font-weight-bold;
+        color: $text-primary;
+        margin: 0;
+        letter-spacing: -0.01em;
+      }
+
+      p {
+        font-size: 14px;
+        color: $text-secondary;
+        margin: 0;
+        line-height: 1.5;
+      }
+
+      &:hover {
+        border-color: rgba($primary-green, 0.4);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15), 0 4px 12px rgba($primary-green, 0.1);
+        transform: translateY(-6px);
+
+        &::before {
+          transform: scaleX(1);
+        }
+
+        .action-icon {
+          transform: scale(1.15);
+
+          svg {
+            transform: rotate(8deg);
+          }
+        }
+      }
+
+      &:active {
+        transform: translateY(-2px);
+      }
+    }
+  }
+
+  .recent-applications {
+    .section-header {
+      @include flex-between;
+      align-items: center;
+      margin-bottom: $spacing-6;
+      gap: $spacing-4;
+
+      @include respond-to-max('md') {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      h3 {
+        font-size: 22px;
+        font-weight: $font-weight-bold;
+        color: $text-primary;
+        margin: 0;
+        letter-spacing: -0.01em;
+      }
+
+      .filters {
+        display: flex;
+        gap: $spacing-2;
+
+        .filter-btn {
+          padding: 8px $spacing-4;
+          background: $white;
+          border: 1.5px solid #e5e7eb;
+          border-radius: $radius-lg;
+          color: #6b7280;
+          font-size: 13px;
+          font-weight: $font-weight-semibold;
+          cursor: pointer;
+          transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+          &:hover {
+            border-color: $primary-green;
+            color: $primary-green;
+            background: rgba($primary-green, 0.05);
+          }
+
+          &.active {
+            background: $primary-green;
+            border-color: $primary-green;
+            color: $white;
+            box-shadow: 0 2px 4px rgba($primary-green, 0.2);
+          }
+        }
+      }
+    }
+
+    .empty-state {
+      background: linear-gradient(135deg, #fafbfc 0%, #f8f9fa 100%);
+      border: 2px dashed #d1d5db;
+      border-radius: $radius-xl;
+      padding: $spacing-12 $spacing-6;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+
+      // Subtle pattern
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image:
+          radial-gradient(circle at 20% 50%, rgba($primary-green, 0.03) 0%, transparent 50%),
+          radial-gradient(circle at 80% 80%, rgba(59, 130, 246, 0.03) 0%, transparent 50%);
+        pointer-events: none;
+      }
+
+      svg {
+        color: #cbd5e1;
+        margin-bottom: $spacing-5;
+        position: relative;
+        z-index: 1;
+      }
+
+      h4 {
+        font-size: 20px;
+        font-weight: $font-weight-bold;
+        color: $text-primary;
+        margin: 0 0 $spacing-2;
+        letter-spacing: -0.01em;
+        position: relative;
+        z-index: 1;
+      }
+
+      p {
+        font-size: 15px;
+        color: $text-secondary;
+        margin: 0;
+        max-width: 400px;
+        margin-left: auto;
+        margin-right: auto;
+        line-height: 1.6;
+        position: relative;
+        z-index: 1;
+      }
     }
   }
 }

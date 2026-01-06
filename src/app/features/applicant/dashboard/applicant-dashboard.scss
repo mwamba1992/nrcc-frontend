@@ -253,6 +253,23 @@
   }
 }
 
+// DASHBOARD GRID FOR CHARTS
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: $spacing-6;
+  padding: 0 $spacing-6 $spacing-6;
+
+  @include respond-to-max('lg') {
+    grid-template-columns: 1fr;
+  }
+
+  .chart-section,
+  .activity-section {
+    min-height: 340px;
+  }
+}
+
 // BOTTOM SECTION
 .bottom-section {
   display: grid;

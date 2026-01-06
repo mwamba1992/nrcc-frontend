@@ -3,17 +3,19 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { User, UserRole } from '../../../core/models/user.model';
+import { NotificationCenterComponent, Notification } from '../notification-center/notification-center';
 
 @Component({
   selector: 'app-reviewer-layout',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, NotificationCenterComponent],
   templateUrl: './reviewer-layout.html',
   styleUrl: './reviewer-layout.scss'
 })
 export class ReviewerLayoutComponent {
   currentUser: User | null = null;
   reviewerLevel: string = '';
+  notifications: Notification[] = [];
 
   constructor(
     private authService: AuthService,
@@ -21,6 +23,7 @@ export class ReviewerLayoutComponent {
   ) {
     this.currentUser = this.authService.currentUser();
     this.setReviewerLevel();
+    this.loadNotifications();
   }
 
   setReviewerLevel(): void {
@@ -55,5 +58,51 @@ export class ReviewerLayoutComponent {
 
   navigateToQueue(): void {
     this.router.navigate(['/reviewer/applications-queue']);
+  }
+
+  loadNotifications(): void {
+    // Mock notifications - replace with actual API call
+    this.notifications = [
+      {
+        id: '1',
+        type: 'info',
+        title: 'New Application Submitted',
+        message: 'Application #RF-2024-005 has been submitted for review',
+        timestamp: new Date(Date.now() - 1000 * 60 * 15),
+        read: false
+      },
+      {
+        id: '2',
+        type: 'success',
+        title: 'Application Approved',
+        message: 'Your review for #RF-2024-003 has been approved',
+        timestamp: new Date(Date.now() - 1000 * 60 * 60 * 2),
+        read: false
+      },
+      {
+        id: '3',
+        type: 'warning',
+        title: 'Review Deadline Approaching',
+        message: 'Application #RF-2024-002 requires review within 24 hours',
+        timestamp: new Date(Date.now() - 1000 * 60 * 60 * 5),
+        read: true
+      }
+    ];
+  }
+
+  onNotificationClick(notification: Notification): void {
+    console.log('Notification clicked:', notification);
+    // Navigate to relevant page or show details
+  }
+
+  onMarkAsRead(notificationId: string): void {
+    const notification = this.notifications.find(n => n.id === notificationId);
+    if (notification) {
+      notification.read = true;
+    }
+  }
+
+  onClearAllNotifications(): void {
+    this.notifications = [];
   }
 }

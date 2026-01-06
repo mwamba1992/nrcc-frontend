@@ -1,0 +1,159 @@
+@import '../../../../styles/variables';
+@import '../../../../styles/mixins';
+
+.activity-timeline {
+  background: $white;
+  border-radius: $radius-xl;
+  padding: $spacing-6;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.timeline-header {
+  margin-bottom: $spacing-6;
+
+  h3 {
+    font-size: 18px;
+    font-weight: $font-weight-bold;
+    color: $text-primary;
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+}
+
+.timeline-list {
+  position: relative;
+}
+
+.timeline-item {
+  display: flex;
+  gap: $spacing-4;
+  position: relative;
+  padding-bottom: $spacing-5;
+
+  &:not(.last-item)::before {
+    content: '';
+    position: absolute;
+    left: 15px;
+    top: 32px;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(180deg, #e5e7eb 0%, transparent 100%);
+  }
+
+  &.last-item {
+    padding-bottom: 0;
+  }
+}
+
+.timeline-marker {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  @include flex-center;
+  border-radius: 50%;
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 0 0 4px $white;
+
+  &[data-type="blue"] {
+    background: rgba(#3b82f6, 0.15);
+    color: #3b82f6;
+  }
+
+  &[data-type="green"] {
+    background: rgba(#10b981, 0.15);
+    color: #10b981;
+  }
+
+  &[data-type="red"] {
+    background: rgba(#ef4444, 0.15);
+    color: #ef4444;
+  }
+
+  &[data-type="orange"] {
+    background: rgba(#f59e0b, 0.15);
+    color: #f59e0b;
+  }
+
+  &[data-type="purple"] {
+    background: rgba(#8b5cf6, 0.15);
+    color: #8b5cf6;
+  }
+
+  &[data-type="gray"] {
+    background: rgba(#6b7280, 0.15);
+    color: #6b7280;
+  }
+
+  &[data-type="teal"] {
+    background: rgba(#14b8a6, 0.15);
+    color: #14b8a6;
+  }
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.timeline-content {
+  flex: 1;
+  min-width: 0;
+  padding-top: 2px;
+
+  .timeline-title {
+    font-size: 14px;
+    font-weight: $font-weight-semibold;
+    color: $text-primary;
+    margin-bottom: 4px;
+    line-height: 1.4;
+  }
+
+  .timeline-description {
+    font-size: 13px;
+    color: $text-secondary;
+    margin-bottom: 6px;
+    line-height: 1.5;
+  }
+
+  .timeline-meta {
+    display: flex;
+    align-items: center;
+    gap: $spacing-2;
+    font-size: 12px;
+
+    .timeline-user {
+      color: $text-secondary;
+      font-weight: $font-weight-medium;
+
+      &::after {
+        content: '•';
+        margin-left: $spacing-2;
+        color: #d1d5db;
+      }
+    }
+
+    .timeline-time {
+      color: #9ca3af;
+    }
+  }
+}
+
+.empty-state {
+  @include flex-center;
+  flex-direction: column;
+  padding: $spacing-10 $spacing-6;
+  color: #9ca3af;
+
+  svg {
+    margin-bottom: $spacing-4;
+    opacity: 0.3;
+  }
+
+  p {
+    font-size: 14px;
+    color: $text-secondary;
+    margin: 0;
+  }
+}
