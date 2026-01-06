@@ -1,71 +1,19 @@
 @import '../../../../styles/variables';
 @import '../../../../styles/mixins';
 
-// WELCOME BANNER
-.welcome-banner {
-  background: linear-gradient(135deg, #166534 0%, #15803d 50%, #16a34a 100%);
-  margin: $spacing-6;
-  padding: $spacing-6;
-  border-radius: $radius-lg;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
-  position: relative;
-  overflow: hidden;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 400px;
-    height: 400px;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
-    border-radius: 50%;
-    transform: translate(30%, -30%);
-  }
-
-  @include respond-to-max('md') {
-    margin: $spacing-4;
-    padding: $spacing-5;
-  }
-
-  .welcome-content {
-    position: relative;
-    z-index: 2;
-
-    h1 {
-      font-size: 26px;
-      font-weight: $font-weight-bold;
-      margin: 0 0 $spacing-2;
-      color: $white;
-      letter-spacing: -0.01em;
-
-      @include respond-to-max('md') {
-        font-size: $font-size-xl;
-      }
-    }
-
-    p {
-      font-size: 14px;
-      margin: 0;
-      opacity: 0.95;
-      color: $white;
-      max-width: 700px;
-      line-height: 1.5;
-
-      @include respond-to-max('md') {
-        max-width: 100%;
-        font-size: 13px;
-      }
-    }
-  }
+// Add background to the entire dashboard
+:host {
+  display: block;
+  min-height: 100vh;
+  background: #f8fafc;
 }
 
 // STATISTICS CARDS
 .stats-container {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: $spacing-5;
-  padding: 0 $spacing-6 $spacing-6;
+  gap: $spacing-4;
+  padding: $spacing-5 $spacing-6 $spacing-6;
 
   .stat-card {
     display: flex;
@@ -243,10 +191,10 @@
 
 // SERVICES SECTION
 .services-section {
-  padding: 0 $spacing-6 $spacing-6;
+  padding: 0 $spacing-6 $spacing-5;
 
   .section-header {
-    margin-bottom: $spacing-5;
+    margin-bottom: $spacing-4;
 
     h3 {
       font-size: $font-size-lg;
@@ -333,8 +281,8 @@
 .dashboard-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: $spacing-6;
-  padding: 0 $spacing-6 $spacing-6;
+  gap: $spacing-5;
+  padding: 0 $spacing-6 $spacing-5;
 
   @include respond-to-max('lg') {
     grid-template-columns: 1fr;

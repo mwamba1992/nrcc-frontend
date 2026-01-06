@@ -1,12 +1,4 @@
 <app-applicant-layout>
-  <!-- Welcome Banner -->
-    <div class="welcome-banner">
-      <div class="welcome-content">
-        <h1>Welcome Back, {{ currentUser?.firstName || currentUser?.email }}!</h1>
-        <p>National Road Classification Commission Portal - Manage your road reclassification applications efficiently</p>
-      </div>
-    </div>
-
     <!-- Statistics Cards -->
     <div class="stats-container" *ngIf="!isLoading">
       <div class="stat-card blue">
