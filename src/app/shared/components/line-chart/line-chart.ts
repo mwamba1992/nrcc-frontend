@@ -67,55 +67,66 @@ export class LineChartComponent implements OnInit, AfterViewInit, OnChanges, OnD
             display: true,
             position: 'bottom',
             labels: {
-              usePointStyle: true,
-              padding: 15,
+              usePointStyle: false,  // Government style: use boxes, not circles
+              padding: 12,
               font: {
-                size: 12,
-                family: "'Inter', sans-serif"
-              }
+                size: 11,
+                family: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                weight: 500
+              },
+              color: '#475569'      // Government gray
             }
           },
           tooltip: {
             mode: 'index',
             intersect: false,
-            backgroundColor: 'rgba(0, 0, 0, 0.8)',
-            padding: 12,
-            cornerRadius: 8,
+            backgroundColor: '#1E293B',  // Government dark gray
+            padding: 10,
+            cornerRadius: 4,             // Minimal rounding
             titleFont: {
-              size: 13,
-              weight: 'bold'
+              size: 12,
+              weight: 600
             },
             bodyFont: {
-              size: 12
-            }
+              size: 11
+            },
+            borderColor: '#CBD5E1',
+            borderWidth: 0
           }
         },
         scales: {
           y: {
             beginAtZero: true,
             border: {
-              display: false
+              display: true,
+              color: '#E4E9F0'     // Government border
             },
             grid: {
-              color: 'rgba(0, 0, 0, 0.05)'
+              color: '#E4E9F0',    // Subtle grid lines
+              lineWidth: 1
             },
             ticks: {
               font: {
-                size: 11
-              }
+                size: 11,
+                family: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+              },
+              color: '#64748B'     // Government gray text
             }
           },
           x: {
             border: {
-              display: false
+              display: true,
+              color: '#E4E9F0'
             },
             grid: {
-              display: false
+              display: false       // Cleaner look
             },
             ticks: {
               font: {
-                size: 11
-              }
+                size: 11,
+                family: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+              },
+              color: '#64748B'
             }
           }
         },

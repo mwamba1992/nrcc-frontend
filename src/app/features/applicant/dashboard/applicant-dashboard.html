@@ -1,19 +1,19 @@
 <app-applicant-layout>
     <!-- Statistics Cards -->
-    <div class="stats-container" *ngIf="!isLoading">
-      <div class="stat-card blue">
-        <div class="card-icon">
+    <div class="stats-container" *ngIf="!isLoading" role="region" aria-label="Application statistics">
+      <div class="stat-card blue" role="article" aria-labelledby="stat-total">
+        <div class="card-icon" aria-hidden="true">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
             <polyline points="14 2 14 8 20 8"/>
           </svg>
         </div>
         <div class="card-body">
-          <h3>{{ stats.total }}</h3>
+          <h3 id="stat-total">{{ stats.total }}</h3>
           <p>Total Applications</p>
           <span class="card-subtitle">All submitted applications</span>
         </div>
-        <div class="card-trend positive" *ngIf="stats.trend.total > 0">
+        <div class="card-trend positive" *ngIf="stats.trend.total > 0" aria-hidden="true">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
             <polyline points="18 15 12 9 6 15"></polyline>
           </svg>
@@ -21,33 +21,33 @@
         </div>
       </div>
 
-      <div class="stat-card green">
-        <div class="card-icon">
+      <div class="stat-card green" role="article" aria-labelledby="stat-amount">
+        <div class="card-icon" aria-hidden="true">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <line x1="12" y1="1" x2="12" y2="23"/>
             <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
           </svg>
         </div>
         <div class="card-body">
-          <h3>{{ stats.amountPaid | number }}</h3>
+          <h3 id="stat-amount">{{ stats.amountPaid | number }}</h3>
           <p>Amount Paid (TZS)</p>
           <span class="card-subtitle">Total fees paid</span>
         </div>
       </div>
 
-      <div class="stat-card purple">
-        <div class="card-icon">
+      <div class="stat-card purple" role="article" aria-labelledby="stat-approved">
+        <div class="card-icon" aria-hidden="true">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
             <polyline points="22 4 12 14.01 9 11.01"/>
           </svg>
         </div>
         <div class="card-body">
-          <h3>{{ stats.approved }}</h3>
+          <h3 id="stat-approved">{{ stats.approved }}</h3>
           <p>Approved</p>
           <span class="card-subtitle">Successfully approved</span>
         </div>
-        <div class="card-trend positive" *ngIf="stats.trend.approved > 0">
+        <div class="card-trend positive" *ngIf="stats.trend.approved > 0" aria-hidden="true">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
             <polyline points="18 15 12 9 6 15"></polyline>
           </svg>
@@ -55,15 +55,15 @@
         </div>
       </div>
 
-      <div class="stat-card orange">
-        <div class="card-icon">
+      <div class="stat-card orange" role="article" aria-labelledby="stat-review">
+        <div class="card-icon" aria-hidden="true">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="12" cy="12" r="10"/>
             <polyline points="12 6 12 12 16 14"/>
           </svg>
         </div>
         <div class="card-body">
-          <h3>{{ stats.inReview }}</h3>
+          <h3 id="stat-review">{{ stats.inReview }}</h3>
           <p>In Review</p>
           <span class="card-subtitle">Currently under review</span>
         </div>
@@ -104,14 +104,14 @@
     </div>
 
     <!-- Quick Actions -->
-    <div class="services-section">
+    <div class="services-section" role="region" aria-labelledby="quick-actions-title">
       <div class="section-header">
-        <h3>Quick Actions</h3>
+        <h3 id="quick-actions-title">Quick Actions</h3>
       </div>
 
       <div class="services-grid">
-        <div class="service-card" (click)="navigateToApplications()">
-          <div class="service-icon blue-icon">
+        <button class="service-card" (click)="navigateToApplications()" aria-label="Submit new road reclassification application">
+          <div class="service-icon blue-icon" aria-hidden="true">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
               <polyline points="14 2 14 8 20 8"/>
@@ -121,10 +121,10 @@
             <h4>New Application</h4>
             <p>Submit road reclassification request</p>
           </div>
-        </div>
+        </button>
 
-        <div class="service-card" (click)="navigateToApplications()">
-          <div class="service-icon green-icon">
+        <button class="service-card" (click)="navigateToApplications()" aria-label="View all submitted applications">
+          <div class="service-icon green-icon" aria-hidden="true">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
               <polyline points="14 2 14 8 20 8"/>
@@ -134,10 +134,10 @@
             <h4>My Applications</h4>
             <p>View all submitted applications</p>
           </div>
-        </div>
+        </button>
 
-        <div class="service-card">
-          <div class="service-icon purple-icon">
+        <button class="service-card" aria-label="Track application status and progress">
+          <div class="service-icon purple-icon" aria-hidden="true">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="11" cy="11" r="8"/>
               <path d="m21 21-4.35-4.35"/>
@@ -147,10 +147,10 @@
             <h4>Track Status</h4>
             <p>Monitor application progress</p>
           </div>
-        </div>
+        </button>
 
-        <div class="service-card">
-          <div class="service-icon orange-icon">
+        <button class="service-card" aria-label="Get help and support for your applications">
+          <div class="service-icon orange-icon" aria-hidden="true">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
             </svg>
@@ -159,7 +159,7 @@
             <h4>Help & Support</h4>
             <p>Get assistance and guidelines</p>
           </div>
-        </div>
+        </button>
       </div>
     </div>
 </app-applicant-layout>

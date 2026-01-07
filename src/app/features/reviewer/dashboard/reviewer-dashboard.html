@@ -1,21 +1,21 @@
 <app-reviewer-layout>
   <div class="reviewer-dashboard">
     <div class="dashboard-content">
-      <!-- Stats Cards -->
-      <div class="stats-grid" *ngIf="!isLoading">
-        <div class="stat-card pending-card">
-          <div class="card-icon">
+      <!-- Stats Cards - INSTITUTIONAL DESIGN (Applicant Style) -->
+      <div class="stats-grid" *ngIf="!isLoading" role="region" aria-label="Application statistics">
+        <div class="stat-card orange" role="article" aria-labelledby="pending-title">
+          <div class="card-icon" aria-hidden="true">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="12" cy="12" r="10"/>
               <polyline points="12 6 12 12 16 14"/>
             </svg>
           </div>
           <div class="card-body">
-            <h3>{{ stats.pending }}</h3>
+            <h3 id="pending-title">{{ stats.pending }}</h3>
             <p>Pending Review</p>
-            <span class="card-subtitle">Applications awaiting review</span>
+            <span class="card-subtitle">Awaiting action</span>
           </div>
-          <div class="card-trend positive" *ngIf="stats.trend.pending > 0">
+          <div class="card-trend positive" *ngIf="stats.trend.pending > 0" aria-hidden="true">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
               <polyline points="18 15 12 9 6 15"></polyline>
             </svg>
@@ -23,19 +23,19 @@
           </div>
         </div>
 
-        <div class="stat-card approved-card">
-          <div class="card-icon">
+        <div class="stat-card green" role="article" aria-labelledby="approved-title">
+          <div class="card-icon" aria-hidden="true">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
               <polyline points="22 4 12 14.01 9 11.01"/>
             </svg>
           </div>
           <div class="card-body">
-            <h3>{{ stats.approved }}</h3>
-            <p>Approved This Month</p>
-            <span class="card-subtitle">Successfully approved applications</span>
+            <h3 id="approved-title">{{ stats.approved }}</h3>
+            <p>Approved</p>
+            <span class="card-subtitle">This month</span>
           </div>
-          <div class="card-trend positive" *ngIf="stats.trend.approved > 0">
+          <div class="card-trend positive" *ngIf="stats.trend.approved > 0" aria-hidden="true">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
               <polyline points="18 15 12 9 6 15"></polyline>
             </svg>
@@ -43,8 +43,28 @@
           </div>
         </div>
 
-        <div class="stat-card total-card">
-          <div class="card-icon">
+        <div class="stat-card purple" role="article" aria-labelledby="reviewed-title">
+          <div class="card-icon" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 11l3 3L22 4"/>
+              <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+            </svg>
+          </div>
+          <div class="card-body">
+            <h3 id="reviewed-title">{{ stats.reviewed }}</h3>
+            <p>Reviewed</p>
+            <span class="card-subtitle">Total reviewed</span>
+          </div>
+          <div class="card-trend positive" *ngIf="stats.trend.reviewed > 0" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+              <polyline points="18 15 12 9 6 15"></polyline>
+            </svg>
+            <span>+{{ stats.trend.reviewed }}%</span>
+          </div>
+        </div>
+
+        <div class="stat-card blue" role="article" aria-labelledby="total-title">
+          <div class="card-icon" aria-hidden="true">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M3 3h7v7H3z"/>
               <path d="M14 3h7v7h-7z"/>
@@ -53,21 +73,16 @@
             </svg>
           </div>
           <div class="card-body">
-            <h3>{{ stats.total }}</h3>
+            <h3 id="total-title">{{ stats.total }}</h3>
             <p>Total Applications</p>
-            <span class="card-subtitle">{{ stats.reviewed }} applications reviewed</span>
-          </div>
-          <div class="card-trend positive" *ngIf="stats.trend.reviewed > 0">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-              <polyline points="18 15 12 9 6 15"></polyline>
-            </svg>
-            <span>+{{ stats.trend.reviewed }}%</span>
+            <span class="card-subtitle">SLA: {{ stats.slaCompliance }}% | Avg: {{ stats.avgReviewTime }}</span>
           </div>
         </div>
       </div>
 
       <!-- Skeleton Loaders for Stats -->
       <div class="stats-grid" *ngIf="isLoading">
+        <app-skeleton-loader type="card" [count]="1" height="88px"></app-skeleton-loader>
         <app-skeleton-loader type="card" [count]="1" height="88px"></app-skeleton-loader>
         <app-skeleton-loader type="card" [count]="1" height="88px"></app-skeleton-loader>
         <app-skeleton-loader type="card" [count]="1" height="88px"></app-skeleton-loader>
@@ -98,34 +113,53 @@
         <app-skeleton-loader type="chart" height="360px"></app-skeleton-loader>
       </div>
 
-      <!-- Applications Queue -->
-      <div class="recent-applications">
+      <!-- Applications Queue - HIGH-DENSITY TABLE -->
+      <div class="recent-applications" role="region" aria-labelledby="queue-title">
         <div class="section-header">
-          <h3>Applications Queue</h3>
-          <div class="filters">
-            <button class="filter-btn" [class.active]="activeFilter === 'all'" (click)="setFilter('all')">All</button>
-            <button class="filter-btn" [class.active]="activeFilter === 'pending'" (click)="setFilter('pending')">Pending</button>
-            <button class="filter-btn" [class.active]="activeFilter === 'reviewed'" (click)="setFilter('reviewed')">Reviewed</button>
-            <button class="filter-btn" [class.active]="activeFilter === 'forwarded'" (click)="setFilter('forwarded')">Forwarded</button>
+          <h3 id="queue-title">APPLICATIONS QUEUE</h3>
+          <div class="filters" role="group" aria-label="Filter applications by status">
+            <button
+              class="filter-btn"
+              [class.active]="activeFilter === 'all'"
+              (click)="setFilter('all')"
+              [attr.aria-pressed]="activeFilter === 'all'"
+              aria-label="Show all applications">
+              All
+            </button>
+            <button
+              class="filter-btn"
+              [class.active]="activeFilter === 'pending'"
+              (click)="setFilter('pending')"
+              [attr.aria-pressed]="activeFilter === 'pending'"
+              aria-label="Show pending applications">
+              Pending
+            </button>
+            <button
+              class="filter-btn"
+              [class.active]="activeFilter === 'reviewed'"
+              (click)="setFilter('reviewed')"
+              [attr.aria-pressed]="activeFilter === 'reviewed'"
+              aria-label="Show reviewed applications">
+              Reviewed
+            </button>
+            <button
+              class="filter-btn"
+              [class.active]="activeFilter === 'forwarded'"
+              (click)="setFilter('forwarded')"
+              [attr.aria-pressed]="activeFilter === 'forwarded'"
+              aria-label="Show forwarded applications">
+              Forwarded
+            </button>
           </div>
         </div>
 
-        <div class="empty-state" *ngIf="!isLoading">
-          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-            <polyline points="14 2 14 8 20 8"/>
-            <line x1="16" y1="13" x2="8" y2="13"/>
-            <line x1="16" y1="17" x2="8" y2="17"/>
-            <polyline points="10 9 9 9 8 9"/>
-          </svg>
-          <h4>No applications in queue</h4>
-          <p>You're all caught up! New applications will appear here when submitted.</p>
-        </div>
-
-        <!-- Skeleton for table -->
-        <div *ngIf="isLoading">
-          <app-skeleton-loader type="table-row" [count]="5"></app-skeleton-loader>
-        </div>
+        <!-- High-Density Applications Table -->
+        <app-applications-table
+          [applications]="applications"
+          [isLoading]="isLoading"
+          (viewApplication)="onViewApplication($event)"
+          (reviewApplication)="onReviewApplication($event)">
+        </app-applications-table>
       </div>
     </div>
   </div>

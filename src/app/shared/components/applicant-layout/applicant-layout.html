@@ -1,23 +1,22 @@
 <div class="dashboard-container">
+  <!-- Government Gold Stripe -->
+  <div class="gov-stripe" aria-hidden="true"></div>
+
   <!-- Top Header - Full Width -->
-  <header class="top-header">
+  <header class="top-header" role="banner">
     <div class="header-left">
-      <button class="menu-toggle">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <line x1="3" y1="12" x2="21" y2="12"/>
-          <line x1="3" y1="6" x2="21" y2="6"/>
-          <line x1="3" y1="18" x2="21" y2="18"/>
-        </svg>
-      </button>
-      <img src="/emblem.png" alt="Tanzania Coat of Arms">
-      <div class="header-brand">
-        <div>
+      <div class="logo-section">
+        <div class="logo-circle">
+          <img src="/emblem.png" alt="Tanzania Coat of Arms">
+        </div>
+        <div class="header-brand">
           <h3>Roads Fund Board</h3>
-          <p>NRCC Portal</p>
+          <p>NRCC Applicant Portal</p>
         </div>
       </div>
     </div>
     <div class="header-right">
+      <app-global-search (search)="onSearch($event)"></app-global-search>
       <div class="user-info">
         <div class="user-avatar">{{ currentUser?.firstName?.charAt(0) }}{{ currentUser?.lastName?.charAt(0) }}</div>
         <div class="user-details">
@@ -41,23 +40,16 @@
     </div>
   </header>
 
+  <!-- Breadcrumbs - Below Header -->
+  <app-breadcrumbs [breadcrumbs]="breadcrumbs"></app-breadcrumbs>
+
   <!-- Sidebar Navigation - Below Header -->
   <aside class="sidebar">
 
-    <!-- Quick Access -->
-    <div class="quick-access">
-      <div class="quick-access-header">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <rect x="3" y="3" width="7" height="7"/>
-          <rect x="14" y="3" width="7" height="7"/>
-          <rect x="14" y="14" width="7" height="7"/>
-          <rect x="3" y="14" width="7" height="7"/>
-        </svg>
-        <div>
-          <h4>Quick Access</h4>
-          <p>Portal Services</p>
-        </div>
-      </div>
+    <!-- Sidebar Header - Government Official Style -->
+    <div class="sidebar-header">
+      <h4>Applicant Portal</h4>
+      <p>Application Services</p>
     </div>
 
     <!-- Navigation Menu -->
@@ -98,17 +90,16 @@
       </div>
     </nav>
 
-    <!-- Help Section -->
-    <div class="sidebar-help">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <circle cx="12" cy="12" r="10"/>
-        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
-        <line x1="12" y1="17" x2="12.01" y2="17"/>
-      </svg>
-      <div>
-        <h5>Need Help?</h5>
-        <p>Contact support for assistance</p>
-      </div>
+    <!-- Footer Section - Government Official Style -->
+    <div class="sidebar-footer">
+      <a href="#" class="footer-link">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+        </svg>
+        Documentation
+      </a>
+      <p class="footer-text">Technical Support | Help Desk</p>
     </div>
   </aside>
 

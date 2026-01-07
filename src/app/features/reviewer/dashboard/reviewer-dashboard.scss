@@ -1,16 +1,17 @@
 @import '../../../../styles/variables';
 @import '../../../../styles/mixins';
 
-// Add background to the entire dashboard
+// Government-grade dashboard styling
 :host {
   display: block;
   min-height: 100vh;
-  background: #f8fafc;
+  background: $gray-50;  // Cooler, more professional
 }
 
 .reviewer-dashboard {
   .dashboard-content {
-    padding: $spacing-5 $spacing-6 $spacing-6;
+    padding: $spacing-6 $spacing-6 $spacing-6;
+    padding-top: $spacing-8; // Extra spacing from top for better visibility
   }
 
   .stats-grid {
@@ -18,6 +19,15 @@
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     gap: $spacing-4;
     margin-bottom: $spacing-8;
+    margin-top: 0; // Ensure proper spacing from top
+
+    @include respond-to-max('xl') {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @include respond-to-max('sm') {
+      grid-template-columns: 1fr;
+    }
   }
 
   .stat-card {
@@ -25,83 +35,69 @@
     align-items: center;
     gap: $spacing-4;
     padding: $spacing-5;
-    border-radius: $radius-lg;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    transition: all 0.2s ease;
+    border-radius: $radius-md;  // Reduced from $radius-lg
+    box-shadow: $shadow-sm;     // Minimal shadow
+    transition: none;           // Remove animations
     position: relative;
     overflow: hidden;
-    border: 1px solid #e5e7eb;
+    border: 1px solid $gray-200;
     background: $white;
 
     &:hover {
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-      transform: translateY(-1px);
+      // Minimal hover effect - government style
+      border-color: $gray-300;
     }
 
-    // Pending card - Blue theme
-    &.pending-card {
-      &::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        width: 3px;
-        background: #3b82f6;
-      }
+    // Blue card - Navy theme
+    &.blue {
+      border-left: 3px solid $gov-navy;
 
       .card-icon {
-        background: rgba(59, 130, 246, 0.1);
-        color: #3b82f6;
+        background: rgba($gov-navy, 0.08);
+        color: $gov-navy;
       }
     }
 
-    // Approved card - Purple theme
-    &.approved-card {
-      &::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        width: 3px;
-        background: #8b5cf6;
-      }
+    // Green card - Muted green
+    &.green {
+      border-left: 3px solid $gov-success;
 
       .card-icon {
-        background: rgba(139, 92, 246, 0.1);
-        color: #8b5cf6;
+        background: rgba($gov-success, 0.08);
+        color: $gov-success;
       }
     }
 
-    // Total card - Green theme
-    &.total-card {
-      &::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        width: 3px;
-        background: #10b981;
-      }
+    // Purple card - Info blue
+    &.purple {
+      border-left: 3px solid $gov-info;
 
       .card-icon {
-        background: rgba(16, 185, 129, 0.1);
-        color: #10b981;
+        background: rgba($gov-info, 0.08);
+        color: $gov-info;
+      }
+    }
+
+    // Orange card - Warning
+    &.orange {
+      border-left: 3px solid $gov-warning;
+
+      .card-icon {
+        background: rgba($gov-warning, 0.08);
+        color: $gov-warning;
       }
     }
 
     .card-icon {
-      width: 48px;
-      height: 48px;
+      width: 40px;               // Reduced from 48px
+      height: 40px;
       @include flex-center;
-      border-radius: $radius-lg;
+      border-radius: $radius-sm;  // Minimal rounding
       flex-shrink: 0;
 
       svg {
-        width: 24px;
-        height: 24px;
+        width: 20px;             // Reduced from 24px
+        height: 20px;
       }
     }
 
@@ -110,67 +106,66 @@
       min-width: 0;
 
       h3 {
-        font-size: 24px;
+        font-size: 28px;         // Larger, more authoritative
         font-weight: $font-weight-bold;
-        color: #111827;
-        margin: 0 0 2px;
+        color: $gray-900;
+        margin: 0 0 4px;
         line-height: 1;
-        letter-spacing: -0.02em;
+        letter-spacing: normal;  // Remove negative spacing
+        font-variant-numeric: tabular-nums;  // Government-style numbers
       }
 
       p {
-        font-size: 12px;
-        color: #6b7280;
-        margin: 0 0 2px;
-        font-weight: $font-weight-medium;
+        font-size: 11px;
+        color: $gray-600;
+        margin: 0;
+        font-weight: $font-weight-semibold;
         text-transform: uppercase;
-        letter-spacing: 0.04em;
+        letter-spacing: 0.5px;   // Standard government spacing
       }
 
       .card-subtitle {
         display: block;
-        font-size: 12px;
-        color: #9ca3af;
+        font-size: 11px;
+        color: $gray-500;
+        margin-top: 4px;
         font-weight: $font-weight-normal;
-        line-height: 1.3;
+        text-transform: none;
+        letter-spacing: normal;
       }
     }
 
     .card-trend {
-      display: flex;
+      display: inline-flex;
       align-items: center;
-      gap: 3px;
-      padding: 4px 8px;
-      border-radius: 10px;
-      font-size: 11px;
+      gap: 4px;
+      font-size: 12px;
       font-weight: $font-weight-semibold;
-      flex-shrink: 0;
+      padding: 3px 8px;
+      border-radius: $radius-sm;
 
       &.positive {
-        background: rgba(16, 185, 129, 0.1);
-        color: #059669;
+        color: $gov-success;
+        background: rgba($gov-success, 0.1);
 
         svg {
-          color: #059669;
+          color: $gov-success;
         }
       }
 
       &.negative {
-        background: rgba(239, 68, 68, 0.1);
-        color: #dc2626;
+        color: $gov-danger;
+        background: rgba($gov-danger, 0.1);
 
         svg {
-          transform: rotate(180deg);
+          color: $gov-danger;
         }
       }
 
       svg {
+        flex-shrink: 0;
         width: 12px;
         height: 12px;
-      }
-
-      span {
-        line-height: 1;
       }
     }
   }
@@ -185,45 +180,46 @@
 
   .metric-card {
     background: $white;
-    border: 1.5px solid #e5e7eb;
-    border-radius: $radius-xl;
-    padding: $spacing-6;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-    transition: all 0.3s ease;
+    border: 1px solid $gray-200;
+    border-radius: $radius-md;  // Reduced from $radius-xl
+    padding: $spacing-5;
+    box-shadow: $shadow-sm;     // Minimal shadow
+    transition: none;           // Remove animations
 
     &:hover {
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-      transform: translateY(-2px);
+      // Minimal government-style hover
+      border-color: $gray-300;
     }
 
     .metric-label {
-      font-size: 13px;
+      font-size: 11px;
       font-weight: $font-weight-semibold;
-      color: $text-secondary;
+      color: $gray-600;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.5px;   // Standard spacing
       margin-bottom: $spacing-2;
     }
 
     .metric-value {
-      font-size: 28px;
+      font-size: 32px;         // Larger, authoritative
       font-weight: $font-weight-bold;
-      color: $text-primary;
+      color: $gray-900;
       margin-bottom: $spacing-3;
-      letter-spacing: -0.02em;
+      letter-spacing: normal;  // Remove negative spacing
+      font-variant-numeric: tabular-nums;
     }
 
     .metric-progress {
-      height: 6px;
-      background: #f3f4f6;
-      border-radius: 3px;
+      height: 8px;             // Slightly thicker for visibility
+      background: $gray-100;
+      border-radius: $radius-sm;
       overflow: hidden;
 
       .progress-bar {
         height: 100%;
-        background: linear-gradient(90deg, $primary-green 0%, darken($primary-green, 10%) 100%);
-        border-radius: 3px;
-        transition: width 0.6s ease;
+        background: $gov-success;  // Flat color, no gradient
+        border-radius: 0;
+        transition: none;       // No animation
       }
     }
   }
@@ -276,97 +272,90 @@
       display: flex;
       flex-direction: column;
       align-items: flex-start;
-      gap: $spacing-4;
-      padding: $spacing-6;
+      gap: $spacing-3;
+      padding: $spacing-5;
+      min-height: 44px;          // WCAG touch target minimum
       background: $white;
-      border: 1.5px solid #e5e7eb;
-      border-radius: $radius-xl;
+      border: 1px solid $gray-200;
+      border-radius: $radius-md;
       cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: none;
       text-align: left;
       position: relative;
       overflow: hidden;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
-
-      &::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 4px;
-        background: linear-gradient(90deg, $primary-green 0%, darken($primary-green, 10%) 100%);
-        transform: scaleX(0);
-        transition: transform 0.3s ease;
-      }
+      box-shadow: $shadow-sm;
 
       .action-icon {
-        width: 64px;
-        height: 64px;
+        width: 48px;             // Reduced from 64px
+        height: 48px;
         @include flex-center;
-        border-radius: $radius-lg;
-        transition: transform 0.3s ease;
+        border-radius: $radius-sm;
+        transition: none;
 
         &.green {
-          background: linear-gradient(135deg, rgba($primary-green, 0.1) 0%, rgba($primary-green, 0.15) 100%);
-          color: $primary-green;
+          background: rgba($gov-success, 0.08);
+          color: $gov-success;
         }
 
         &.blue {
-          background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(37, 99, 235, 0.15) 100%);
-          color: #3b82f6;
+          background: rgba($gov-navy, 0.08);
+          color: $gov-navy;
         }
 
         &.purple {
-          background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(124, 58, 237, 0.15) 100%);
-          color: #8b5cf6;
+          background: rgba($gov-info, 0.08);
+          color: $gov-info;
         }
 
         &.orange {
-          background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(217, 119, 6, 0.15) 100%);
-          color: #f59e0b;
+          background: rgba($gov-warning, 0.08);
+          color: $gov-warning;
         }
 
         svg {
-          transition: transform 0.3s ease;
+          width: 20px;
+          height: 20px;
         }
       }
 
       h4 {
-        font-size: 17px;
-        font-weight: $font-weight-bold;
-        color: $text-primary;
+        font-size: 15px;
+        font-weight: $font-weight-semibold;
+        color: $gray-900;
         margin: 0;
-        letter-spacing: -0.01em;
+        letter-spacing: normal;
       }
 
       p {
-        font-size: 14px;
-        color: $text-secondary;
+        font-size: 13px;
+        color: $gray-600;
         margin: 0;
         line-height: 1.5;
       }
 
       &:hover {
-        border-color: rgba($primary-green, 0.4);
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15), 0 4px 12px rgba($primary-green, 0.1);
-        transform: translateY(-6px);
+        border-color: $gray-300;
+        background: $gray-50;
+      }
 
-        &::before {
-          transform: scaleX(1);
-        }
+      // WCAG 2.1 AA Focus Indicators
+      &:focus {
+        outline: 3px solid $gov-accent-blue;
+        outline-offset: 2px;
+        z-index: 1;
+      }
 
-        .action-icon {
-          transform: scale(1.15);
+      &:focus:not(:focus-visible) {
+        outline: none;
+      }
 
-          svg {
-            transform: rotate(8deg);
-          }
-        }
+      &:focus-visible {
+        outline: 3px solid $gov-accent-blue;
+        outline-offset: 2px;
       }
 
       &:active {
-        transform: translateY(-2px);
+        background: $gray-100;
       }
     }
   }
@@ -376,6 +365,8 @@
       @include flex-between;
       align-items: center;
       margin-bottom: $spacing-6;
+      padding-bottom: $spacing-4;
+      border-bottom: 2px solid $gray-200;  // Government section separator
       gap: $spacing-4;
 
       @include respond-to-max('md') {
@@ -384,11 +375,12 @@
       }
 
       h3 {
-        font-size: 22px;
+        font-size: 13px;               // Official government style
         font-weight: $font-weight-bold;
-        color: $text-primary;
+        color: $gov-navy;
         margin: 0;
-        letter-spacing: -0.01em;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
       }
 
       .filters {
@@ -397,81 +389,73 @@
 
         .filter-btn {
           padding: 8px $spacing-4;
+          min-height: 44px;              // WCAG touch target minimum
           background: $white;
-          border: 1.5px solid #e5e7eb;
-          border-radius: $radius-lg;
-          color: #6b7280;
+          border: 1px solid $gray-200;
+          border-radius: $radius-sm;
+          color: $gray-700;
           font-size: 13px;
-          font-weight: $font-weight-semibold;
+          font-weight: $font-weight-medium;
           cursor: pointer;
-          transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+          transition: none;
 
           &:hover {
-            border-color: $primary-green;
-            color: $primary-green;
-            background: rgba($primary-green, 0.05);
+            border-color: $gov-navy;
+            background: $gray-50;
+          }
+
+          // WCAG 2.1 AA Focus Indicators
+          &:focus {
+            outline: 3px solid $gov-accent-blue;
+            outline-offset: 2px;
+            z-index: 1;
+          }
+
+          &:focus:not(:focus-visible) {
+            outline: none;                         // Remove for mouse users
+          }
+
+          &:focus-visible {
+            outline: 3px solid $gov-accent-blue;   // Show for keyboard users
+            outline-offset: 2px;
           }
 
           &.active {
-            background: $primary-green;
-            border-color: $primary-green;
+            background: $gov-navy;
+            border-color: $gov-navy;
             color: $white;
-            box-shadow: 0 2px 4px rgba($primary-green, 0.2);
+            box-shadow: none;
           }
         }
       }
     }
 
     .empty-state {
-      background: linear-gradient(135deg, #fafbfc 0%, #f8f9fa 100%);
-      border: 2px dashed #d1d5db;
-      border-radius: $radius-xl;
       padding: $spacing-12 $spacing-6;
       text-align: center;
-      position: relative;
-      overflow: hidden;
-
-      // Subtle pattern
-      &::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-image:
-          radial-gradient(circle at 20% 50%, rgba($primary-green, 0.03) 0%, transparent 50%),
-          radial-gradient(circle at 80% 80%, rgba(59, 130, 246, 0.03) 0%, transparent 50%);
-        pointer-events: none;
-      }
+      margin-top: $spacing-4;
 
       svg {
-        color: #cbd5e1;
-        margin-bottom: $spacing-5;
-        position: relative;
-        z-index: 1;
+        color: $gray-300;
+        margin-bottom: $spacing-4;
       }
 
       h4 {
-        font-size: 20px;
-        font-weight: $font-weight-bold;
-        color: $text-primary;
+        font-size: 16px;
+        font-weight: $font-weight-semibold;
+        color: $gray-900;
         margin: 0 0 $spacing-2;
-        letter-spacing: -0.01em;
-        position: relative;
-        z-index: 1;
+        letter-spacing: normal;
       }
 
       p {
-        font-size: 15px;
-        color: $text-secondary;
+        font-size: 14px;
+        color: $gray-600;
         margin: 0;
         max-width: 400px;
         margin-left: auto;
         margin-right: auto;
-        line-height: 1.6;
-        position: relative;
-        z-index: 1;
+        line-height: 1.5;
       }
     }
   }

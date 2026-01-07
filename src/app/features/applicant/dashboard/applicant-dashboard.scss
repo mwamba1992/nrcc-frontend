@@ -1,11 +1,11 @@
 @import '../../../../styles/variables';
 @import '../../../../styles/mixins';
 
-// Add background to the entire dashboard
+// Government-grade dashboard styling
 :host {
   display: block;
   min-height: 100vh;
-  background: #f8fafc;
+  background: $gray-50;  // Cooler, more professional
 }
 
 // STATISTICS CARDS
@@ -20,101 +20,69 @@
     align-items: center;
     gap: $spacing-4;
     padding: $spacing-5;
-    border-radius: $radius-lg;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    transition: all 0.2s ease;
+    border-radius: $radius-md;  // Reduced from $radius-lg
+    box-shadow: $shadow-sm;     // Minimal shadow
+    transition: none;           // Remove animations
     position: relative;
     overflow: hidden;
-    border: 1px solid #e5e7eb;
+    border: 1px solid $gray-200;
     background: $white;
 
     &:hover {
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-      transform: translateY(-1px);
+      // Minimal hover effect - government style
+      border-color: $gray-300;
     }
 
-    // Blue card
+    // Blue card - Navy theme
     &.blue {
-      &::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        width: 3px;
-        background: #3b82f6;
-      }
+      border-left: 3px solid $gov-navy;
 
       .card-icon {
-        background: rgba(59, 130, 246, 0.1);
-        color: #3b82f6;
+        background: rgba($gov-navy, 0.08);
+        color: $gov-navy;
       }
     }
 
-    // Green card
+    // Green card - Muted green
     &.green {
-      &::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        width: 3px;
-        background: #10b981;
-      }
+      border-left: 3px solid $gov-success;
 
       .card-icon {
-        background: rgba(16, 185, 129, 0.1);
-        color: #10b981;
+        background: rgba($gov-success, 0.08);
+        color: $gov-success;
       }
     }
 
-    // Purple card
+    // Purple card - Info blue
     &.purple {
-      &::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        width: 3px;
-        background: #8b5cf6;
-      }
+      border-left: 3px solid $gov-info;
 
       .card-icon {
-        background: rgba(139, 92, 246, 0.1);
-        color: #8b5cf6;
+        background: rgba($gov-info, 0.08);
+        color: $gov-info;
       }
     }
 
-    // Orange card
+    // Orange card - Warning
     &.orange {
-      &::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        width: 3px;
-        background: #f59e0b;
-      }
+      border-left: 3px solid $gov-warning;
 
       .card-icon {
-        background: rgba(245, 158, 11, 0.1);
-        color: #f59e0b;
+        background: rgba($gov-warning, 0.08);
+        color: $gov-warning;
       }
     }
 
     .card-icon {
-      width: 48px;
-      height: 48px;
+      width: 40px;               // Reduced from 48px
+      height: 40px;
       @include flex-center;
-      border-radius: $radius-lg;
+      border-radius: $radius-sm;  // Minimal rounding
       flex-shrink: 0;
 
       svg {
-        width: 24px;
-        height: 24px;
+        width: 20px;             // Reduced from 24px
+        height: 20px;
       }
     }
 
@@ -123,68 +91,31 @@
       min-width: 0;
 
       h3 {
-        font-size: 24px;
+        font-size: 28px;         // Larger, more authoritative
         font-weight: $font-weight-bold;
-        color: #111827;
-        margin: 0 0 2px;
+        color: $gray-900;
+        margin: 0 0 4px;
         line-height: 1;
-        letter-spacing: -0.02em;
+        letter-spacing: normal;  // Remove negative spacing
+        font-variant-numeric: tabular-nums;  // Government-style numbers
       }
 
       p {
-        font-size: 12px;
-        color: #6b7280;
-        margin: 0 0 2px;
-        font-weight: $font-weight-medium;
+        font-size: 11px;
+        color: $gray-600;
+        margin: 0;
+        font-weight: $font-weight-semibold;
         text-transform: uppercase;
-        letter-spacing: 0.04em;
+        letter-spacing: 0.5px;   // Standard government spacing
       }
 
       .card-subtitle {
-        display: block;
-        font-size: 12px;
-        color: #9ca3af;
-        font-weight: $font-weight-normal;
-        line-height: 1.3;
+        display: none;  // Remove casual subtitle text
       }
     }
 
     .card-trend {
-      display: flex;
-      align-items: center;
-      gap: 3px;
-      padding: 4px 8px;
-      border-radius: 10px;
-      font-size: 11px;
-      font-weight: $font-weight-semibold;
-      flex-shrink: 0;
-
-      &.positive {
-        background: rgba(16, 185, 129, 0.1);
-        color: #059669;
-
-        svg {
-          color: #059669;
-        }
-      }
-
-      &.negative {
-        background: rgba(239, 68, 68, 0.1);
-        color: #dc2626;
-
-        svg {
-          transform: rotate(180deg);
-        }
-      }
-
-      svg {
-        width: 12px;
-        height: 12px;
-      }
-
-      span {
-        line-height: 1;
-      }
+      display: none;  // Remove trend indicators - too SaaS-like
     }
   }
 }
@@ -212,47 +143,70 @@
     .service-card {
       background: $white;
       padding: $spacing-5;
-      border-radius: $radius-lg;
-      border: 1px solid #e5e7eb;
+      min-height: 44px;          // WCAG touch target minimum
+      border-radius: $radius-md;  // Reduced from $radius-lg
+      border: 1px solid $gray-200;
       display: flex;
       align-items: center;
       gap: $spacing-4;
-      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: none;           // Remove animations
       cursor: pointer;
+      text-align: left;
+      width: 100%;
 
       &:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 16px rgba($black, 0.08);
-        border-color: #d1d5db;
+        border-color: $gray-300;
+        background: $gray-50;
+      }
 
-        .service-icon {
-          transform: scale(1.05);
-        }
+      // WCAG 2.1 AA Focus Indicators
+      &:focus {
+        outline: 3px solid $gov-accent-blue;
+        outline-offset: 2px;
+        z-index: 1;
+      }
+
+      &:focus:not(:focus-visible) {
+        outline: none;
+      }
+
+      &:focus-visible {
+        outline: 3px solid $gov-accent-blue;
+        outline-offset: 2px;
+      }
+
+      &:active {
+        background: $gray-100;
       }
 
       .service-icon {
-        width: 48px;
-        height: 48px;
+        width: 40px;             // Reduced from 48px
+        height: 40px;
         flex-shrink: 0;
         @include flex-center;
-        border-radius: $radius-md;
-        transition: all 0.25s ease;
+        border-radius: $radius-sm;
+        transition: none;
 
         &.blue-icon {
-          background: rgba(#3b82f6, 0.1);
-          color: #3b82f6;
+          background: rgba($gov-navy, 0.08);
+          color: $gov-navy;
         }
         &.purple-icon {
-          background: rgba(#8b5cf6, 0.1);
-          color: #8b5cf6;
+          background: rgba($gov-info, 0.08);
+          color: $gov-info;
         }
         &.orange-icon {
-          background: rgba(#f59e0b, 0.1);
-          color: #f59e0b;
+          background: rgba($gov-warning, 0.08);
+          color: $gov-warning;
         }
         &.green-icon {
-          background: rgba(#16a34a, 0.1);
-          color: #16a34a;
+          background: rgba($gov-success, 0.08);
+          color: $gov-success;
+        }
+
+        svg {
+          width: 18px;
+          height: 18px;
         }
       }
 
@@ -260,15 +214,16 @@
         flex: 1;
 
         h4 {
-          font-size: $font-size-base;
+          font-size: 14px;
           font-weight: $font-weight-semibold;
-          color: $text-primary;
+          color: $gray-900;
           margin: 0 0 $spacing-1;
+          letter-spacing: normal;
         }
 
         p {
           font-size: 13px;
-          color: $text-secondary;
+          color: $gray-600;
           line-height: 1.4;
           margin: 0;
         }

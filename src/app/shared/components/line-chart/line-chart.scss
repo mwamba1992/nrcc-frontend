@@ -2,20 +2,26 @@
 
 .chart-container {
   background: white;
-  border-radius: $radius-xl;
-  padding: $spacing-6;
-  border: 1px solid #e5e7eb;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  border-radius: $radius-md;  // Reduced from $radius-xl
+  padding: $spacing-5;
+  border: 1px solid $gray-200;
+  box-shadow: $shadow-sm;     // Minimal shadow
   height: 100%;
   display: flex;
   flex-direction: column;
 
   .chart-title {
-    font-size: 18px;
-    font-weight: $font-weight-bold;
-    color: $text-primary;
-    margin: 0 0 $spacing-5;
-    letter-spacing: -0.01em;
+    font-size: 16px;           // Reduced from 18px
+    font-weight: $font-weight-semibold;
+    color: $gray-900;
+    margin: 0 0 $spacing-4;
+    letter-spacing: normal;    // Remove negative spacing
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+    color: $gray-700;
+    border-bottom: 1px solid $gray-200;
+    padding-bottom: $spacing-3;
     flex-shrink: 0;
   }
 

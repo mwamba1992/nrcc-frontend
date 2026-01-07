@@ -3,24 +3,27 @@
 
 .activity-timeline {
   background: $white;
-  border-radius: $radius-xl;
-  padding: $spacing-6;
-  border: 1px solid #e5e7eb;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  border-radius: $radius-md;  // Reduced from $radius-xl
+  padding: $spacing-5;
+  border: 1px solid $gray-200;
+  box-shadow: $shadow-sm;     // Minimal shadow
   height: 100%;
   display: flex;
   flex-direction: column;
 }
 
 .timeline-header {
-  margin-bottom: $spacing-6;
+  margin-bottom: $spacing-5;
+  border-bottom: 1px solid $gray-200;
+  padding-bottom: $spacing-3;
 
   h3 {
-    font-size: 18px;
-    font-weight: $font-weight-bold;
-    color: $text-primary;
+    font-size: 12px;
+    font-weight: $font-weight-semibold;
+    color: $gray-700;
     margin: 0;
-    letter-spacing: -0.01em;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
   }
 }
 
@@ -32,27 +35,27 @@
 
   // Custom scrollbar styling
   &::-webkit-scrollbar {
-    width: 6px;
+    width: 8px;  // Slightly wider for government UI
   }
 
   &::-webkit-scrollbar-track {
-    background: #f3f4f6;
-    border-radius: 3px;
+    background: $gray-100;
+    border-radius: $radius-sm;
   }
 
   &::-webkit-scrollbar-thumb {
-    background: #d1d5db;
-    border-radius: 3px;
-    transition: background 0.2s ease;
+    background: $gray-300;
+    border-radius: $radius-sm;
+    transition: none;
 
     &:hover {
-      background: #9ca3af;
+      background: $gray-400;
     }
   }
 
   // Firefox scrollbar
   scrollbar-width: thin;
-  scrollbar-color: #d1d5db #f3f4f6;
+  scrollbar-color: $gray-300 $gray-100;
 }
 
 .timeline-item {
@@ -64,11 +67,11 @@
   &:not(.last-item)::before {
     content: '';
     position: absolute;
-    left: 15px;
+    left: 14px;
     top: 32px;
     bottom: 0;
     width: 2px;
-    background: linear-gradient(180deg, #e5e7eb 0%, transparent 100%);
+    background: $gray-200;  // Solid color, no gradient
   }
 
   &.last-item {
@@ -78,52 +81,60 @@
 
 .timeline-marker {
   flex-shrink: 0;
-  width: 32px;
-  height: 32px;
+  width: 28px;  // Reduced from 32px
+  height: 28px;
   @include flex-center;
   border-radius: 50%;
   position: relative;
   z-index: 1;
-  box-shadow: 0 0 0 4px $white;
+  box-shadow: 0 0 0 3px $white;
+  border: 2px solid;  // Government style: defined border
 
   &[data-type="blue"] {
-    background: rgba(#3b82f6, 0.15);
-    color: #3b82f6;
+    background: $white;
+    border-color: $gov-navy;
+    color: $gov-navy;
   }
 
   &[data-type="green"] {
-    background: rgba(#10b981, 0.15);
-    color: #10b981;
+    background: $white;
+    border-color: $gov-success;
+    color: $gov-success;
   }
 
   &[data-type="red"] {
-    background: rgba(#ef4444, 0.15);
-    color: #ef4444;
+    background: $white;
+    border-color: $gov-danger;
+    color: $gov-danger;
   }
 
   &[data-type="orange"] {
-    background: rgba(#f59e0b, 0.15);
-    color: #f59e0b;
+    background: $white;
+    border-color: $gov-warning;
+    color: $gov-warning;
   }
 
   &[data-type="purple"] {
-    background: rgba(#8b5cf6, 0.15);
-    color: #8b5cf6;
+    background: $white;
+    border-color: $gov-info;
+    color: $gov-info;
   }
 
   &[data-type="gray"] {
-    background: rgba(#6b7280, 0.15);
-    color: #6b7280;
+    background: $white;
+    border-color: $gray-400;
+    color: $gray-600;
   }
 
   &[data-type="teal"] {
-    background: rgba(#14b8a6, 0.15);
-    color: #14b8a6;
+    background: $white;
+    border-color: $gov-info;
+    color: $gov-info;
   }
 
   svg {
-    width: 16px;
-    height: 16px;
+    width: 14px;  // Reduced from 16px
+    height: 14px;
   }
 }
 
@@ -133,16 +144,16 @@
   padding-top: 2px;
 
   .timeline-title {
-    font-size: 14px;
+    font-size: 13px;
     font-weight: $font-weight-semibold;
-    color: $text-primary;
+    color: $gray-900;
     margin-bottom: 4px;
     line-height: 1.4;
   }
 
   .timeline-description {
-    font-size: 13px;
-    color: $text-secondary;
+    font-size: 12px;
+    color: $gray-600;
     margin-bottom: 6px;
     line-height: 1.5;
   }
@@ -151,21 +162,21 @@
     display: flex;
     align-items: center;
     gap: $spacing-2;
-    font-size: 12px;
+    font-size: 11px;
 
     .timeline-user {
-      color: $text-secondary;
+      color: $gray-700;
       font-weight: $font-weight-medium;
 
       &::after {
         content: '•';
         margin-left: $spacing-2;
-        color: #d1d5db;
+        color: $gray-300;
       }
     }
 
     .timeline-time {
-      color: #9ca3af;
+      color: $gray-500;
     }
   }
 }
@@ -174,16 +185,17 @@
   @include flex-center;
   flex-direction: column;
   padding: $spacing-10 $spacing-6;
-  color: #9ca3af;
+  color: $gray-400;
 
   svg {
     margin-bottom: $spacing-4;
-    opacity: 0.3;
+    opacity: 0.4;
+    color: $gray-300;
   }
 
   p {
-    font-size: 14px;
-    color: $text-secondary;
+    font-size: 13px;
+    color: $gray-600;
     margin: 0;
   }
 }

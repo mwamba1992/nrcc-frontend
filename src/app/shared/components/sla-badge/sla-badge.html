@@ -1,0 +1,18 @@
+<span
+  class="sla-badge"
+  [ngClass]="[getStatusClass(), getSizeClass()]"
+  [attr.aria-label]="getAriaLabel()"
+  role="status">
+  <svg
+    *ngIf="showIcon"
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    aria-hidden="true"
+    [innerHTML]="getIconSvg()">
+  </svg>
+  <span *ngIf="showLabel" class="sla-badge-text">{{ getStatusLabel() }}</span>
+</span>

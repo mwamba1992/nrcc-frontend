@@ -4,11 +4,13 @@ import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { User, UserRole } from '../../../core/models/user.model';
 import { NotificationCenterComponent, Notification } from '../notification-center/notification-center';
+import { GlobalSearchComponent } from '../global-search/global-search';
+import { BreadcrumbsComponent, Breadcrumb } from '../breadcrumbs/breadcrumbs';
 
 @Component({
   selector: 'app-reviewer-layout',
   standalone: true,
-  imports: [CommonModule, RouterModule, NotificationCenterComponent],
+  imports: [CommonModule, RouterModule, NotificationCenterComponent, GlobalSearchComponent, BreadcrumbsComponent],
   templateUrl: './reviewer-layout.html',
   styleUrl: './reviewer-layout.scss'
 })
@@ -16,6 +18,11 @@ export class ReviewerLayoutComponent {
   currentUser: User | null = null;
   reviewerLevel: string = '';
   notifications: Notification[] = [];
+  breadcrumbs: Breadcrumb[] = [
+    { label: 'Home', url: '/' },
+    { label: 'Reviewer Portal', url: '/reviewer' },
+    { label: 'Dashboard' }
+  ];
 
   constructor(
     private authService: AuthService,
@@ -104,5 +111,11 @@ export class ReviewerLayoutComponent {
 
   onClearAllNotifications(): void {
     this.notifications = [];
+  }
+
+  onSearch(query: string): void {
+    console.log('Search query:', query);
+    // Implement search functionality
+    this.router.navigate(['/reviewer/search'], { queryParams: { q: query } });
   }
 }

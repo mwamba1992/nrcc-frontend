@@ -1,0 +1,137 @@
+@import '../../../../styles/variables';
+@import '../../../../styles/mixins';
+
+.global-search {
+  position: relative;
+  width: 350px;
+  transition: width 0.2s ease;
+
+  &.expanded {
+    width: 450px;
+  }
+
+  @include respond-to-max('lg') {
+    width: 280px;
+
+    &.expanded {
+      width: 350px;
+    }
+  }
+
+  @include respond-to-max('md') {
+    display: none;
+  }
+}
+
+.search-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: $gray-50;
+  border: 1px solid $gray-300;
+  border-radius: $radius-md;
+  padding: 0 $spacing-3;
+  height: 40px;
+  transition: all 0.2s ease;
+
+  &:focus-within {
+    background: $white;
+    border-color: $gov-accent-blue;
+    box-shadow: 0 0 0 3px rgba($gov-accent-blue, 0.1);
+  }
+}
+
+.search-icon {
+  flex-shrink: 0;
+  color: $gray-500;
+  margin-right: $spacing-2;
+}
+
+.search-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  color: $gray-900;
+  font-size: 14px;
+  font-family: $font-family-base;
+  outline: none;
+  padding: 0;
+  min-width: 0;
+
+  &::placeholder {
+    color: $gray-500;
+  }
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.search-shortcut {
+  flex-shrink: 0;
+  font-size: 11px;
+  color: $gray-500;
+  background: $white;
+  border: 1px solid $gray-300;
+  border-radius: $radius-sm;
+  padding: 2px 6px;
+  font-family: $font-family-mono;
+  font-weight: $font-weight-medium;
+  margin-left: $spacing-2;
+  line-height: 1;
+}
+
+.clear-btn {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  @include flex-center;
+  background: transparent;
+  border: none;
+  border-radius: $radius-sm;
+  color: $gray-500;
+  cursor: pointer;
+  margin-left: $spacing-2;
+  padding: 0;
+  transition: all 0.15s ease;
+
+  &:hover {
+    background: $gray-200;
+    color: $gray-700;
+  }
+
+  &:focus {
+    outline: 2px solid $gov-accent-blue;
+    outline-offset: 2px;
+  }
+
+  &:focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $gov-accent-blue;
+    outline-offset: 2px;
+  }
+}
+
+// Responsive adjustments
+@include respond-to-max('lg') {
+  .global-search {
+    max-width: 300px;
+
+    &.expanded {
+      max-width: 400px;
+    }
+  }
+}
+
+@include respond-to-max('md') {
+  .global-search {
+    max-width: 100%;
+  }
+
+  .search-shortcut {
+    display: none;
+  }
+}

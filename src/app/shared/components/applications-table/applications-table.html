@@ -1,0 +1,76 @@
+<div class="applications-table-container">
+  <table class="applications-table" role="table" aria-label="Applications queue">
+    <thead>
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Project Name</th>
+        <th scope="col">District</th>
+        <th scope="col">Submitted</th>
+        <th scope="col">Status</th>
+        <th scope="col">SLA</th>
+        <th scope="col" class="actions-column">Actions</th>
+      </tr>
+    </thead>
+    <tbody *ngIf="!isLoading && applications.length > 0">
+      <tr *ngFor="let app of applications" class="table-row">
+        <td class="id-cell">
+          <span class="application-id">{{ app.id }}</span>
+        </td>
+        <td class="project-cell">
+          <span class="project-name">{{ app.projectName }}</span>
+        </td>
+        <td class="district-cell">{{ app.district }}</td>
+        <td class="date-cell">{{ formatDate(app.submittedDate) }}</td>
+        <td class="status-cell">
+          <span class="status-badge" [class]="'status-' + app.status">
+            {{ getStatusLabel(app.status) }}
+          </span>
+        </td>
+        <td class="sla-cell">
+          <span class="sla-badge" [class]="'urgency-' + app.urgencyLevel">
+            <span class="sla-days" [class.negative]="app.slaDaysRemaining < 0">
+              {{ app.slaDaysRemaining > 0 ? app.slaDaysRemaining + 'd' : (app.slaDaysRemaining * -1) + 'd' }}
+            </span>
+          </span>
+        </td>
+        <td class="actions-cell">
+          <div class="action-buttons">
+            <button
+              class="action-btn view-btn"
+              (click)="onView(app.id)"
+              aria-label="View application details"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+              View
+            </button>
+            <button
+              class="action-btn review-btn"
+              (click)="onReview(app.id)"
+              aria-label="Review application"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+              </svg>
+              Review
+            </button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Empty state -->
+  <div class="empty-state" *ngIf="!isLoading && applications.length === 0">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+      <polyline points="14 2 14 8 20 8"/>
+      <line x1="16" y1="13" x2="8" y2="13"/>
+      <line x1="16" y1="17" x2="8" y2="17"/>
+    </svg>
+    <p>No applications found</p>
+  </div>
+</div>

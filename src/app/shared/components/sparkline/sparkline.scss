@@ -1,0 +1,14 @@
+@import '../../../../styles/variables';
+
+.sparkline {
+  display: inline-block;
+  vertical-align: middle;
+
+  .sparkline-fill {
+    opacity: 0.15;
+  }
+
+  .sparkline-line {
+    vector-effect: non-scaling-stroke;
+  }
+}

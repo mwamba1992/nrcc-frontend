@@ -1,0 +1,275 @@
+@import '../../../../styles/variables';
+@import '../../../../styles/mixins';
+
+.applications-table-container {
+  background: $white;
+  border: 1px solid $gray-200;
+  border-radius: $radius-md;
+  overflow: hidden;
+}
+
+.applications-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  font-family: $font-family-base;
+
+  thead {
+    background: $gray-50;
+    border-bottom: 2px solid $gray-300;
+
+    th {
+      padding: 12px 16px;
+      text-align: left;
+      font-size: 11px;
+      font-weight: $font-weight-bold;
+      color: $gray-700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 2px solid $gray-300;
+      white-space: nowrap;
+
+      &.actions-column {
+        text-align: right;
+      }
+    }
+  }
+
+  tbody {
+    .table-row {
+      border-bottom: 1px solid $gray-200;
+      transition: background-color 0.15s ease;
+
+      &:hover {
+        background: $gray-50;
+      }
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      td {
+        padding: 12px 16px;
+        color: $gray-900;
+        vertical-align: middle;
+        height: 48px; // Compact row height
+      }
+    }
+  }
+}
+
+// Cell-specific styling
+.id-cell {
+  .application-id {
+    font-family: $font-family-mono;
+    font-size: 12px;
+    color: $gov-slate;
+    font-weight: $font-weight-medium;
+  }
+}
+
+.project-cell {
+  .project-name {
+    font-weight: $font-weight-medium;
+    color: $gray-900;
+  }
+}
+
+.district-cell {
+  color: $gray-700;
+}
+
+.date-cell {
+  color: $gray-600;
+  font-size: 12px;
+}
+
+.status-cell {
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: $radius-sm;
+    font-size: 10px;
+    font-weight: $font-weight-bold;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+
+    &.status-pending {
+      background: #FEF3C7;
+      color: #F59E0B;
+    }
+
+    &.status-reviewed {
+      background: #DBEAFE;
+      color: #3B82F6;
+    }
+
+    &.status-approved {
+      background: #D1FAE5;
+      color: $gov-success;
+    }
+
+    &.status-rejected {
+      background: #FEE2E2;
+      color: $gov-danger;
+    }
+
+    &.status-forwarded {
+      background: #E0E7FF;
+      color: #6366F1;
+    }
+  }
+}
+
+.sla-cell {
+  .sla-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+
+    .sla-days {
+      font-weight: $font-weight-semibold;
+      font-size: 13px;
+      color: $gov-success;
+
+      &.negative {
+        color: $gov-danger;
+      }
+    }
+
+    &.urgency-overdue {
+      .sla-days {
+        color: $gov-danger;
+        font-weight: $font-weight-bold;
+      }
+    }
+
+    &.urgency-due-soon {
+      .sla-days {
+        color: $gov-warning;
+      }
+    }
+
+    &.urgency-on-track {
+      .sla-days {
+        color: $gov-success;
+      }
+    }
+  }
+}
+
+.actions-cell {
+  text-align: right;
+
+  .action-buttons {
+    display: inline-flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: $white;
+    border: 1px solid $gray-300;
+    border-radius: $radius-sm;
+    font-size: 12px;
+    font-weight: $font-weight-medium;
+    color: $gray-700;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    min-height: 32px;
+
+    svg {
+      flex-shrink: 0;
+      width: 14px;
+      height: 14px;
+    }
+
+    &:hover {
+      background: $gray-50;
+      border-color: $gray-400;
+      color: $gray-900;
+    }
+
+    &:focus {
+      outline: 2px solid $gov-accent-blue;
+      outline-offset: 2px;
+      z-index: 1;
+    }
+
+    &:focus:not(:focus-visible) {
+      outline: none;
+    }
+
+    &:focus-visible {
+      outline: 2px solid $gov-accent-blue;
+      outline-offset: 2px;
+    }
+
+    &.review-btn {
+      background: $gov-navy;
+      border-color: $gov-navy;
+      color: $white;
+
+      &:hover {
+        background: darken($gov-navy, 5%);
+        border-color: darken($gov-navy, 5%);
+      }
+    }
+  }
+}
+
+// Empty state
+.empty-state {
+  padding: $spacing-12 $spacing-6;
+  text-align: center;
+
+  svg {
+    color: $gray-300;
+    margin-bottom: $spacing-4;
+  }
+
+  p {
+    font-size: 14px;
+    color: $gray-600;
+    margin: 0;
+  }
+}
+
+// Responsive
+@include respond-to-max('lg') {
+  .applications-table {
+    font-size: 12px;
+
+    thead th {
+      padding: 10px 12px;
+      font-size: 10px;
+    }
+
+    tbody td {
+      padding: 10px 12px;
+    }
+  }
+
+  .action-btn {
+    padding: 5px 10px !important;
+    font-size: 11px !important;
+
+    svg {
+      width: 12px !important;
+      height: 12px !important;
+    }
+  }
+}
+
+@include respond-to-max('md') {
+  .applications-table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+}

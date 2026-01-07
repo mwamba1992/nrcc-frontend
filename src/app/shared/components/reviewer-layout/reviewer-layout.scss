@@ -9,20 +9,32 @@
   background: #f7f9fc;
 }
 
-// SIDEBAR
+// Government Gold Stripe (Authority Accent)
+.gov-stripe {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: $primary-gold;
+  z-index: 120;
+}
+
+// SIDEBAR - GOVERNMENT INSTITUTIONAL DESIGN
 .sidebar {
   width: 240px;
-  background: #f9fafb;
-  border-right: 1px solid #e5e7eb;
+  background: #1F2937;  // Dark navy/gray - professional government style
+  border-right: none;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
   position: fixed;
   left: 0;
-  top: 60px;
-  height: calc(100vh - 60px);
+  top: 104px; // Adjusted for header + breadcrumbs + gold stripe
+  height: calc(100vh - 104px);
   overflow-y: auto;
   z-index: 90;
-  padding: $spacing-5 $spacing-4;
+  padding: 0;
 
   @include respond-to-max('lg') {
     transform: translateX(-100%);
@@ -30,202 +42,224 @@
   }
 }
 
-.quick-access {
-  padding: $spacing-4;
-  background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
-  margin-bottom: $spacing-5;
-  border-radius: 10px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+// SIDEBAR HEADER - OFFICIAL GOVERNMENT STYLE
+.sidebar-header {
+  padding: 20px 16px 16px;
+  background: rgba(0, 0, 0, 0.2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 
-  .quick-access-header {
-    display: flex;
-    align-items: center;
-    gap: $spacing-3;
-    color: $white;
+  h4 {
+    font-size: 11px;
+    font-weight: 700;
+    color: #9CA3AF;  // Light gray text on dark background
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin: 0 0 4px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
 
-    svg {
-      flex-shrink: 0;
-      width: 22px;
-      height: 22px;
-      background: rgba(255, 255, 255, 0.2);
-      padding: 6px;
-      border-radius: 8px;
-    }
-
-    div {
-      h4 {
-        font-size: 14px;
-        font-weight: $font-weight-bold;
-        margin: 0 0 2px;
-      }
-
-      p {
-        font-size: 12px;
-        opacity: 0.9;
-        margin: 0;
-      }
-    }
+  p {
+    font-size: 12px;
+    color: #D1D5DB;  // Lighter for visibility on dark
+    margin: 0;
+    font-weight: 500;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   }
 }
 
+// NAVIGATION - GOVERNMENT INSTITUTIONAL DESIGN
 .sidebar-nav {
   flex: 1;
   padding: 0;
-  margin-left: -$spacing-4;
-  margin-right: -$spacing-4;
 
   .nav-section {
-    margin-bottom: $spacing-5;
+    margin-bottom: 0;
 
     h5 {
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 700;
-      color: #6b7280;
+      color: #6B7280;  // Muted gray for section headers
       text-transform: uppercase;
-      letter-spacing: 0.1em;
-      padding: 0 $spacing-5;
-      margin: 0 0 $spacing-3;
+      letter-spacing: 1px;
+      padding: 20px 16px 12px;
+      margin: 0;
+      border-bottom: none;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     }
 
     .nav-link {
       display: flex;
       align-items: center;
-      gap: $spacing-3;
-      padding: 11px $spacing-5;
-      color: #4b5563;
+      gap: 12px;
+      padding: 12px 16px;
+      min-height: 44px;
+      color: #D1D5DB;  // Light text on dark background
       text-decoration: none;
       font-size: 14px;
-      transition: all 0.2s ease;
+      font-weight: 500;
       border-left: 3px solid transparent;
-      font-weight: 400;
+      transition: all 0.15s ease;
       position: relative;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      margin: 0;
+      border-radius: 0;
 
       svg {
         flex-shrink: 0;
-        color: #6b7280;
-        width: 20px;
-        height: 20px;
+        width: 18px;
+        height: 18px;
+        color: #9CA3AF;  // Muted icon color
+        stroke-width: 2;
       }
 
       &:hover {
-        background: rgba($primary-green, 0.05);
-        color: $primary-green;
+        background: rgba(255, 255, 255, 0.05);  // Subtle hover on dark
+        color: #F3F4F6;
 
         svg {
-          color: $primary-green;
+          color: #D1D5DB;
         }
       }
 
+      // WCAG 2.1 AA Focus Indicators
+      &:focus {
+        outline: 2px solid #3B82F6;
+        outline-offset: -2px;
+        z-index: 1;
+      }
+
+      &:focus:not(:focus-visible) {
+        outline: none;
+      }
+
+      &:focus-visible {
+        outline: 2px solid #3B82F6;
+        outline-offset: -2px;
+      }
+
       &.active {
-        background: rgba($primary-green, 0.08);
-        color: $primary-green;
-        font-weight: 500;
-        border-left-color: $primary-green;
+        background: #374151;  // Darker gray for active state
+        color: #FFFFFF;
+        font-weight: 600;
+        border-left: 3px solid #10B981;  // Green accent
 
         svg {
-          color: $primary-green;
+          color: #FFFFFF;
         }
       }
     }
   }
 }
 
-.sidebar-help {
-  margin: 0 0 0 0;
-  padding: $spacing-4;
-  background: #ecfdf5;
-  border-left: 4px solid $primary-green;
-  border-radius: 0;
-  display: flex;
-  gap: $spacing-3;
-  align-items: start;
+// SIDEBAR FOOTER - OFFICIAL GOVERNMENT STYLE
+.sidebar-footer {
+  padding: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.2);
+  margin-top: auto;
 
-  svg {
-    flex-shrink: 0;
-    color: $primary-green;
-    width: 20px;
-    height: 20px;
-    margin-top: 2px;
+  .footer-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #9CA3AF;  // Light text on dark
+    font-size: 13px;
+    text-decoration: none;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    transition: all 0.15s ease;
+    padding: 6px 0;
+
+    svg {
+      width: 18px;
+      height: 18px;
+      color: #6B7280;
+      flex-shrink: 0;
+    }
+
+    &:hover {
+      color: #F3F4F6;
+
+      svg {
+        color: #9CA3AF;
+      }
+    }
   }
 
-  div {
-    h5 {
-      font-size: 14px;
-      font-weight: $font-weight-bold;
-      color: #065f46;
-      margin: 0 0 4px;
-    }
-
-    p {
-      font-size: 12px;
-      color: #047857;
-      margin: 0;
-      line-height: 1.4;
-    }
+  .footer-text {
+    font-size: 10px;
+    color: #6B7280;
+    margin: 12px 0 0;
+    line-height: 1.4;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   }
 }
 
 // TOP HEADER - Full width, positioned above sidebar
 .top-header {
   background: $white;
-  border-bottom: 2px solid #16a34a;
+  border-bottom: 1px solid #E5E7EB;
   padding: 0 $spacing-6;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: $spacing-6;
   position: fixed;
-  top: 0;
+  top: 4px; // Offset for gold stripe
   left: 0;
   right: 0;
   width: 100%;
   z-index: 110;
   height: 60px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
 
   .header-left {
     display: flex;
     align-items: center;
-    gap: $spacing-3;
+    flex-shrink: 0;
 
-    .menu-toggle {
-      display: block;
-      background: none;
-      border: none;
-      padding: $spacing-2;
-      cursor: pointer;
-      color: #586069;
-
-      &:hover {
-        color: $primary-green;
-      }
+    .logo-section {
+      display: flex;
+      align-items: center;
+      gap: $spacing-3;
     }
 
-    img {
+    .logo-circle {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: $white;
+      @include flex-center;
+      padding: 4px;
       flex-shrink: 0;
-      width: 40px;
-      height: 40px;
+      border: 2px solid #E5E7EB;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
     }
 
     .header-brand {
       display: flex;
-      align-items: center;
-      gap: $spacing-2;
+      flex-direction: column;
+      gap: 2px;
 
-      div {
-        h3 {
-          font-size: 17px;
-          font-weight: $font-weight-bold;
-          color: #24292e;
-          margin: 0;
-          line-height: 1;
-        }
+      h3 {
+        font-size: 16px;
+        font-weight: $font-weight-bold;
+        color: #111827;
+        margin: 0;
+        line-height: 1.2;
+      }
 
-        p {
-          font-size: 12px;
-          color: #6a737d;
-          margin: 0;
-          font-weight: 400;
-        }
+      p {
+        font-size: 11px;
+        color: #6B7280;
+        margin: 0;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
       }
     }
   }
@@ -233,7 +267,8 @@
   .header-right {
     display: flex;
     align-items: center;
-    gap: $spacing-3;
+    gap: $spacing-4;
+    flex-shrink: 0;
 
     .user-info {
       display: flex;
@@ -268,8 +303,8 @@
     }
 
     .icon-btn {
-      width: 40px;
-      height: 40px;
+      width: 44px;                       // WCAG touch target minimum
+      height: 44px;
       @include flex-center;
       background: #f6f8fa;
       border: 1px solid #e1e4e8;
@@ -283,16 +318,32 @@
         color: $white;
         border-color: $primary-green;
       }
+
+      // WCAG 2.1 AA Focus Indicators
+      &:focus {
+        outline: 3px solid $gov-accent-blue;
+        outline-offset: 2px;
+        z-index: 1;
+      }
+
+      &:focus:not(:focus-visible) {
+        outline: none;
+      }
+
+      &:focus-visible {
+        outline: 3px solid $gov-accent-blue;
+        outline-offset: 2px;
+      }
     }
   }
 }
 
-// MAIN CONTENT - Below header, beside sidebar
+// MAIN CONTENT - Below header + breadcrumbs, beside sidebar
 .main-content {
   flex: 1;
   margin-left: 240px;
-  margin-top: 60px;
-  min-height: calc(100vh - 60px);
+  margin-top: 104px; // header (64px) + breadcrumbs (~40px)
+  min-height: calc(100vh - 104px);
   width: calc(100% - 240px);
   background: #f7f9fc;
 

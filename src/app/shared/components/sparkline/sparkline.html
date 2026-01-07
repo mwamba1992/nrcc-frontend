@@ -1,0 +1,25 @@
+<svg
+  [attr.width]="width"
+  [attr.height]="height"
+  [attr.viewBox]="'0 0 ' + width + ' ' + height"
+  class="sparkline"
+  aria-hidden="true"
+  preserveAspectRatio="none"
+>
+  <path
+    *ngIf="fillPath"
+    [attr.d]="fillPath"
+    [attr.fill]="fillColor"
+    class="sparkline-fill"
+  />
+  <path
+    *ngIf="svgPath"
+    [attr.d]="svgPath"
+    [attr.stroke]="color"
+    fill="none"
+    stroke-width="1.5"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    class="sparkline-line"
+  />
+</svg>
