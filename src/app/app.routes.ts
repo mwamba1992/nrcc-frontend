@@ -54,6 +54,26 @@ export const routes: Routes = [
     loadComponent: () => import('./features/reviewer/dashboard/reviewer-dashboard').then(m => m.ReviewerDashboardComponent),
     canActivate: [authGuard, roleGuard([UserRole.ADMIN])]
   },
+  {
+    path: 'admin/settings',
+    loadComponent: () => import('./features/admin/settings/settings').then(m => m.SettingsComponent),
+    canActivate: [authGuard, roleGuard([UserRole.ADMIN])]
+  },
+  {
+    path: 'admin/settings/regions',
+    loadComponent: () => import('./features/admin/regions/regions').then(m => m.RegionsComponent),
+    canActivate: [authGuard, roleGuard([UserRole.ADMIN])]
+  },
+  {
+    path: 'admin/settings/districts',
+    loadComponent: () => import('./features/admin/districts/districts').then(m => m.DistrictsComponent),
+    canActivate: [authGuard, roleGuard([UserRole.ADMIN])]
+  },
+  {
+    path: 'admin/settings/organizations',
+    loadComponent: () => import('./features/admin/organizations/organizations').then(m => m.OrganizationsComponent),
+    canActivate: [authGuard, roleGuard([UserRole.ADMIN])]
+  },
   // Fallback
   {
     path: '**',

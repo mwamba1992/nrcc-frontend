@@ -1,0 +1,138 @@
+<div class="data-table-container">
+  <!-- Table Header with Search -->
+  <div class="table-header" *ngIf="mergedConfig.showSearch">
+    <div class="search-box">
+      <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"/>
+        <path d="m21 21-4.35-4.35"/>
+      </svg>
+      <input
+        type="text"
+        [placeholder]="mergedConfig.searchPlaceholder"
+        (input)="onSearch($any($event.target).value)"
+        [value]="searchQuery()">
+    </div>
+    <div class="table-info">
+      <span class="result-count">{{ filteredData().length }} {{ filteredData().length === 1 ? 'record' : 'records' }}</span>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-overlay">
+    <div class="spinner"></div>
+    <p>Loading data...</p>
+  </div>
+
+  <!-- Table -->
+  <div class="table-wrapper" *ngIf="!loading">
+    <table class="professional-table">
+      <thead>
+        <tr>
+          <th *ngIf="showSerialNumber" class="sn-header" width="60">S/N</th>
+          <th
+            *ngFor="let column of columns"
+            [style.width]="column.width"
+            [class.sortable]="column.sortable"
+            [class.sorted]="sortColumn() === column.key"
+            [class.text-center]="column.align === 'center'"
+            [class.text-right]="column.align === 'right'"
+            (click)="onSort(column)">
+            <div class="th-content">
+              <span>{{ column.label }}</span>
+              <svg *ngIf="column.sortable && sortColumn() === column.key" class="sort-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline *ngIf="sortDirection() === 'asc'" points="18 15 12 9 6 15"/>
+                <polyline *ngIf="sortDirection() === 'desc'" points="6 9 12 15 18 9"/>
+              </svg>
+              <svg *ngIf="column.sortable && sortColumn() !== column.key" class="sort-icon inactive" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19"/>
+                <polyline points="19 12 12 19 5 12"/>
+              </svg>
+            </div>
+          </th>
+          <th *ngIf="actions.length > 0" class="actions-header text-center">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let row of paginatedData(); let i = index"
+            (click)="onRowClick(row)"
+            [class.clickable]="rowClick.observed">
+          <td *ngIf="showSerialNumber" class="sn-cell text-center">{{ getSerialNumber(i) }}</td>
+          <td
+            *ngFor="let column of columns"
+            [class.text-center]="column.align === 'center'"
+            [class.text-right]="column.align === 'right'"
+            [ngClass]="column.class"
+            [attr.data-value]="getCellValue(row, column)">
+            <ng-container *ngIf="column.class === 'status-cell'">
+              <span class="status-badge" [class.active]="getCellValue(row, column) === 'ACTIVE'" [class.inactive]="getCellValue(row, column) === 'INACTIVE'">
+                {{ getCellValue(row, column) }}
+              </span>
+            </ng-container>
+            <ng-container *ngIf="column.class !== 'status-cell'">
+              {{ getCellValue(row, column) }}
+            </ng-container>
+          </td>
+          <td *ngIf="actions.length > 0" class="actions-cell">
+            <div class="action-buttons">
+              <ng-container *ngFor="let action of actions">
+                <button
+                  *ngIf="isActionVisible(action, row)"
+                  [class]="'action-btn ' + (action.class || '')"
+                  [title]="action.label"
+                  (click)="executeAction(action, row, $event)">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" [innerHTML]="getSanitizedIcon(action.icon)"></svg>
+                </button>
+              </ng-container>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Empty State -->
+    <div *ngIf="paginatedData().length === 0" class="empty-state">
+      <svg class="empty-icon" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+        <circle cx="11" cy="11" r="8"/>
+        <path d="m21 21-4.35-4.35"/>
+      </svg>
+      <h3>{{ mergedConfig.emptyMessage }}</h3>
+      <p *ngIf="searchQuery()">Try adjusting your search criteria</p>
+    </div>
+  </div>
+
+  <!-- Pagination -->
+  <div class="table-footer" *ngIf="mergedConfig.showPagination && totalPages() > 1 && !loading">
+    <div class="pagination-info">
+      Showing {{ (currentPage() - 1) * (mergedConfig.pageSize || 10) + 1 }}
+      to {{ Math.min(currentPage() * (mergedConfig.pageSize || 10), filteredData().length) }}
+      of {{ filteredData().length }} entries
+    </div>
+    <div class="pagination">
+      <button
+        class="page-btn"
+        [disabled]="currentPage() === 1"
+        (click)="onPageChange(currentPage() - 1)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
+      </button>
+      <button
+        *ngFor="let page of getPageNumbers()"
+        [class.page-btn]="page !== -1"
+        [class.dots]="page === -1"
+        [class.active]="page === currentPage()"
+        [disabled]="page === -1"
+        (click)="page !== -1 && onPageChange(page)">
+        {{ page === -1 ? '...' : page }}
+      </button>
+      <button
+        class="page-btn"
+        [disabled]="currentPage() === totalPages()"
+        (click)="onPageChange(currentPage() + 1)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="9 18 15 12 9 6"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>

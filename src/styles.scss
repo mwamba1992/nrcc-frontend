@@ -4,6 +4,7 @@
 
 @import './styles/variables';
 @import './styles/mixins';
+@import 'sweetalert2/src/sweetalert2.scss';
 
 // -----------------------------------------------------------------------------
 // Reset & Base Styles
@@ -455,4 +456,74 @@ a {
   width: 100%;
   padding-left: $spacing-4;
   padding-right: $spacing-4;
+}
+
+// -----------------------------------------------------------------------------
+// SweetAlert2 Custom Styles
+// -----------------------------------------------------------------------------
+.swal-custom-popup {
+  border-radius: 12px !important;
+  font-family: $font-family-base !important;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+}
+
+.swal-custom-title {
+  font-size: 1.5rem !important;
+  font-weight: 700 !important;
+  color: #111827 !important;
+  margin-bottom: 1rem !important;
+  font-family: $font-family-heading !important;
+}
+
+.swal-custom-html {
+  font-size: 0.9375rem !important;
+  color: #6b7280 !important;
+  line-height: 1.6 !important;
+}
+
+.swal-custom-confirm {
+  border-radius: 8px !important;
+  padding: 0.75rem 1.5rem !important;
+  font-weight: 600 !important;
+  font-size: 0.875rem !important;
+  transition: all 0.15s !important;
+  border: none !important;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1) !important;
+
+  &:hover {
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+  }
+
+  &:active {
+    transform: translateY(0) !important;
+  }
+}
+
+.swal-custom-cancel {
+  border-radius: 8px !important;
+  padding: 0.75rem 1.5rem !important;
+  font-weight: 600 !important;
+  font-size: 0.875rem !important;
+  transition: all 0.15s !important;
+  border: 1px solid #d1d5db !important;
+  background-color: #f3f4f6 !important;
+  color: #374151 !important;
+
+  &:hover {
+    background-color: #e5e7eb !important;
+    color: #1f2937 !important;
+  }
+
+  &:focus {
+    box-shadow: 0 0 0 3px rgba(107, 114, 128, 0.1) !important;
+  }
+}
+
+.swal2-icon {
+  margin: 1.5rem auto 1rem !important;
+}
+
+.swal2-timer-progress-bar {
+  background: rgba(59, 130, 246, 0.8) !important;
 }

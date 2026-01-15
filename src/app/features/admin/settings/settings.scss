@@ -1,0 +1,146 @@
+.settings-container {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.settings-header {
+  margin-bottom: 2rem;
+
+  h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1a202c;
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    color: #64748b;
+    font-size: 1rem;
+  }
+}
+
+.settings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 1.5rem;
+}
+
+.setting-card {
+  display: flex;
+  align-items: center;
+  padding: 1.5rem;
+  background: white;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    transition: all 0.2s ease;
+  }
+
+  &.blue {
+    &::before {
+      background: #3b82f6;
+    }
+    .card-icon {
+      background: #eff6ff;
+      color: #3b82f6;
+    }
+  }
+
+  &.green {
+    &::before {
+      background: #10b981;
+    }
+    .card-icon {
+      background: #f0fdf4;
+      color: #10b981;
+    }
+  }
+
+  &.purple {
+    &::before {
+      background: #8b5cf6;
+    }
+    .card-icon {
+      background: #f5f3ff;
+      color: #8b5cf6;
+    }
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-color: currentColor;
+
+    &.blue {
+      border-color: #3b82f6;
+    }
+    &.green {
+      border-color: #10b981;
+    }
+    &.purple {
+      border-color: #8b5cf6;
+    }
+
+    .card-arrow {
+      transform: translateX(4px);
+    }
+  }
+}
+
+.card-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 12px;
+  flex-shrink: 0;
+  margin-right: 1.25rem;
+}
+
+.card-content {
+  flex: 1;
+
+  h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1a202c;
+    margin: 0 0 0.25rem 0;
+  }
+
+  p {
+    font-size: 0.875rem;
+    color: #64748b;
+    margin: 0;
+    line-height: 1.5;
+  }
+}
+
+.card-arrow {
+  color: #94a3b8;
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .settings-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .settings-container {
+    padding: 1rem;
+  }
+}

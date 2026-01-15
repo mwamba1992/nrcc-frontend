@@ -1,0 +1,49 @@
+<app-reviewer-layout>
+  <div class="settings-container">
+    <div class="settings-header">
+      <h1>System Settings</h1>
+      <p>Manage system configuration and administrative data</p>
+    </div>
+
+    <div class="settings-grid">
+      <a *ngFor="let category of settingsCategories"
+         [routerLink]="category.route"
+         class="setting-card"
+         [class]="category.color">
+        <div class="card-icon" aria-hidden="true">
+          <svg *ngIf="category.icon === 'building'" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="4" y="2" width="16" height="20" rx="2" ry="2"/>
+            <path d="M9 22v-4h6v4"/>
+            <path d="M8 6h.01"/>
+            <path d="M16 6h.01"/>
+            <path d="M12 6h.01"/>
+            <path d="M12 10h.01"/>
+            <path d="M12 14h.01"/>
+            <path d="M16 10h.01"/>
+            <path d="M16 14h.01"/>
+            <path d="M8 10h.01"/>
+            <path d="M8 14h.01"/>
+          </svg>
+          <svg *ngIf="category.icon === 'map'" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/>
+            <line x1="8" y1="2" x2="8" y2="18"/>
+            <line x1="16" y1="6" x2="16" y2="22"/>
+          </svg>
+          <svg *ngIf="category.icon === 'marker'" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+            <circle cx="12" cy="10" r="3"/>
+          </svg>
+        </div>
+        <div class="card-content">
+          <h2>{{ category.title }}</h2>
+          <p>{{ category.description }}</p>
+        </div>
+        <div class="card-arrow">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="9 18 15 12 9 6"/>
+          </svg>
+        </div>
+      </a>
+    </div>
+  </div>
+</app-reviewer-layout>

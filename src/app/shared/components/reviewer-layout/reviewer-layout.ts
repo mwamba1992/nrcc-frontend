@@ -118,4 +118,8 @@ export class ReviewerLayoutComponent {
     // Implement search functionality
     this.router.navigate(['/reviewer/search'], { queryParams: { q: query } });
   }
+
+  isAdmin(): boolean {
+    return this.currentUser?.role === UserRole.ADMIN;
+  }
 }
