@@ -1,11 +1,34 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { User, UserRole, AuthResponse, LoginCredentials } from '../models/user.model';
+import { Observable, firstValueFrom } from 'rxjs';
+import { environment } from '../../../environments/environment';
+import { User, UserRole, LoginCredentials } from '../models/user.model';
+import { ApiResponse } from '../models/api-response.model';
+
+// Auth response from backend
+interface AuthResponseData {
+  accessToken: string;
+  refreshToken: string;
+  tokenType: string;
+  expiresIn: number;
+  user: {
+    id: number;
+    name: string;
+    email: string;
+    phoneNumber?: string;
+    role: string;
+    status: string;
+  };
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+  private http = inject(HttpClient);
+  private router = inject(Router);
+
   private currentUserSignal = signal<User | null>(null);
   private isAuthenticatedSignal = signal<boolean>(false);
 
@@ -13,134 +36,170 @@ export class AuthService {
   currentUser = this.currentUserSignal.asReadonly();
   isAuthenticated = this.isAuthenticatedSignal.asReadonly();
 
-  // Mock users for testing
-  private mockUsers: Array<{ email: string; password: string; user: User }> = [
-    // Applicants
-    {
-      email: 'applicant@test.com',
-      password: 'password',
-      user: {
-        id: '1',
-        email: 'applicant@test.com',
-        firstName: 'John',
-        lastName: 'Doe',
-        role: UserRole.APPLICANT,
-        organization: 'Independent Applicant',
-        phone: '+255 123 456 789',
-        createdAt: new Date(),
-        lastLogin: new Date()
-      }
-    },
-    {
-      email: 'mp@parliament.go.tz',
-      password: 'password',
-      user: {
-        id: '2',
-        email: 'mp@parliament.go.tz',
-        firstName: 'Sarah',
-        lastName: 'Mwamba',
-        role: UserRole.APPLICANT,
-        organization: 'Member of Parliament - Dar es Salaam',
-        region: 'Dar es Salaam',
-        phone: '+255 123 456 790',
-        createdAt: new Date(),
-        lastLogin: new Date()
-      }
-    },
-    // District Reviewer
-    {
-      email: 'district@roadsfund.go.tz',
-      password: 'password',
-      user: {
-        id: '3',
-        email: 'district@roadsfund.go.tz',
-        firstName: 'Michael',
-        lastName: 'Kimaro',
-        role: UserRole.DISTRICT_REVIEWER,
-        organization: 'Kinondoni District Council',
-        region: 'Dar es Salaam',
-        district: 'Kinondoni',
-        phone: '+255 123 456 791',
-        createdAt: new Date(),
-        lastLogin: new Date()
-      }
-    },
-    // Regional Reviewer
-    {
-      email: 'regional@roadsfund.go.tz',
-      password: 'password',
-      user: {
-        id: '4',
-        email: 'regional@roadsfund.go.tz',
-        firstName: 'Grace',
-        lastName: 'Mlaki',
-        role: UserRole.REGIONAL_REVIEWER,
-        organization: 'Dar es Salaam Regional Roads Board',
-        region: 'Dar es Salaam',
-        phone: '+255 123 456 792',
-        createdAt: new Date(),
-        lastLogin: new Date()
-      }
-    },
-    // National Reviewer
-    {
-      email: 'national@roadsfund.go.tz',
-      password: 'password',
-      user: {
-        id: '5',
-        email: 'national@roadsfund.go.tz',
-        firstName: 'David',
-        lastName: 'Ngowi',
-        role: UserRole.NATIONAL_REVIEWER,
-        organization: 'Roads Fund Board - National Office',
-        phone: '+255 123 456 793',
-        createdAt: new Date(),
-        lastLogin: new Date()
-      }
-    },
-    // NRCC Member
-    {
-      email: 'nrcc@roadsfund.go.tz',
-      password: 'password',
-      user: {
-        id: '6',
-        email: 'nrcc@roadsfund.go.tz',
-        firstName: 'Peter',
-        lastName: 'Mushi',
-        role: UserRole.NRCC_MEMBER,
-        organization: 'National Road Classification Committee',
-        phone: '+255 123 456 794',
-        createdAt: new Date(),
-        lastLogin: new Date()
-      }
-    },
-    // Admin
-    {
-      email: 'admin@roadsfund.go.tz',
-      password: 'admin123',
-      user: {
-        id: '7',
-        email: 'admin@roadsfund.go.tz',
-        firstName: 'Admin',
-        lastName: 'User',
-        role: UserRole.ADMIN,
-        organization: 'Roads Fund Board',
-        phone: '+255 123 456 795',
-        createdAt: new Date(),
-        lastLogin: new Date()
-      }
-    }
-  ];
+  private apiUrl = `${environment.apiUrl}/auth`;
 
-  constructor(private router: Router) {
+  constructor() {
     this.loadUserFromStorage();
   }
 
-  async login(credentials: LoginCredentials): Promise<AuthResponse> {
-    // Simulate API call delay
-    await new Promise(resolve => setTimeout(resolve, 800));
+  async login(credentials: LoginCredentials): Promise<any> {
+    console.log('🔑 Attempting login for:', credentials.email);
 
-    const mockUser = this.mockUsers.find(
+    try {
+      // Call the real backend API
+      const response = await firstValueFrom(
+        this.http.post<ApiResponse<AuthResponseData>>(`${this.apiUrl}/login`, {
+          email: credentials.email,
+          password: credentials.password
+        })
+      );
+
+      console.log('📥 Login response:', response);
+
+      if (response.success && response.data) {
+        const authData = response.data;
+        console.log('✅ Login successful, token starts with:', authData.accessToken?.substring(0, 30));
+
+        // Map backend user to frontend User model
+        const user: User = {
+          id: authData.user.id.toString(),
+          email: authData.user.email,
+          firstName: authData.user.name.split(' ')[0] || authData.user.name,
+          lastName: authData.user.name.split(' ').slice(1).join(' ') || '',
+          role: this.mapBackendRole(authData.user.role),
+          phone: authData.user.phoneNumber,
+          organization: this.getOrganizationFromRole(authData.user.role),
+          createdAt: new Date(),
+          lastLogin: new Date()
+        };
+
+        this.setCurrentUser(user, authData.accessToken, authData.refreshToken);
+
+        return {
+          user,
+          token: authData.accessToken,
+          expiresIn: authData.expiresIn
+        };
+      } else {
+        throw new Error(response.message || 'Login failed');
+      }
+    } catch (error: any) {
+      console.error('Login error:', error);
+
+      // If backend is unavailable, fall back to mock auth for development
+      if (error.status === 0 || error.status === 504) {
+        console.warn('Backend unavailable, using mock authentication');
+        return this.mockLogin(credentials);
+      }
+
+      throw new Error(error.error?.message || error.message || 'Invalid email or password');
+    }
+  }
+
+  // Map backend role to frontend UserRole enum
+  private mapBackendRole(backendRole: string): UserRole {
+    const roleMap: Record<string, UserRole> = {
+      'PUBLIC_APPLICANT': UserRole.PUBLIC_APPLICANT,
+      'MEMBER_OF_PARLIAMENT': UserRole.MEMBER_OF_PARLIAMENT,
+      'REGIONAL_ROADS_BOARD_INITIATOR': UserRole.REGIONAL_ROADS_BOARD_INITIATOR,
+      'REGIONAL_ADMINISTRATIVE_SECRETARY': UserRole.REGIONAL_ADMINISTRATIVE_SECRETARY,
+      'REGIONAL_COMMISSIONER': UserRole.REGIONAL_COMMISSIONER,
+      'MINISTER_OF_WORKS': UserRole.MINISTER_OF_WORKS,
+      'NRCC_CHAIRPERSON': UserRole.NRCC_CHAIRPERSON,
+      'NRCC_MEMBER': UserRole.NRCC_MEMBER,
+      'NRCC_SECRETARIAT': UserRole.NRCC_SECRETARIAT,
+      'MINISTRY_LAWYER': UserRole.MINISTRY_LAWYER,
+      'SYSTEM_ADMINISTRATOR': UserRole.SYSTEM_ADMINISTRATOR
+    };
+    return roleMap[backendRole] || UserRole.PUBLIC_APPLICANT;
+  }
+
+  private getOrganizationFromRole(role: string): string {
+    const orgMap: Record<string, string> = {
+      'PUBLIC_APPLICANT': 'Public Applicant',
+      'MEMBER_OF_PARLIAMENT': 'Parliament of Tanzania',
+      'REGIONAL_ROADS_BOARD_INITIATOR': 'Regional Roads Board',
+      'REGIONAL_ADMINISTRATIVE_SECRETARY': 'Regional Administration',
+      'REGIONAL_COMMISSIONER': 'Regional Commissioner Office',
+      'MINISTER_OF_WORKS': 'Ministry of Works',
+      'NRCC_CHAIRPERSON': 'NRCC',
+      'NRCC_MEMBER': 'NRCC',
+      'NRCC_SECRETARIAT': 'NRCC Secretariat',
+      'MINISTRY_LAWYER': 'Ministry of Works - Legal',
+      'SYSTEM_ADMINISTRATOR': 'Roads Fund Board'
+    };
+    return orgMap[role] || 'Roads Fund Board';
+  }
+
+  // Mock login fallback for development when backend is unavailable
+  private async mockLogin(credentials: LoginCredentials): Promise<any> {
+    await new Promise(resolve => setTimeout(resolve, 500));
+
+    const mockUsers: Array<{ email: string; password: string; user: User }> = [
+      {
+        email: 'admin@roadsfund.go.tz',
+        password: 'Admin@123456',
+        user: {
+          id: '1',
+          email: 'admin@roadsfund.go.tz',
+          firstName: 'System',
+          lastName: 'Administrator',
+          role: UserRole.SYSTEM_ADMINISTRATOR,
+          organization: 'Roads Fund Board',
+          phone: '+255712345678',
+          createdAt: new Date(),
+          lastLogin: new Date()
+        }
+      },
+      {
+        email: 'john.mwangi@email.com',
+        password: 'Test@123456',
+        user: {
+          id: '2',
+          email: 'john.mwangi@email.com',
+          firstName: 'John',
+          lastName: 'Mwangi',
+          role: UserRole.PUBLIC_APPLICANT,
+          organization: 'Public Applicant',
+          phone: '+255723456789',
+          createdAt: new Date(),
+          lastLogin: new Date()
+        }
+      },
+      {
+        email: 'ras.dar@roadsfund.go.tz',
+        password: 'Ras@123456',
+        user: {
+          id: '3',
+          email: 'ras.dar@roadsfund.go.tz',
+          firstName: 'RAS',
+          lastName: 'Dar es Salaam',
+          role: UserRole.REGIONAL_ADMINISTRATIVE_SECRETARY,
+          organization: 'Regional Administration',
+          region: 'Dar es Salaam',
+          phone: '+255734567890',
+          createdAt: new Date(),
+          lastLogin: new Date()
+        }
+      },
+      {
+        email: 'chair@nrcc.go.tz',
+        password: 'Chair@123456',
+        user: {
+          id: '4',
+          email: 'chair@nrcc.go.tz',
+          firstName: 'NRCC',
+          lastName: 'Chairperson',
+          role: UserRole.NRCC_CHAIRPERSON,
+          organization: 'NRCC',
+          phone: '+255767890123',
+          createdAt: new Date(),
+          lastLogin: new Date()
+        }
+      }
+    ];
+
+    const mockUser = mockUsers.find(
       u => u.email === credentials.email && u.password === credentials.password
     );
 
@@ -148,32 +207,44 @@ export class AuthService {
       throw new Error('Invalid email or password');
     }
 
-    // User type is automatically determined from their credentials
-    // No need to specify user type - the system knows based on their account
+    const token = 'mock_dev_token_' + Math.random().toString(36).substring(2, 15);
+    this.setCurrentUser(mockUser.user, token);
 
-    const authResponse: AuthResponse = {
-      user: { ...mockUser.user, lastLogin: new Date() },
-      token: this.generateMockToken(),
-      expiresIn: 3600 // 1 hour
+    return {
+      user: mockUser.user,
+      token,
+      expiresIn: 3600
     };
-
-    this.setCurrentUser(authResponse.user, authResponse.token);
-    return authResponse;
   }
 
   logout(): void {
+    const token = localStorage.getItem('authToken');
+
+    // Call backend logout if we have a token
+    if (token && !token.startsWith('mock_')) {
+      this.http.post(`${this.apiUrl}/logout`, {}).subscribe({
+        error: () => {} // Ignore logout errors
+      });
+    }
+
     this.currentUserSignal.set(null);
     this.isAuthenticatedSignal.set(false);
     localStorage.removeItem('currentUser');
     localStorage.removeItem('authToken');
+    localStorage.removeItem('refreshToken');
     this.router.navigate(['/']);
   }
 
-  private setCurrentUser(user: User, token: string): void {
+  private setCurrentUser(user: User, token: string, refreshToken?: string): void {
+    console.log('💾 Storing user and token in localStorage');
     this.currentUserSignal.set(user);
     this.isAuthenticatedSignal.set(true);
     localStorage.setItem('currentUser', JSON.stringify(user));
     localStorage.setItem('authToken', token);
+    if (refreshToken) {
+      localStorage.setItem('refreshToken', refreshToken);
+    }
+    console.log('✅ Token stored. Verify with: localStorage.getItem("authToken")');
   }
 
   private loadUserFromStorage(): void {
@@ -192,8 +263,65 @@ export class AuthService {
     }
   }
 
-  private generateMockToken(): string {
-    return 'mock_token_' + Math.random().toString(36).substring(2, 15);
+  // Refresh token
+  async refreshToken(): Promise<string | null> {
+    const refreshToken = localStorage.getItem('refreshToken');
+    if (!refreshToken) return null;
+
+    try {
+      const response = await firstValueFrom(
+        this.http.post<ApiResponse<{ accessToken: string }>>(`${this.apiUrl}/refresh-token`, {
+          refreshToken
+        })
+      );
+
+      if (response.success && response.data) {
+        localStorage.setItem('authToken', response.data.accessToken);
+        return response.data.accessToken;
+      }
+    } catch (error) {
+      console.error('Token refresh failed:', error);
+      this.logout();
+    }
+
+    return null;
+  }
+
+  // Get current user profile from backend
+  async fetchCurrentUserProfile(): Promise<User | null> {
+    try {
+      const response = await firstValueFrom(
+        this.http.get<ApiResponse<any>>(`${this.apiUrl}/me`)
+      );
+
+      if (response.success && response.data) {
+        const userData = response.data;
+        const user: User = {
+          id: userData.id.toString(),
+          email: userData.email,
+          firstName: userData.name.split(' ')[0] || userData.name,
+          lastName: userData.name.split(' ').slice(1).join(' ') || '',
+          role: this.mapBackendRole(userData.role),
+          phone: userData.phoneNumber,
+          organization: this.getOrganizationFromRole(userData.role),
+          createdAt: new Date(userData.createdAt),
+          lastLogin: new Date()
+        };
+
+        this.currentUserSignal.set(user);
+        localStorage.setItem('currentUser', JSON.stringify(user));
+        return user;
+      }
+    } catch (error) {
+      console.error('Failed to fetch user profile:', error);
+    }
+
+    return null;
+  }
+
+  // Get the current auth token
+  getToken(): string | null {
+    return localStorage.getItem('authToken');
   }
 
   hasRole(role: UserRole): boolean {
@@ -206,16 +334,23 @@ export class AuthService {
   }
 
   isApplicant(): boolean {
-    return this.hasRole(UserRole.APPLICANT);
+    return this.hasAnyRole([UserRole.PUBLIC_APPLICANT, UserRole.MEMBER_OF_PARLIAMENT]);
   }
 
   isReviewer(): boolean {
     return this.hasAnyRole([
-      UserRole.DISTRICT_REVIEWER,
-      UserRole.REGIONAL_REVIEWER,
-      UserRole.NATIONAL_REVIEWER,
-      UserRole.NRCC_MEMBER
+      UserRole.REGIONAL_ADMINISTRATIVE_SECRETARY,
+      UserRole.REGIONAL_COMMISSIONER,
+      UserRole.MINISTER_OF_WORKS,
+      UserRole.NRCC_CHAIRPERSON,
+      UserRole.NRCC_MEMBER,
+      UserRole.NRCC_SECRETARIAT,
+      UserRole.MINISTRY_LAWYER
     ]);
+  }
+
+  isAdmin(): boolean {
+    return this.hasRole(UserRole.SYSTEM_ADMINISTRATOR);
   }
 
   getDashboardRoute(): string {
@@ -223,17 +358,22 @@ export class AuthService {
     if (!user) return '/';
 
     switch (user.role) {
-      case UserRole.APPLICANT:
+      case UserRole.PUBLIC_APPLICANT:
+      case UserRole.MEMBER_OF_PARLIAMENT:
         return '/applicant/dashboard';
-      case UserRole.DISTRICT_REVIEWER:
-        return '/reviewer/district/dashboard';
-      case UserRole.REGIONAL_REVIEWER:
+      case UserRole.REGIONAL_ADMINISTRATIVE_SECRETARY:
+      case UserRole.REGIONAL_COMMISSIONER:
+      case UserRole.REGIONAL_ROADS_BOARD_INITIATOR:
         return '/reviewer/regional/dashboard';
-      case UserRole.NATIONAL_REVIEWER:
+      case UserRole.MINISTER_OF_WORKS:
         return '/reviewer/national/dashboard';
+      case UserRole.NRCC_CHAIRPERSON:
       case UserRole.NRCC_MEMBER:
+      case UserRole.NRCC_SECRETARIAT:
         return '/nrcc/dashboard';
-      case UserRole.ADMIN:
+      case UserRole.MINISTRY_LAWYER:
+        return '/reviewer/national/dashboard';
+      case UserRole.SYSTEM_ADMINISTRATOR:
         return '/admin/dashboard';
       default:
         return '/';

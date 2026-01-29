@@ -13,6 +13,13 @@ import { ReviewerLayoutComponent } from '../../../shared/components/reviewer-lay
 export class SettingsComponent {
   settingsCategories = [
     {
+      title: 'Users',
+      description: 'Manage system users, roles, and permissions',
+      icon: 'users',
+      route: '/admin/settings/users',
+      color: 'indigo'
+    },
+    {
       title: 'Organizations',
       description: 'Manage organizations, their types, and contact information',
       icon: 'building',
@@ -32,6 +39,20 @@ export class SettingsComponent {
       icon: 'marker',
       route: '/admin/settings/districts',
       color: 'purple'
+    },
+    {
+      title: 'Roads',
+      description: 'Manage road classification, conditions, and details',
+      icon: 'road',
+      route: '/admin/settings/roads',
+      color: 'orange'
+    },
+    {
+      title: 'Action Plans',
+      description: 'Manage annual action plans, targets, and activities',
+      icon: 'clipboard',
+      route: '/admin/settings/action-plans',
+      color: 'teal'
     }
   ];
 }

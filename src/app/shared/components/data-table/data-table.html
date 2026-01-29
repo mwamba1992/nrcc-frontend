@@ -101,13 +101,13 @@
   </div>
 
   <!-- Pagination -->
-  <div class="table-footer" *ngIf="mergedConfig.showPagination && totalPages() > 1 && !loading">
+  <div class="table-footer" *ngIf="mergedConfig.showPagination && !loading && filteredData().length > 0">
     <div class="pagination-info">
       Showing {{ (currentPage() - 1) * (mergedConfig.pageSize || 10) + 1 }}
       to {{ Math.min(currentPage() * (mergedConfig.pageSize || 10), filteredData().length) }}
       of {{ filteredData().length }} entries
     </div>
-    <div class="pagination">
+    <div class="pagination" *ngIf="totalPages() > 1">
       <button
         class="page-btn"
         [disabled]="currentPage() === 1"

@@ -1,0 +1,7 @@
+// Import all shared styles from organizations
+@use '../organizations/organizations.scss' as organizations;
+
+// Roads-specific overrides
+.roads-container {
+  @extend .organizations-container;
+}

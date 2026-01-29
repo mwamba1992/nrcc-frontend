@@ -39,37 +39,39 @@
 // STEPPER CONTAINER
 .stepper-container {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   margin-bottom: $spacing-6;
   position: relative;
-  padding: 0 $spacing-2;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 18px;
-    left: 10%;
-    right: 10%;
-    height: 2px;
-    background: #e5e7eb;
-    z-index: 0;
-  }
+  padding: 0;
 }
 
 .stepper-item {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: $spacing-3;
+  gap: $spacing-2;
   cursor: pointer;
   transition: all 0.2s ease;
   position: relative;
   z-index: 1;
   flex: 1;
-  max-width: 200px;
+  text-align: center;
 
-  &:not(:last-child) {
-    margin-right: $spacing-4;
+  // Connecting line between circles
+  &:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    top: 18px;
+    left: calc(50% + 22px);
+    right: calc(-50% + 22px);
+    height: 2px;
+    background: #e5e7eb;
+    z-index: 0;
+  }
+
+  &.completed:not(:last-child)::after {
+    background: $primary-green;
   }
 
   .stepper-number {
@@ -86,11 +88,13 @@
     font-weight: $font-weight-bold;
     transition: all 0.2s ease;
     border: 2px solid transparent;
+    position: relative;
+    z-index: 2;
   }
 
   .stepper-content {
     .stepper-label {
-      font-size: 13px;
+      font-size: 12px;
       font-weight: $font-weight-medium;
       color: #9ca3af;
       transition: all 0.2s ease;
@@ -334,73 +338,397 @@
   }
 }
 
+// ROAD SELECTION
+.selected-road {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $spacing-4;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+
+  .road-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    strong {
+      font-size: $font-size-base;
+      color: #111827;
+    }
+
+    .road-meta {
+      font-size: $font-size-sm;
+      color: #6b7280;
+    }
+  }
+
+  .btn-change {
+    padding: 6px 12px;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+    color: $primary-green;
+    background: $white;
+    border: 1px solid $primary-green;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+
+    &:hover {
+      background: $primary-green;
+      color: $white;
+    }
+  }
+}
+
+.road-search {
+  input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: $font-size-sm;
+    margin-bottom: $spacing-3;
+
+    &:focus {
+      outline: none;
+      border-color: $primary-green;
+      box-shadow: 0 0 0 3px rgba($primary-green, 0.1);
+    }
+  }
+}
+
+.road-list {
+  max-height: 250px;
+  overflow-y: auto;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: $white;
+}
+
+.road-item {
+  padding: $spacing-3 $spacing-4;
+  cursor: pointer;
+  border-bottom: 1px solid #f3f4f6;
+  transition: all 0.15s ease;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover {
+    background: #f0fdf4;
+  }
+
+  .road-name {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+    color: #111827;
+    margin-bottom: 2px;
+  }
+
+  .road-details {
+    font-size: $font-size-xs;
+    color: #6b7280;
+  }
+}
+
+.road-list-status {
+  padding: $spacing-4;
+  text-align: center;
+  color: #6b7280;
+  font-size: $font-size-sm;
+  background: #f9fafb;
+  border-radius: 8px;
+
+  &.error {
+    background: #fef2f2;
+    color: #dc2626;
+
+    .btn-retry {
+      margin-top: $spacing-2;
+      padding: 6px 12px;
+      font-size: $font-size-sm;
+      color: #dc2626;
+      background: $white;
+      border: 1px solid #dc2626;
+      border-radius: 6px;
+      cursor: pointer;
+
+      &:hover {
+        background: #dc2626;
+        color: $white;
+      }
+    }
+  }
+
+  .loading-text {
+    color: #6b7280;
+  }
+}
+
 // CLASSIFICATION PREVIEW
 .classification-preview {
-  margin-top: $spacing-6;
-  padding: $spacing-5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-4;
+  padding: $spacing-4;
   background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
   border-radius: 8px;
   border: 1px solid #d1fae5;
 
-  .preview-header {
-    display: flex;
-    align-items: center;
-    gap: $spacing-2;
-    margin-bottom: $spacing-4;
-    font-size: $font-size-sm;
-    font-weight: $font-weight-semibold;
-    color: $primary-green;
-
-    svg {
-      flex-shrink: 0;
-    }
-  }
-
-  .preview-content {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: $spacing-5;
-  }
-
   .preview-item {
     flex: 1;
     text-align: center;
-    padding: $spacing-4;
+    padding: $spacing-3;
     background: $white;
     border-radius: 6px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 
-    .preview-label {
+    .label {
       display: block;
       font-size: $font-size-xs;
-      color: $text-muted;
+      color: #6b7280;
       text-transform: uppercase;
       letter-spacing: 0.05em;
-      margin-bottom: $spacing-2;
+      margin-bottom: 4px;
       font-weight: $font-weight-semibold;
     }
 
-    .preview-value {
+    .value {
       display: block;
-      font-size: $font-size-lg;
+      font-size: $font-size-base;
       font-weight: $font-weight-bold;
     }
 
-    &.current .preview-value {
-      color: #dc2626;
+    &.current .value {
+      color: #6b7280;
     }
 
-    &.proposed .preview-value {
+    &.proposed .value {
       color: $primary-green;
     }
   }
 
   .preview-arrow {
-    flex-shrink: 0;
+    font-size: 24px;
+    color: $primary-green;
+    font-weight: bold;
+  }
+}
 
-    svg {
+// CHARACTER COUNT
+.char-count {
+  font-size: $font-size-xs;
+  color: #6b7280;
+  margin-top: $spacing-2;
+  text-align: right;
+
+  &.warning {
+    color: #f59e0b;
+  }
+}
+
+// ELIGIBILITY CRITERIA
+.criteria-list {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-3;
+}
+
+.criterion-item {
+  display: flex;
+  align-items: flex-start;
+  gap: $spacing-3;
+  padding: $spacing-4;
+  background: $white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+
+  &:hover {
+    border-color: $primary-green;
+    background: #fafffe;
+  }
+
+  &.selected {
+    border-color: $primary-green;
+    background: #f0fdf4;
+
+    .criterion-checkbox {
+      background: $primary-green;
+      border-color: $primary-green;
+      color: $white;
+    }
+  }
+
+  .criterion-checkbox {
+    width: 24px;
+    height: 24px;
+    min-width: 24px;
+    border: 2px solid #d1d5db;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+  }
+
+  .criterion-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    .criterion-code {
+      font-size: $font-size-xs;
+      font-weight: $font-weight-semibold;
       color: $primary-green;
+    }
+
+    .criterion-text {
+      font-size: $font-size-sm;
+      color: #374151;
+    }
+  }
+}
+
+.criteria-status {
+  margin-top: $spacing-4;
+  padding: $spacing-3 $spacing-4;
+  border-radius: 8px;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  text-align: center;
+  background: #f9fafb;
+  color: #6b7280;
+
+  &.valid {
+    background: #f0fdf4;
+    color: $primary-green;
+  }
+
+  .warning {
+    color: #f59e0b;
+  }
+}
+
+// DOCUMENT SUGGESTIONS
+.document-suggestions {
+  margin-top: $spacing-5;
+  padding: $spacing-4;
+  background: #f9fafb;
+  border-radius: 8px;
+
+  p {
+    font-size: $font-size-sm;
+    color: #374151;
+    margin: 0 0 $spacing-2;
+  }
+
+  ul {
+    margin: 0;
+    padding-left: $spacing-5;
+
+    li {
+      font-size: $font-size-sm;
+      color: #6b7280;
+      margin-bottom: $spacing-1;
+    }
+  }
+}
+
+// UPLOADED FILES
+.uploaded-files {
+  margin-top: $spacing-5;
+
+  h4 {
+    font-size: $font-size-base;
+    font-weight: $font-weight-semibold;
+    color: #111827;
+    margin: 0 0 $spacing-3;
+  }
+
+  .file-list {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-2;
+  }
+
+  .file-item {
+    display: flex;
+    align-items: center;
+    gap: $spacing-3;
+    padding: $spacing-3;
+    background: $white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+
+    .file-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      background: #f3f4f6;
+      color: #6b7280;
+
+      &.pdf {
+        background: rgba(#dc2626, 0.1);
+        color: #dc2626;
+      }
+
+      &.image {
+        background: rgba(#3b82f6, 0.1);
+        color: #3b82f6;
+      }
+
+      &.document {
+        background: rgba(#10b981, 0.1);
+        color: #10b981;
+      }
+    }
+
+    .file-info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+
+      .file-name {
+        font-size: $font-size-sm;
+        font-weight: $font-weight-medium;
+        color: #111827;
+      }
+
+      .file-size {
+        font-size: $font-size-xs;
+        color: #6b7280;
+      }
+    }
+
+    .btn-remove {
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      border: none;
+      background: transparent;
+      color: #9ca3af;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.15s ease;
+
+      &:hover {
+        background: #fee2e2;
+        color: #dc2626;
+      }
     }
   }
 }
@@ -583,11 +911,17 @@
 // FORM ACTIONS
 .form-actions {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
   gap: $spacing-3;
   padding: $spacing-6 0 0 0;
   margin-top: $spacing-6;
   border-top: 1px solid #e5e7eb;
+
+  .action-buttons {
+    display: flex;
+    gap: $spacing-3;
+  }
 
   button {
     display: inline-flex;

@@ -7,6 +7,39 @@ import Swal from 'sweetalert2';
 export class SweetAlertService {
 
   /**
+   * Show a generic confirmation dialog
+   */
+  async confirm(
+    title: string,
+    message: string,
+    confirmText: string = 'Yes',
+    cancelText: string = 'Cancel',
+    confirmColor: string = '#3b82f6'
+  ): Promise<boolean> {
+    const result = await Swal.fire({
+      title: title,
+      html: message,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: confirmColor,
+      cancelButtonColor: '#6b7280',
+      confirmButtonText: confirmText,
+      cancelButtonText: cancelText,
+      reverseButtons: true,
+      customClass: {
+        popup: 'swal-custom-popup',
+        title: 'swal-custom-title',
+        htmlContainer: 'swal-custom-html',
+        confirmButton: 'swal-custom-confirm',
+        cancelButton: 'swal-custom-cancel'
+      },
+      focusCancel: true
+    });
+
+    return result.isConfirmed;
+  }
+
+  /**
    * Show a confirmation dialog for delete actions
    */
   async confirmDelete(itemName: string, itemType: string = 'record'): Promise<boolean> {

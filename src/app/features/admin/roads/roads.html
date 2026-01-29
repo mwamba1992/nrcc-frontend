@@ -1,0 +1,236 @@
+<app-reviewer-layout>
+  <div class="roads-container">
+    <!-- Breadcrumb / Back Button -->
+    <div class="breadcrumb-nav">
+      <a routerLink="/admin/settings" class="back-link">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
+        Back to Settings
+      </a>
+    </div>
+
+    <!-- Page Header -->
+    <div class="page-header">
+      <div class="header-content">
+        <h1>Roads Management</h1>
+        <p class="subtitle">Manage roads classification and information</p>
+      </div>
+      <button class="btn-primary" (click)="openCreateModal()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="12" y1="5" x2="12" y2="19"/>
+          <line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+        Add Road
+      </button>
+    </div>
+
+    <!-- Professional Data Table -->
+    <app-data-table
+      [data]="roads()"
+      [columns]="tableColumns"
+      [actions]="tableActions"
+      [loading]="isLoading()"
+      [config]="tableConfig"
+      [showSerialNumber]="true">
+    </app-data-table>
+
+    <!-- Modal for Create/Edit -->
+    <div *ngIf="showModal()" class="modal-overlay" (click)="closeModal()">
+      <div class="modal-content modal-large" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h2>{{ editMode() ? 'Edit Road' : 'Add New Road' }}</h2>
+          <button class="btn-close" (click)="closeModal()">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"/>
+              <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+        </div>
+        <form (ngSubmit)="submitForm()" class="modal-body">
+          <div class="form-grid">
+            <!-- Basic Information -->
+            <div class="form-section">
+              <h3 class="section-title">Basic Information</h3>
+
+              <div class="form-group">
+                <label for="name">Road Name *</label>
+                <input
+                  type="text"
+                  id="name"
+                  [(ngModel)]="formData.name"
+                  name="name"
+                  placeholder="e.g., Dar es Salaam - Morogoro Highway"
+                  required
+                  maxlength="255">
+                <span class="help-text">Full name of the road</span>
+              </div>
+
+              <div class="form-group">
+                <label for="roadNumber">Road Number</label>
+                <input
+                  type="text"
+                  id="roadNumber"
+                  [(ngModel)]="formData.roadNumber"
+                  name="roadNumber"
+                  placeholder="e.g., T1, R001"
+                  maxlength="50">
+                <span class="help-text">Unique road identification number</span>
+              </div>
+
+              <div class="form-group">
+                <label for="currentClass">Road Class *</label>
+                <select
+                  id="currentClass"
+                  [(ngModel)]="formData.currentClass"
+                  name="currentClass"
+                  required>
+                  <option value="">Select road class</option>
+                  <option *ngFor="let roadClass of roadClasses" [value]="roadClass">
+                    {{ roadClass }}
+                  </option>
+                </select>
+                <span class="help-text">Classification based on road hierarchy</span>
+              </div>
+
+              <div class="form-group">
+                <label for="length">Length (km)</label>
+                <input
+                  type="number"
+                  id="length"
+                  [(ngModel)]="formData.length"
+                  name="length"
+                  placeholder="e.g., 125.5"
+                  step="0.01"
+                  min="0.01">
+                <span class="help-text">Road length in kilometers</span>
+              </div>
+
+              <div class="form-group">
+                <label for="startPoint">Start Point</label>
+                <input
+                  type="text"
+                  id="startPoint"
+                  [(ngModel)]="formData.startPoint"
+                  name="startPoint"
+                  placeholder="e.g., Dar es Salaam City Center"
+                  maxlength="500">
+                <span class="help-text">Starting point of the road</span>
+              </div>
+
+              <div class="form-group">
+                <label for="endPoint">End Point</label>
+                <input
+                  type="text"
+                  id="endPoint"
+                  [(ngModel)]="formData.endPoint"
+                  name="endPoint"
+                  placeholder="e.g., Morogoro Town"
+                  maxlength="500">
+                <span class="help-text">Ending point of the road</span>
+              </div>
+            </div>
+
+            <!-- Location & Technical Details -->
+            <div class="form-section">
+              <h3 class="section-title">Location & Technical Details</h3>
+
+              <div class="form-group">
+                <label for="region">Region</label>
+                <input
+                  type="text"
+                  id="region"
+                  [(ngModel)]="formData.region"
+                  name="region"
+                  placeholder="e.g., Dar es Salaam"
+                  maxlength="100">
+                <span class="help-text">Region where the road is located</span>
+              </div>
+
+              <div class="form-group">
+                <label for="district">District</label>
+                <input
+                  type="text"
+                  id="district"
+                  [(ngModel)]="formData.district"
+                  name="district"
+                  placeholder="e.g., Ilala"
+                  maxlength="100">
+                <span class="help-text">District where the road is located</span>
+              </div>
+
+              <div class="form-group">
+                <label for="surfaceType">Surface Type</label>
+                <input
+                  type="text"
+                  id="surfaceType"
+                  [(ngModel)]="formData.surfaceType"
+                  name="surfaceType"
+                  placeholder="e.g., Paved, Gravel, Earth"
+                  maxlength="100">
+                <span class="help-text">Road surface material</span>
+              </div>
+
+              <div class="form-group">
+                <label for="carriagewayWidth">Carriageway Width (m)</label>
+                <input
+                  type="number"
+                  id="carriagewayWidth"
+                  [(ngModel)]="formData.carriagewayWidth"
+                  name="carriagewayWidth"
+                  placeholder="e.g., 7.5"
+                  step="0.01"
+                  min="0.01">
+                <span class="help-text">Width of the carriageway in meters</span>
+              </div>
+
+              <div class="form-group">
+                <label for="formationWidth">Formation Width (m)</label>
+                <input
+                  type="number"
+                  id="formationWidth"
+                  [(ngModel)]="formData.formationWidth"
+                  name="formationWidth"
+                  placeholder="e.g., 10.5"
+                  step="0.01"
+                  min="0.01">
+                <span class="help-text">Width of the formation in meters</span>
+              </div>
+
+              <div class="form-group">
+                <label for="roadReserveWidth">Road Reserve Width (m)</label>
+                <input
+                  type="number"
+                  id="roadReserveWidth"
+                  [(ngModel)]="formData.roadReserveWidth"
+                  name="roadReserveWidth"
+                  placeholder="e.g., 30"
+                  step="0.01"
+                  min="0.01">
+                <span class="help-text">Width of the road reserve in meters</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Full Width Description -->
+          <div class="form-group">
+            <label for="description">Description</label>
+            <textarea
+              id="description"
+              [(ngModel)]="formData.description"
+              name="description"
+              placeholder="Additional information about the road"
+              rows="3"></textarea>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn-secondary" (click)="closeModal()">Cancel</button>
+            <button type="submit" class="btn-primary">
+              {{ editMode() ? 'Update' : 'Create' }} Road
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</app-reviewer-layout>

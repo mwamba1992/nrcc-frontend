@@ -1,0 +1,471 @@
+<app-reviewer-layout>
+  <div class="action-plans-container">
+    <!-- Breadcrumb / Back Button -->
+    <div class="breadcrumb-nav">
+      <a routerLink="/admin/settings" class="back-link">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
+        Back to Settings
+      </a>
+    </div>
+
+    <!-- Page Header -->
+    <div class="page-header">
+      <div class="header-content">
+        <h1>Action Plans</h1>
+        <p class="subtitle">Manage annual action plans, targets, and activities</p>
+      </div>
+      <button class="btn-primary" (click)="openCreateModal()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+        New Action Plan
+      </button>
+    </div>
+
+    <!-- Filters Bar -->
+    <div class="filters-bar">
+      <div class="filters-left">
+        <div class="filter-group">
+          <label>Status:</label>
+          <select [ngModel]="selectedStatusFilter()" (ngModelChange)="onStatusFilterChange($event)">
+            <option value="">All Statuses</option>
+            <option *ngFor="let status of statuses" [value]="status">
+              {{ getStatusLabel(status) }}
+            </option>
+          </select>
+        </div>
+        <button *ngIf="selectedStatusFilter()" class="btn-text" (click)="clearFilters()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+          Clear Filters
+        </button>
+      </div>
+      <div class="filters-right">
+        <span class="plan-count">{{ filteredPlans().length }} plan(s)</span>
+      </div>
+    </div>
+
+    <!-- Data Table -->
+    <app-data-table
+      [data]="filteredPlans()"
+      [columns]="tableColumns"
+      [actions]="tableActions"
+      [loading]="isLoading()"
+      [config]="tableConfig"
+      [showSerialNumber]="true">
+    </app-data-table>
+
+    <!-- ==================== CREATE/EDIT ACTION PLAN MODAL ==================== -->
+    <div *ngIf="showModal()" class="modal-overlay" (click)="closeModal()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h2>{{ editMode() ? 'Edit Action Plan' : 'New Action Plan' }}</h2>
+          <button class="btn-close" (click)="closeModal()">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+        </div>
+        <form (ngSubmit)="submitForm()" class="modal-body">
+          <div class="form-group">
+            <label for="financialYear">Financial Year *</label>
+            <select id="financialYear" [(ngModel)]="formData.financialYear" name="financialYear" required [disabled]="editMode()">
+              <option value="">Select financial year</option>
+              <option *ngFor="let year of financialYearOptions" [value]="year">{{ year }}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="title">Title *</label>
+            <input type="text" id="title" [(ngModel)]="formData.title" name="title" placeholder="e.g., NRCC Annual Action Plan 2025/2026" required>
+          </div>
+          <div class="form-group">
+            <label for="totalBudget">Total Budget (TZS)</label>
+            <input type="number" id="totalBudget" [(ngModel)]="formData.totalBudget" name="totalBudget" placeholder="e.g., 500000000" min="0">
+          </div>
+          <div class="form-group">
+            <label for="description">Description</label>
+            <textarea id="description" [(ngModel)]="formData.description" name="description" placeholder="Brief description of the action plan" rows="3"></textarea>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn-secondary" (click)="closeModal()">Cancel</button>
+            <button type="submit" class="btn-primary">{{ editMode() ? 'Update' : 'Create' }} Action Plan</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ==================== DETAIL/MANAGE MODAL ==================== -->
+    <div *ngIf="showDetailModal()" class="modal-overlay" (click)="closeDetailModal()">
+      <div class="modal-content modal-xlarge" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h2>{{ currentPlanDetail()?.title }}</h2>
+          <button class="btn-close" (click)="closeDetailModal()">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+        </div>
+        <div class="modal-body" *ngIf="currentPlanDetail() as plan">
+          <!-- Plan Summary -->
+          <div class="plan-summary">
+            <div class="summary-card">
+              <span class="label">Financial Year</span>
+              <span class="value highlight">{{ plan.financialYear }}</span>
+            </div>
+            <div class="summary-card">
+              <span class="label">Status</span>
+              <span class="status-badge" [attr.data-status]="plan.status">{{ getStatusLabel(plan.status) }}</span>
+            </div>
+            <div class="summary-card">
+              <span class="label">Total Budget</span>
+              <span class="value">TZS {{ formatCurrency(plan.totalBudget) }}</span>
+            </div>
+            <div class="summary-card">
+              <span class="label">Actual Cost</span>
+              <span class="value" [class.over-budget]="plan.totalActualCost > plan.totalBudget">TZS {{ formatCurrency(plan.totalActualCost || 0) }}</span>
+            </div>
+            <div class="summary-card progress-card">
+              <span class="label">Overall Progress</span>
+              <div class="progress-display">
+                <span class="progress-percent" [class.complete]="plan.overallProgress >= 100" [class.high]="plan.overallProgress >= 75 && plan.overallProgress < 100" [class.medium]="plan.overallProgress >= 50 && plan.overallProgress < 75">{{ plan.overallProgress }}%</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Progress Bar -->
+          <div class="progress-container">
+            <div class="progress-bar">
+              <div class="progress-fill" [style.width.%]="plan.overallProgress"></div>
+            </div>
+          </div>
+
+          <!-- Targets Section -->
+          <div class="targets-section">
+            <div class="section-header">
+              <h3>Targets & Activities</h3>
+              <button *ngIf="canEditPlan()" class="btn-sm btn-primary" (click)="openAddTargetModal()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                </svg>
+                Add Target
+              </button>
+            </div>
+
+            <div *ngIf="plan.targets.length === 0" class="empty-state">
+              <p>No targets defined yet. Click "Add Target" to create your first target.</p>
+            </div>
+
+            <div *ngFor="let target of plan.targets; let i = index" class="target-card">
+              <div class="target-header">
+                <div class="target-info">
+                  <span class="target-number">Target {{ i + 1 }}</span>
+                  <h4>{{ target.title }}</h4>
+                </div>
+                <div class="target-meta">
+                  <span class="progress-badge">{{ target.targetProgress }}%</span>
+                  <span class="budget">TZS {{ formatCurrency(target.subtotal) }}</span>
+                  <button *ngIf="canEditPlan()" class="btn-icon btn-sm" (click)="openAddActivityModal(target)" title="Add Activity">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+
+              <div class="target-details">
+                <div class="detail-item" *ngIf="target.indicator">
+                  <span class="label">Indicator:</span>
+                  <span class="value">{{ target.indicator }}</span>
+                </div>
+                <div class="detail-item" *ngIf="target.baseline">
+                  <span class="label">Baseline:</span>
+                  <span class="value">{{ target.baseline }}</span>
+                </div>
+                <div class="detail-item" *ngIf="target.targetValue">
+                  <span class="label">Target:</span>
+                  <span class="value">{{ target.targetValue }}</span>
+                </div>
+                <div class="detail-item" *ngIf="target.dueDate">
+                  <span class="label">Due Date:</span>
+                  <span class="value">{{ target.dueDate | date:'mediumDate' }}</span>
+                </div>
+              </div>
+
+              <!-- Activities Table -->
+              <div class="activities-list" *ngIf="target.activities.length > 0">
+                <table class="activities-table">
+                  <thead>
+                    <tr>
+                      <th>Activity</th>
+                      <th>Quarter</th>
+                      <th>Responsible</th>
+                      <th>Budget</th>
+                      <th>Status</th>
+                      <th>Progress</th>
+                      <th *ngIf="canUpdateProgress()">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let activity of target.activities">
+                      <td>{{ activity.description }}</td>
+                      <td>{{ activity.quarterSchedule?.join(', ') || '-' }}</td>
+                      <td>{{ activity.responsibleUnit || '-' }}</td>
+                      <td class="text-right">{{ formatCurrency(activity.budgetedCost) }}</td>
+                      <td>
+                        <span class="activity-status" [attr.data-status]="activity.status">
+                          {{ getActivityStatusLabel(activity.status) }}
+                        </span>
+                      </td>
+                      <td>
+                        <div class="mini-progress">
+                          <div class="mini-progress-bar">
+                            <div class="mini-progress-fill" [style.width.%]="activity.progressPercent"></div>
+                          </div>
+                          <span>{{ activity.progressPercent }}%</span>
+                        </div>
+                      </td>
+                      <td *ngIf="canUpdateProgress()">
+                        <button class="btn-icon btn-sm" (click)="openProgressModal(activity)" title="Update Progress">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                          </svg>
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div *ngIf="target.activities.length === 0" class="empty-activities">
+                <p>No activities yet. <span *ngIf="canEditPlan()">Click the + button to add activities.</span></p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <div class="footer-left">
+            <button type="button" class="btn-secondary" (click)="closeDetailModal()">Close</button>
+          </div>
+          <div class="footer-actions">
+            <button *ngIf="currentPlanDetail()?.status === 'DRAFT'"
+                    class="btn-success"
+                    (click)="submitPlanFromDetail()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 2L11 13"/><path d="M22 2L15 22l-4-9-9-4 20-7z"/>
+              </svg>
+              Submit for Approval
+            </button>
+            <button *ngIf="currentPlanDetail()?.status === 'SUBMITTED'"
+                    class="btn-success"
+                    (click)="approvePlanFromDetail()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+              </svg>
+              Approve Plan
+            </button>
+            <button *ngIf="currentPlanDetail()?.status === 'APPROVED'"
+                    class="btn-warning"
+                    (click)="startExecutionFromDetail()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="5 3 19 12 5 21 5 3"/>
+              </svg>
+              Start Execution
+            </button>
+            <button *ngIf="currentPlanDetail()?.status === 'IN_PROGRESS'"
+                    class="btn-success"
+                    (click)="markPlanComplete()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+              </svg>
+              Mark as Complete
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== ADD TARGET MODAL ==================== -->
+    <div *ngIf="showTargetModal()" class="modal-overlay" (click)="closeTargetModal()">
+      <div class="modal-content modal-medium" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h2>{{ editTargetMode() ? 'Edit Target' : 'Add New Target' }}</h2>
+          <button class="btn-close" (click)="closeTargetModal()">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+        </div>
+        <form (ngSubmit)="submitTargetForm()" class="modal-body">
+          <div class="form-group">
+            <label for="targetTitle">Target Title *</label>
+            <input type="text" id="targetTitle" [(ngModel)]="targetFormData.title" name="targetTitle" placeholder="e.g., Process Road Reclassification Applications" required>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="indicator">Indicator</label>
+              <input type="text" id="indicator" [(ngModel)]="targetFormData.indicator" name="indicator" placeholder="e.g., Number of applications processed">
+            </div>
+            <div class="form-group">
+              <label for="targetValue">Target Value</label>
+              <input type="text" id="targetValue" [(ngModel)]="targetFormData.targetValue" name="targetValue" placeholder="e.g., 50 applications">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="baseline">Baseline</label>
+              <input type="text" id="baseline" [(ngModel)]="targetFormData.baseline" name="baseline" placeholder="e.g., 0">
+            </div>
+            <div class="form-group">
+              <label for="dueDate">Due Date</label>
+              <input type="date" id="dueDate" [(ngModel)]="targetFormData.dueDate" name="dueDate">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="subtotal">Budget (TZS)</label>
+            <input type="number" id="subtotal" [(ngModel)]="targetFormData.subtotal" name="subtotal" placeholder="e.g., 150000000" min="0">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn-secondary" (click)="closeTargetModal()">Cancel</button>
+            <button type="submit" class="btn-primary">{{ editTargetMode() ? 'Update' : 'Add' }} Target</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ==================== ADD ACTIVITY MODAL ==================== -->
+    <div *ngIf="showActivityModal()" class="modal-overlay" (click)="closeActivityModal()">
+      <div class="modal-content modal-large" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h2>Add Activity to: {{ currentTarget()?.title }}</h2>
+          <button class="btn-close" (click)="closeActivityModal()">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+        </div>
+        <form (ngSubmit)="submitActivityForm()" class="modal-body">
+          <div class="form-group">
+            <label for="activityDesc">Activity Description *</label>
+            <textarea id="activityDesc" [(ngModel)]="activityFormData.description" name="activityDesc" placeholder="Describe the activity..." rows="2" required></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>Quarter Schedule</label>
+            <div class="quarter-buttons">
+              <button type="button" *ngFor="let q of quarterOptions"
+                      class="quarter-btn"
+                      [class.selected]="isQuarterSelected(q)"
+                      (click)="toggleQuarter(q)">
+                {{ q }}
+              </button>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="expectedOutput">Expected Output</label>
+              <input type="text" id="expectedOutput" [(ngModel)]="activityFormData.expectedOutput" name="expectedOutput" placeholder="e.g., Verification reports">
+            </div>
+            <div class="form-group">
+              <label for="responsibleUnit">Responsible Unit</label>
+              <input type="text" id="responsibleUnit" [(ngModel)]="activityFormData.responsibleUnit" name="responsibleUnit" placeholder="e.g., NRCC Verification Team">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="startDate">Start Date</label>
+              <input type="date" id="startDate" [(ngModel)]="activityFormData.startDate" name="startDate">
+            </div>
+            <div class="form-group">
+              <label for="endDate">End Date</label>
+              <input type="date" id="endDate" [(ngModel)]="activityFormData.endDate" name="endDate">
+            </div>
+          </div>
+
+          <!-- Cost Items -->
+          <div class="form-group">
+            <label>Cost Items</label>
+            <div class="cost-items-section">
+              <div class="cost-item-input">
+                <input type="text" [(ngModel)]="newCostItem.description" name="costDesc" placeholder="Cost description">
+                <input type="number" [(ngModel)]="newCostItem.amount" name="costAmount" placeholder="Amount" min="0">
+                <button type="button" class="btn-sm btn-secondary" (click)="addCostItem()">Add</button>
+              </div>
+              <div class="cost-items-list" *ngIf="activityFormData.costItems && activityFormData.costItems.length > 0">
+                <div class="cost-item" *ngFor="let item of activityFormData.costItems; let idx = index">
+                  <span>{{ item.description }}</span>
+                  <span>TZS {{ formatCurrency(item.amount) }}</span>
+                  <button type="button" class="btn-icon-sm" (click)="removeCostItem(idx)">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                  </button>
+                </div>
+                <div class="cost-total">
+                  <strong>Total: TZS {{ formatCurrency(getTotalCost()) }}</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn-secondary" (click)="closeActivityModal()">Cancel</button>
+            <button type="submit" class="btn-primary">Add Activity</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ==================== UPDATE PROGRESS MODAL ==================== -->
+    <div *ngIf="showProgressModal()" class="modal-overlay" (click)="closeProgressModal()">
+      <div class="modal-content modal-small" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h2>Update Progress</h2>
+          <button class="btn-close" (click)="closeProgressModal()">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+        </div>
+        <form (ngSubmit)="submitProgressForm()" class="modal-body" *ngIf="currentActivity() as activity">
+          <div class="activity-info">
+            <p><strong>Activity:</strong> {{ activity.description }}</p>
+            <p><strong>Budgeted Cost:</strong> TZS {{ formatCurrency(activity.budgetedCost) }}</p>
+          </div>
+
+          <div class="form-group">
+            <label for="progressStatus">Status *</label>
+            <select id="progressStatus" [(ngModel)]="progressFormData.status" name="progressStatus" required>
+              <option *ngFor="let status of activityStatuses" [value]="status">{{ getActivityStatusLabel(status) }}</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="progressPercent">Progress (%)</label>
+            <input type="range" id="progressPercent" [(ngModel)]="progressFormData.progressPercent" name="progressPercent" min="0" max="100">
+            <div class="progress-value">{{ progressFormData.progressPercent }}%</div>
+          </div>
+
+          <div class="form-group">
+            <label for="actualCost">Actual Cost (TZS)</label>
+            <input type="number" id="actualCost" [(ngModel)]="progressFormData.actualCost" name="actualCost" min="0">
+          </div>
+
+          <div class="form-group">
+            <label for="progressComments">Comments</label>
+            <textarea id="progressComments" [(ngModel)]="progressFormData.comments" name="progressComments" placeholder="Progress notes..." rows="3"></textarea>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn-secondary" (click)="closeProgressModal()">Cancel</button>
+            <button type="submit" class="btn-primary">Update Progress</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</app-reviewer-layout>

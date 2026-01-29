@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
+import { SweetAlertService } from '../../../core/services/sweetalert.service';
 import { User, UserRole } from '../../../core/models/user.model';
 import { NotificationCenterComponent, Notification } from '../notification-center/notification-center';
 import { GlobalSearchComponent } from '../global-search/global-search';
@@ -26,7 +27,8 @@ export class ReviewerLayoutComponent {
 
   constructor(
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private sweetAlertService: SweetAlertService
   ) {
     this.currentUser = this.authService.currentUser();
     this.setReviewerLevel();
@@ -60,7 +62,8 @@ export class ReviewerLayoutComponent {
   }
 
   navigateToDashboard(): void {
-    this.router.navigate(['/reviewer/dashboard']);
+    const dashboardRoute = this.authService.getDashboardRoute();
+    this.router.navigate([dashboardRoute]);
   }
 
   navigateToQueue(): void {
@@ -121,5 +124,12 @@ export class ReviewerLayoutComponent {
 
   isAdmin(): boolean {
     return this.currentUser?.role === UserRole.ADMIN;
+  }
+
+  showComingSoon(feature: string): void {
+    this.sweetAlertService.info(
+      'Coming Soon',
+      `The "${feature}" feature is currently under development and will be available soon.`
+    );
   }
 }

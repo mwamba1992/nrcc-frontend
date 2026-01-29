@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
+import { SweetAlertService } from '../../../core/services/sweetalert.service';
 import { User } from '../../../core/models/user.model';
 import { GlobalSearchComponent } from '../global-search/global-search';
 import { BreadcrumbsComponent, Breadcrumb } from '../breadcrumbs/breadcrumbs';
@@ -23,7 +24,8 @@ export class ApplicantLayoutComponent {
 
   constructor(
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private sweetAlertService: SweetAlertService
   ) {
     this.currentUser = this.authService.currentUser();
   }
@@ -43,5 +45,12 @@ export class ApplicantLayoutComponent {
   onSearch(query: string): void {
     console.log('Search query:', query);
     this.router.navigate(['/applicant/search'], { queryParams: { q: query } });
+  }
+
+  showComingSoon(feature: string): void {
+    this.sweetAlertService.info(
+      'Coming Soon',
+      `The "${feature}" feature is currently under development and will be available soon.`
+    );
   }
 }

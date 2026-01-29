@@ -1,0 +1,296 @@
+// Import shared styles from organizations
+@use '../organizations/organizations.scss' as organizations;
+
+// Users-specific container
+.users-container {
+  @extend .organizations-container;
+}
+
+// Filters Bar
+.filters-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  background: var(--bg-secondary, #f8fafc);
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+
+  .filters-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .filters-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .filter-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    label {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-secondary, #64748b);
+      white-space: nowrap;
+    }
+
+    select {
+      padding: 0.5rem 2rem 0.5rem 0.75rem;
+      border: 1px solid var(--border-color, #e2e8f0);
+      border-radius: 6px;
+      background: white;
+      font-size: 0.875rem;
+      color: var(--text-primary, #1e293b);
+      cursor: pointer;
+      min-width: 160px;
+
+      &:focus {
+        outline: none;
+        border-color: var(--primary-color, #3b82f6);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+      }
+    }
+  }
+
+  .btn-text {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.5rem 0.75rem;
+    background: none;
+    border: none;
+    color: var(--text-secondary, #64748b);
+    font-size: 0.875rem;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.2s;
+
+    &:hover {
+      background: var(--bg-hover, #f1f5f9);
+      color: var(--text-primary, #1e293b);
+    }
+
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  .user-count {
+    font-size: 0.875rem;
+    color: var(--text-secondary, #64748b);
+    font-weight: 500;
+  }
+}
+
+// Bulk Actions Bar
+.bulk-actions-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  color: white;
+
+  .selection-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+
+    svg {
+      opacity: 0.9;
+    }
+  }
+
+  .bulk-buttons {
+    display: flex;
+    gap: 0.5rem;
+  }
+}
+
+// Small buttons for bulk actions
+.btn-sm {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.5rem 0.875rem;
+  font-size: 0.813rem;
+  font-weight: 500;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  &.btn-success {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+
+    &:hover {
+      background: #22c55e;
+      border-color: #22c55e;
+    }
+  }
+
+  &.btn-warning {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+
+    &:hover {
+      background: #f59e0b;
+      border-color: #f59e0b;
+    }
+  }
+
+  &.btn-danger {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+
+    &:hover {
+      background: #ef4444;
+      border-color: #ef4444;
+    }
+  }
+
+  &.btn-ghost {
+    background: transparent;
+    color: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+    }
+  }
+}
+
+// Info Box for role descriptions
+.info-box {
+  display: flex;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: var(--info-bg, #eff6ff);
+  border: 1px solid var(--info-border, #bfdbfe);
+  border-radius: 8px;
+  margin-top: 1rem;
+
+  svg {
+    flex-shrink: 0;
+    color: var(--info-color, #3b82f6);
+    margin-top: 0.125rem;
+  }
+
+  .info-content {
+    flex: 1;
+
+    strong {
+      display: block;
+      color: var(--info-color, #3b82f6);
+      font-size: 0.875rem;
+      margin-bottom: 0.25rem;
+    }
+
+    p {
+      margin: 0;
+      color: var(--text-secondary, #64748b);
+      font-size: 0.813rem;
+      line-height: 1.5;
+    }
+  }
+}
+
+// Status badges in table
+:host ::ng-deep {
+  .status-cell {
+    .ACTIVE {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      background: #dcfce7;
+      color: #15803d;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .INACTIVE {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      background: #fee2e2;
+      color: #b91c1c;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .PENDING {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      background: #fef3c7;
+      color: #b45309;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+  }
+
+  .email-cell {
+    color: var(--primary-color, #3b82f6);
+    font-family: monospace;
+    font-size: 0.813rem;
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .filters-bar {
+    flex-direction: column;
+    align-items: stretch;
+
+    .filters-left,
+    .filters-right {
+      width: 100%;
+    }
+
+    .filter-group {
+      flex: 1;
+
+      select {
+        width: 100%;
+      }
+    }
+  }
+
+  .bulk-actions-bar {
+    flex-direction: column;
+    gap: 0.75rem;
+    text-align: center;
+
+    .bulk-buttons {
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+  }
+}

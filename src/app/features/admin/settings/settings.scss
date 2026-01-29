@@ -79,6 +79,36 @@
     }
   }
 
+  &.indigo {
+    &::before {
+      background: #6366f1;
+    }
+    .card-icon {
+      background: #eef2ff;
+      color: #6366f1;
+    }
+  }
+
+  &.orange {
+    &::before {
+      background: #f97316;
+    }
+    .card-icon {
+      background: #fff7ed;
+      color: #f97316;
+    }
+  }
+
+  &.teal {
+    &::before {
+      background: #14b8a6;
+    }
+    .card-icon {
+      background: #f0fdfa;
+      color: #14b8a6;
+    }
+  }
+
   &:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -92,6 +122,15 @@
     }
     &.purple {
       border-color: #8b5cf6;
+    }
+    &.indigo {
+      border-color: #6366f1;
+    }
+    &.orange {
+      border-color: #f97316;
+    }
+    &.teal {
+      border-color: #14b8a6;
     }
 
     .card-arrow {
