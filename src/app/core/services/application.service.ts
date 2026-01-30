@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, timeout, catchError, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import {
   ApplicationResponse,
@@ -46,7 +46,13 @@ export class ApplicationService {
    * Get application by ID
    */
   getApplicationById(id: number): Observable<ApiResponse<ApplicationDetailResponse>> {
-    return this.http.get<ApiResponse<ApplicationDetailResponse>>(`${this.apiUrl}/${id}`);
+    return this.http.get<ApiResponse<ApplicationDetailResponse>>(`${this.apiUrl}/${id}`).pipe(
+      timeout(15000),
+      catchError(err => {
+        console.error('Error fetching application:', err);
+        return throwError(() => err);
+      })
+    );
   }
 
   /**
@@ -76,6 +82,7 @@ export class ApplicationService {
 
   /**
    * Get current user's applications (paginated)
+   * Endpoint: GET /applications/my-applications
    */
   getMyApplications(
     page: number = 0,
@@ -93,9 +100,20 @@ export class ApplicationService {
 
   /**
    * Get applications assigned to current user for verification
+   * Endpoint: GET /applications/assigned
    */
-  getMyAssignedApplications(): Observable<ApiResponse<ApplicationResponse[]>> {
-    return this.http.get<ApiResponse<ApplicationResponse[]>>(`${this.apiUrl}/my-assignments`);
+  getMyAssignedApplications(
+    page: number = 0,
+    size: number = 10,
+    sortBy: string = 'createdAt',
+    sortDirection: string = 'DESC'
+  ): Observable<ApiResponse<PageResponse<ApplicationResponse>>> {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString())
+      .set('sortBy', sortBy)
+      .set('sortDirection', sortDirection);
+    return this.http.get<ApiResponse<PageResponse<ApplicationResponse>>>(`${this.apiUrl}/assigned`, { params });
   }
 
   // ==================== CRUD OPERATIONS ====================
@@ -167,17 +185,19 @@ export class ApplicationService {
   /**
    * NRCC Member submits verification report
    * VERIFICATION_IN_PROGRESS -> NRCC_REVIEW_MEETING
+   * Endpoint: POST /applications/{id}/verification-report
    */
   submitVerificationReport(id: number, request: SubmitVerificationReportRequest): Observable<ApiResponse<ApplicationDetailResponse>> {
-    return this.http.post<ApiResponse<ApplicationDetailResponse>>(`${this.apiUrl}/${id}/submit-verification-report`, request);
+    return this.http.post<ApiResponse<ApplicationDetailResponse>>(`${this.apiUrl}/${id}/verification-report`, request);
   }
 
   /**
    * NRCC Chair submits recommendation to Minister
    * NRCC_REVIEW_MEETING -> RECOMMENDATION_SUBMITTED
+   * Endpoint: POST /applications/{id}/recommend
    */
   submitRecommendation(id: number, request: WorkflowActionRequest): Observable<ApiResponse<ApplicationDetailResponse>> {
-    return this.http.post<ApiResponse<ApplicationDetailResponse>>(`${this.apiUrl}/${id}/submit-recommendation`, request);
+    return this.http.post<ApiResponse<ApplicationDetailResponse>>(`${this.apiUrl}/${id}/recommend`, request);
   }
 
   /**
@@ -191,9 +211,10 @@ export class ApplicationService {
   /**
    * Ministry Lawyer updates gazettement details
    * APPROVED -> PENDING_GAZETTEMENT -> GAZETTED
+   * Endpoint: POST /applications/{id}/gazettement
    */
   updateGazettement(id: number, request: UpdateGazettementRequest): Observable<ApiResponse<ApplicationDetailResponse>> {
-    return this.http.post<ApiResponse<ApplicationDetailResponse>>(`${this.apiUrl}/${id}/gazette`, request);
+    return this.http.post<ApiResponse<ApplicationDetailResponse>>(`${this.apiUrl}/${id}/gazettement`, request);
   }
 
   /**

@@ -1,7 +1,7 @@
 import { Injectable, signal, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { Observable, firstValueFrom } from 'rxjs';
+import { Observable, firstValueFrom, timeout, catchError, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { User, UserRole, LoginCredentials } from '../models/user.model';
 import { ApiResponse } from '../models/api-response.model';
@@ -46,12 +46,18 @@ export class AuthService {
     console.log('🔑 Attempting login for:', credentials.email);
 
     try {
-      // Call the real backend API
+      // Call the real backend API with timeout
       const response = await firstValueFrom(
         this.http.post<ApiResponse<AuthResponseData>>(`${this.apiUrl}/login`, {
           email: credentials.email,
           password: credentials.password
-        })
+        }).pipe(
+          timeout(15000), // 15 second timeout
+          catchError(err => {
+            console.error('HTTP error in login:', err);
+            return throwError(() => err);
+          })
+        )
       );
 
       console.log('📥 Login response:', response);
@@ -85,6 +91,11 @@ export class AuthService {
       }
     } catch (error: any) {
       console.error('Login error:', error);
+
+      // Handle timeout error
+      if (error.name === 'TimeoutError') {
+        throw new Error('Connection timeout. Please check your network and try again.');
+      }
 
       // If backend is unavailable, fall back to mock auth for development
       if (error.status === 0 || error.status === 504) {

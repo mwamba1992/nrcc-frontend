@@ -30,23 +30,23 @@ export const routes: Routes = [
     loadComponent: () => import('./features/reviewer/dashboard/reviewer-dashboard').then(m => m.ReviewerDashboardComponent),
     canActivate: [authGuard, roleGuard([UserRole.DISTRICT_REVIEWER])]
   },
-  // Reviewer Routes - Regional
+  // Reviewer Routes - Regional (RAS, RC, RRB Initiator)
   {
     path: 'reviewer/regional/dashboard',
     loadComponent: () => import('./features/reviewer/dashboard/reviewer-dashboard').then(m => m.ReviewerDashboardComponent),
-    canActivate: [authGuard, roleGuard([UserRole.REGIONAL_REVIEWER])]
+    canActivate: [authGuard, roleGuard([UserRole.REGIONAL_REVIEWER, UserRole.REGIONAL_ADMINISTRATIVE_SECRETARY, UserRole.REGIONAL_COMMISSIONER, UserRole.REGIONAL_ROADS_BOARD_INITIATOR])]
   },
-  // Reviewer Routes - National
+  // Reviewer Routes - National (Minister, Ministry Lawyer)
   {
     path: 'reviewer/national/dashboard',
     loadComponent: () => import('./features/reviewer/dashboard/reviewer-dashboard').then(m => m.ReviewerDashboardComponent),
-    canActivate: [authGuard, roleGuard([UserRole.NATIONAL_REVIEWER])]
+    canActivate: [authGuard, roleGuard([UserRole.NATIONAL_REVIEWER, UserRole.MINISTER_OF_WORKS, UserRole.MINISTRY_LAWYER])]
   },
-  // NRCC Routes
+  // NRCC Routes (Chairperson, Member, Secretariat)
   {
     path: 'nrcc/dashboard',
     loadComponent: () => import('./features/reviewer/dashboard/reviewer-dashboard').then(m => m.ReviewerDashboardComponent),
-    canActivate: [authGuard, roleGuard([UserRole.NRCC_MEMBER])]
+    canActivate: [authGuard, roleGuard([UserRole.NRCC_MEMBER, UserRole.NRCC_CHAIRPERSON, UserRole.NRCC_SECRETARIAT])]
   },
   // Applications Queue - for all reviewers
   {
@@ -54,46 +54,52 @@ export const routes: Routes = [
     loadComponent: () => import('./features/reviewer/applications-queue/applications-queue').then(m => m.ApplicationsQueueComponent),
     canActivate: [authGuard]
   },
+  // Application Detail - for reviewers/admin
+  {
+    path: 'reviewer/applications/:id',
+    loadComponent: () => import('./features/applicant/application-detail/application-detail').then(m => m.ApplicationDetailComponent),
+    canActivate: [authGuard]
+  },
   // Admin Routes
   {
     path: 'admin/dashboard',
     loadComponent: () => import('./features/reviewer/dashboard/reviewer-dashboard').then(m => m.ReviewerDashboardComponent),
-    canActivate: [authGuard, roleGuard([UserRole.ADMIN])]
+    canActivate: [authGuard, roleGuard([UserRole.ADMIN, UserRole.SYSTEM_ADMINISTRATOR])]
   },
   {
     path: 'admin/settings',
     loadComponent: () => import('./features/admin/settings/settings').then(m => m.SettingsComponent),
-    canActivate: [authGuard, roleGuard([UserRole.ADMIN])]
+    canActivate: [authGuard, roleGuard([UserRole.ADMIN, UserRole.SYSTEM_ADMINISTRATOR])]
   },
   {
     path: 'admin/settings/regions',
     loadComponent: () => import('./features/admin/regions/regions').then(m => m.RegionsComponent),
-    canActivate: [authGuard, roleGuard([UserRole.ADMIN])]
+    canActivate: [authGuard, roleGuard([UserRole.ADMIN, UserRole.SYSTEM_ADMINISTRATOR])]
   },
   {
     path: 'admin/settings/districts',
     loadComponent: () => import('./features/admin/districts/districts').then(m => m.DistrictsComponent),
-    canActivate: [authGuard, roleGuard([UserRole.ADMIN])]
+    canActivate: [authGuard, roleGuard([UserRole.ADMIN, UserRole.SYSTEM_ADMINISTRATOR])]
   },
   {
     path: 'admin/settings/organizations',
     loadComponent: () => import('./features/admin/organizations/organizations').then(m => m.OrganizationsComponent),
-    canActivate: [authGuard, roleGuard([UserRole.ADMIN])]
+    canActivate: [authGuard, roleGuard([UserRole.ADMIN, UserRole.SYSTEM_ADMINISTRATOR])]
   },
   {
     path: 'admin/settings/roads',
     loadComponent: () => import('./features/admin/roads/roads').then(m => m.RoadsComponent),
-    canActivate: [authGuard, roleGuard([UserRole.ADMIN])]
+    canActivate: [authGuard, roleGuard([UserRole.ADMIN, UserRole.SYSTEM_ADMINISTRATOR])]
   },
   {
     path: 'admin/settings/users',
     loadComponent: () => import('./features/admin/users/users').then(m => m.UsersComponent),
-    canActivate: [authGuard, roleGuard([UserRole.ADMIN])]
+    canActivate: [authGuard, roleGuard([UserRole.ADMIN, UserRole.SYSTEM_ADMINISTRATOR])]
   },
   {
     path: 'admin/settings/action-plans',
     loadComponent: () => import('./features/admin/action-plans/action-plans').then(m => m.ActionPlansComponent),
-    canActivate: [authGuard, roleGuard([UserRole.ADMIN])]
+    canActivate: [authGuard, roleGuard([UserRole.ADMIN, UserRole.SYSTEM_ADMINISTRATOR])]
   },
   // Fallback
   {

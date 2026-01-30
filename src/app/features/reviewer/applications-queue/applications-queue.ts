@@ -325,26 +325,52 @@ export class ApplicationsQueueComponent implements OnInit {
 
   // Action methods
   viewApplication(app: ApplicationResponse): void {
-    // Navigate to application detail page
-    this.router.navigate(['/applicant/applications', app.id]);
+    // Navigate to reviewer application detail page
+    this.router.navigate(['/reviewer/applications', app.id]);
   }
 
   async forwardApplication(app: ApplicationResponse): Promise<void> {
     const role = this.currentUserRole();
     const status = app.status;
 
-    const confirmed = await this.sweetAlertService.confirm(
-      'Forward Application',
-      `Forward application ${app.applicationNumber} to the next reviewer?`,
-      'Yes, forward',
-      'Cancel'
+    // Determine next step label for the dialog
+    let nextStep = 'next reviewer';
+    let dialogTitle = 'Forward Application';
+    let placeholder = 'Enter your comments...';
+
+    if (role === UserRole.REGIONAL_ADMINISTRATIVE_SECRETARY) {
+      nextStep = 'Regional Commissioner (RC)';
+      placeholder = 'Enter your review comments before forwarding to RC...';
+    } else if (role === UserRole.REGIONAL_COMMISSIONER) {
+      nextStep = 'Minister of Works';
+      placeholder = 'Enter your review comments before forwarding to Minister...';
+    } else if (role === UserRole.MINISTER_OF_WORKS) {
+      nextStep = 'NRCC Chair';
+      dialogTitle = 'Forward to NRCC';
+      placeholder = 'Enter your comments for NRCC review...';
+    } else if (role === UserRole.NRCC_CHAIRPERSON) {
+      dialogTitle = 'Submit Recommendation';
+      nextStep = 'Minister for final decision';
+      placeholder = 'Enter the NRCC recommendation...';
+    }
+
+    const result = await this.sweetAlertService.confirmWithComment(
+      dialogTitle,
+      `Forward application <strong>${app.applicationNumber}</strong> to ${nextStep}?`,
+      placeholder,
+      'Forward',
+      'Cancel',
+      '#3b82f6',
+      false
     );
 
-    if (!confirmed) return;
+    if (!result.confirmed) return;
+
+    const comments = result.comment || `Forwarded by ${this.getRoleName(role)}`;
 
     // Determine the correct action based on role and status
     if (role === UserRole.REGIONAL_ADMINISTRATIVE_SECRETARY && status === 'UNDER_RAS_REVIEW') {
-      this.applicationService.rasApprove(app.id, { comments: 'Forwarded by RAS' }).subscribe({
+      this.applicationService.rasApprove(app.id, { comments }).subscribe({
         next: () => {
           this.sweetAlertService.success('Forwarded!', 'Application forwarded to RC.');
           this.loadApplications();
@@ -352,7 +378,7 @@ export class ApplicationsQueueComponent implements OnInit {
         error: (error) => this.handleError(error, 'forward')
       });
     } else if (role === UserRole.REGIONAL_COMMISSIONER && status === 'UNDER_RC_REVIEW') {
-      this.applicationService.rcApprove(app.id, { comments: 'Forwarded by RC' }).subscribe({
+      this.applicationService.rcApprove(app.id, { comments }).subscribe({
         next: () => {
           this.sweetAlertService.success('Forwarded!', 'Application forwarded to Minister.');
           this.loadApplications();
@@ -360,7 +386,7 @@ export class ApplicationsQueueComponent implements OnInit {
         error: (error) => this.handleError(error, 'forward')
       });
     } else if (role === UserRole.MINISTER_OF_WORKS && status === 'UNDER_MINISTER_REVIEW') {
-      this.applicationService.forwardToNrccChair(app.id, { comments: 'Forwarded to NRCC for review' }).subscribe({
+      this.applicationService.forwardToNrccChair(app.id, { comments }).subscribe({
         next: () => {
           this.sweetAlertService.success('Forwarded!', 'Application forwarded to NRCC Chair.');
           this.loadApplications();
@@ -368,7 +394,7 @@ export class ApplicationsQueueComponent implements OnInit {
         error: (error) => this.handleError(error, 'forward')
       });
     } else if (role === UserRole.NRCC_CHAIRPERSON && status === 'NRCC_REVIEW_MEETING') {
-      this.applicationService.submitRecommendation(app.id, { comments: 'NRCC recommendation submitted' }).subscribe({
+      this.applicationService.submitRecommendation(app.id, { comments }).subscribe({
         next: () => {
           this.sweetAlertService.success('Submitted!', 'Recommendation submitted to Minister.');
           this.loadApplications();
@@ -378,46 +404,58 @@ export class ApplicationsQueueComponent implements OnInit {
     }
   }
 
+  private getRoleName(role: string): string {
+    const roleNames: Record<string, string> = {
+      [UserRole.REGIONAL_ADMINISTRATIVE_SECRETARY]: 'RAS',
+      [UserRole.REGIONAL_COMMISSIONER]: 'RC',
+      [UserRole.MINISTER_OF_WORKS]: 'Minister',
+      [UserRole.NRCC_CHAIRPERSON]: 'NRCC Chair',
+      [UserRole.NRCC_MEMBER]: 'NRCC Member',
+      [UserRole.NRCC_SECRETARIAT]: 'NRCC Secretariat',
+      [UserRole.MINISTRY_LAWYER]: 'Ministry Lawyer',
+      [UserRole.SYSTEM_ADMINISTRATOR]: 'Admin'
+    };
+    return roleNames[role] || 'Reviewer';
+  }
+
   async approveApplication(app: ApplicationResponse): Promise<void> {
     const role = this.currentUserRole();
 
     if (role === UserRole.MINISTER_OF_WORKS) {
-      // Minister final approval
-      const confirmed = await this.sweetAlertService.confirm(
-        'Approve Application',
-        `Approve road reclassification for ${app.roadName}?`,
-        'Yes, approve',
-        'Cancel'
+      // Minister final decision - show decision dialog
+      const result = await this.sweetAlertService.decisionDialog(
+        'Minister Decision',
+        `Make a final decision on road reclassification for <strong>${app.roadName}</strong>.`
       );
 
-      if (confirmed) {
+      if (result.confirmed && result.decision) {
         this.applicationService.recordMinisterDecision(app.id, {
-          decision: 'APPROVE'
+          decision: result.decision,
+          reason: result.reason
         }).subscribe({
           next: () => {
-            this.sweetAlertService.success('Approved!', 'Application has been approved.');
+            if (result.decision === 'APPROVE') {
+              this.sweetAlertService.success('Approved!', 'Application has been approved.');
+            } else {
+              this.sweetAlertService.success('Decision Recorded', 'Application has been disapproved.');
+            }
             this.loadApplications();
           },
-          error: (error) => this.handleError(error, 'approve')
+          error: (error) => this.handleError(error, 'record decision')
         });
       }
     } else {
-      // Other roles forward to next stage
+      // Other roles forward to next stage with comments
       await this.forwardApplication(app);
     }
   }
 
   async returnForCorrection(app: ApplicationResponse): Promise<void> {
-    const confirmed = await this.sweetAlertService.confirm(
-      'Return for Correction',
-      `Return application ${app.applicationNumber} to the applicant for corrections?`,
-      'Yes, return',
-      'Cancel'
-    );
+    const result = await this.sweetAlertService.returnForCorrectionDialog(app.applicationNumber);
 
-    if (confirmed) {
+    if (result.confirmed) {
       this.applicationService.returnForCorrection(app.id, {
-        comments: 'Please review and correct the application'
+        comments: result.comments
       }).subscribe({
         next: () => {
           this.sweetAlertService.success('Returned!', 'Application returned for correction.');

@@ -137,37 +137,45 @@
 
               <div class="form-group">
                 <label for="region">Region</label>
-                <input
-                  type="text"
+                <select
                   id="region"
                   [(ngModel)]="formData.region"
                   name="region"
-                  placeholder="e.g., Dar es Salaam"
-                  maxlength="100">
+                  (ngModelChange)="onRegionChange($event)">
+                  <option value="">Select region</option>
+                  <option *ngFor="let region of regions()" [value]="region.name">
+                    {{ region.name }}
+                  </option>
+                </select>
                 <span class="help-text">Region where the road is located</span>
               </div>
 
               <div class="form-group">
                 <label for="district">District</label>
-                <input
-                  type="text"
+                <select
                   id="district"
                   [(ngModel)]="formData.district"
                   name="district"
-                  placeholder="e.g., Ilala"
-                  maxlength="100">
+                  [disabled]="!formData.region">
+                  <option value="">{{ formData.region ? 'Select district' : 'Select region first' }}</option>
+                  <option *ngFor="let district of filteredDistricts()" [value]="district.name">
+                    {{ district.name }}
+                  </option>
+                </select>
                 <span class="help-text">District where the road is located</span>
               </div>
 
               <div class="form-group">
                 <label for="surfaceType">Surface Type</label>
-                <input
-                  type="text"
+                <select
                   id="surfaceType"
                   [(ngModel)]="formData.surfaceType"
-                  name="surfaceType"
-                  placeholder="e.g., Paved, Gravel, Earth"
-                  maxlength="100">
+                  name="surfaceType">
+                  <option value="">Select surface type</option>
+                  <option *ngFor="let surface of surfaceTypes" [value]="surface">
+                    {{ surface }}
+                  </option>
+                </select>
                 <span class="help-text">Road surface material</span>
               </div>
 

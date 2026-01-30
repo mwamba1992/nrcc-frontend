@@ -177,6 +177,7 @@ export class OrganizationsComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error loading districts:', error);
+        this.sweetAlertService.error('Error', 'Failed to load districts for selection.');
       }
     });
   }

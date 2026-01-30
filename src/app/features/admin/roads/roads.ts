@@ -5,8 +5,12 @@ import { RouterModule } from '@angular/router';
 import { ReviewerLayoutComponent } from '../../../shared/components/reviewer-layout/reviewer-layout';
 import { DataTableComponent, DataTableColumn, DataTableAction, DataTableConfig } from '../../../shared/components/data-table/data-table';
 import { RoadService } from '../../../core/services/road.service';
+import { RegionService } from '../../../core/services/region.service';
+import { DistrictService } from '../../../core/services/district.service';
 import { SweetAlertService } from '../../../core/services/sweetalert.service';
 import { RoadResponse, CreateRoadRequest } from '../../../core/models/road.model';
+import { RegionResponse } from '../../../core/models/region.model';
+import { DistrictResponse } from '../../../core/models/district.model';
 
 @Component({
   selector: 'app-roads',
@@ -17,10 +21,14 @@ import { RoadResponse, CreateRoadRequest } from '../../../core/models/road.model
 })
 export class RoadsComponent implements OnInit {
   roads = signal<RoadResponse[]>([]);
+  regions = signal<RegionResponse[]>([]);
+  districts = signal<DistrictResponse[]>([]);
+  filteredDistricts = signal<DistrictResponse[]>([]);
   isLoading = signal(false);
   showModal = signal(false);
   editMode = signal(false);
   currentRoad = signal<RoadResponse | null>(null);
+  selectedRegionId: number | null = null;
 
   formData: CreateRoadRequest = {
     name: '',
@@ -154,11 +162,51 @@ export class RoadsComponent implements OnInit {
 
   constructor(
     private roadService: RoadService,
+    private regionService: RegionService,
+    private districtService: DistrictService,
     private sweetAlertService: SweetAlertService
   ) {}
 
   ngOnInit() {
     this.loadRoads();
+    this.loadRegions();
+    this.loadDistricts();
+  }
+
+  loadRegions() {
+    this.regionService.getActiveRegions().subscribe({
+      next: (response) => {
+        this.regions.set(response.data);
+      },
+      error: (error) => {
+        console.error('Error loading regions:', error);
+      }
+    });
+  }
+
+  loadDistricts() {
+    this.districtService.getActiveDistricts().subscribe({
+      next: (response) => {
+        this.districts.set(response.data);
+      },
+      error: (error) => {
+        console.error('Error loading districts:', error);
+      }
+    });
+  }
+
+  onRegionChange(regionName: string) {
+    const region = this.regions().find(r => r.name === regionName);
+    if (region) {
+      this.selectedRegionId = region.id;
+      this.filteredDistricts.set(this.districts().filter(d => d.regionId === region.id));
+      // Clear district if region changed
+      this.formData.district = '';
+    } else {
+      this.selectedRegionId = null;
+      this.filteredDistricts.set([]);
+      this.formData.district = '';
+    }
   }
 
   loadRoads() {
@@ -221,6 +269,14 @@ export class RoadsComponent implements OnInit {
       roadReserveWidth: road.roadReserveWidth,
       description: road.description || ''
     };
+
+    // Pre-populate filtered districts for editing
+    if (road.region) {
+      this.onRegionChange(road.region);
+      // Restore district value after filtering
+      this.formData.district = road.district || '';
+    }
+
     this.showModal.set(true);
   }
 

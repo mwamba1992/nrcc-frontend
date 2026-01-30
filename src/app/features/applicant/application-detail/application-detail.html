@@ -1,8 +1,37 @@
-<app-applicant-layout>
+<!-- Reviewer/Admin Layout -->
+<ng-container *ngIf="isReviewerView; else applicantLayout">
+  <app-reviewer-layout>
+    <ng-container *ngTemplateOutlet="applicationContent"></ng-container>
+  </app-reviewer-layout>
+</ng-container>
+
+<!-- Applicant Layout -->
+<ng-template #applicantLayout>
+  <app-applicant-layout>
+    <ng-container *ngTemplateOutlet="applicationContent"></ng-container>
+  </app-applicant-layout>
+</ng-template>
+
+<!-- Shared Content Template -->
+<ng-template #applicationContent>
   <!-- Loading State -->
   <div *ngIf="isLoading" class="loading-container">
     <div class="spinner"></div>
     <p>Loading application details...</p>
+  </div>
+
+  <!-- Error/Not Found State -->
+  <div *ngIf="!isLoading && !application" class="error-container" style="padding: 40px; text-align: center;">
+    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" style="margin-bottom: 16px;">
+      <circle cx="12" cy="12" r="10"/>
+      <line x1="12" y1="8" x2="12" y2="12"/>
+      <line x1="12" y1="16" x2="12.01" y2="16"/>
+    </svg>
+    <h2 style="color: #1f2937; margin-bottom: 8px;">Application Not Found</h2>
+    <p style="color: #6b7280; margin-bottom: 24px;">The application you're looking for could not be loaded.</p>
+    <button class="btn-primary" (click)="goBack()" style="padding: 10px 24px; background: #3b82f6; color: white; border: none; border-radius: 6px; cursor: pointer;">
+      Go Back
+    </button>
   </div>
 
   <!-- Application Details -->
@@ -18,8 +47,8 @@
 
       <div class="header-content">
         <div class="header-left">
-          <h1>{{ application.roadName }}</h1>
-          <p class="reference">{{ application.referenceNumber }}</p>
+          <h1>{{ application.formData?.roadName }}</h1>
+          <p class="reference">{{ application.applicationNumber }}</p>
           <span class="status-badge" [class]="getStatusClass(application.status)">
             {{ getStatusLabel(application.status) }}
           </span>
@@ -112,7 +141,7 @@
                 </div>
                 <div class="info-content">
                   <label>Road Name</label>
-                  <p>{{ application.roadName }}</p>
+                  <p>{{ application.formData?.roadName }}</p>
                 </div>
               </div>
               <div class="info-group">
@@ -126,7 +155,7 @@
                 </div>
                 <div class="info-content">
                   <label>Reference Number</label>
-                  <p>{{ application.referenceNumber }}</p>
+                  <p>{{ application.applicationNumber }}</p>
                 </div>
               </div>
               <div class="info-group">
@@ -137,8 +166,8 @@
                   </svg>
                 </div>
                 <div class="info-content">
-                  <label>Location</label>
-                  <p>{{ application.district }}, {{ application.region }}</p>
+                  <label>Route</label>
+                  <p>{{ application.formData?.startingPoint }} to {{ application.formData?.terminalPoint }}</p>
                 </div>
               </div>
               <div class="info-group">
@@ -149,7 +178,7 @@
                 </div>
                 <div class="info-content">
                   <label>Road Length</label>
-                  <p>{{ application.roadLength }} km</p>
+                  <p>{{ application.formData?.roadLength }} km</p>
                 </div>
               </div>
               <div class="info-group">
@@ -161,7 +190,7 @@
                 </div>
                 <div class="info-content">
                   <label>Submitted Date</label>
-                  <p>{{ application.submittedDate | date:'medium' }}</p>
+                  <p>{{ application.submissionDate | date:'medium' }}</p>
                 </div>
               </div>
               <div class="info-group">
@@ -172,7 +201,7 @@
                 </div>
                 <div class="info-content">
                   <label>Last Updated</label>
-                  <p>{{ application.lastUpdated | date:'medium' }}</p>
+                  <p>{{ application.updatedAt | date:'medium' }}</p>
                 </div>
               </div>
             </div>
@@ -189,7 +218,7 @@
                     </svg>
                   </div>
                   <span class="class-label">Current Classification</span>
-                  <span class="class-value">{{ application.currentClassification }}</span>
+                  <span class="class-value">{{ formatClassification(application.formData?.currentClass || '') }}</span>
                   <span class="status-tag">From</span>
                 </div>
 
@@ -207,7 +236,7 @@
                     </svg>
                   </div>
                   <span class="class-label">Proposed Classification</span>
-                  <span class="class-value">{{ application.proposedClassification }}</span>
+                  <span class="class-value">{{ formatClassification(application.formData?.proposedClass || '') }}</span>
                   <span class="status-tag">To</span>
                 </div>
               </div>
@@ -215,10 +244,10 @@
           </div>
         </div>
 
-        <!-- Description & Justification -->
+        <!-- Road Details & Justification -->
         <div class="info-card full-width">
           <div class="card-header">
-            <h3>Description & Justification</h3>
+            <h3>Road Details & Justification</h3>
           </div>
           <div class="card-body">
             <div class="info-group">
@@ -232,8 +261,8 @@
                 </svg>
               </div>
               <div class="info-content">
-                <label>Description</label>
-                <p>{{ application.description }}</p>
+                <label>Road Specifications</label>
+                <p>Surface: {{ application.formData?.surfaceTypeCarriageway }} | Carriageway Width: {{ application.formData?.carriagewayWidth }}m | Formation Width: {{ application.formData?.formationWidth }}m</p>
               </div>
             </div>
             <div class="info-group">
@@ -245,8 +274,8 @@
                 </svg>
               </div>
               <div class="info-content">
-                <label>Justification</label>
-                <p>{{ application.justification }}</p>
+                <label>Reclassification Reasons</label>
+                <p>{{ application.formData?.reclassificationReasons }}</p>
               </div>
             </div>
           </div>
@@ -433,4 +462,4 @@
       </div>
     </div>
   </div>
-</app-applicant-layout>
+</ng-template>

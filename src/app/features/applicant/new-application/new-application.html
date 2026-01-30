@@ -2,24 +2,16 @@
   [isOpen]="isOpen"
   [size]="'lg'"
   [showFooter]="false"
-  [showHeader]="false"
+  title="New Road Reclassification Application"
   (closeModal)="cancel()"
 >
   <div modal-body>
     <div class="form-container">
-      <!-- Header -->
-      <div class="form-header">
-        <div class="header-content">
-          <h1>New Application</h1>
-          <p>Submit a road reclassification request</p>
-        </div>
-      </div>
-
       <!-- Progress Stepper -->
       <div class="progress-section">
         <div class="stepper-container">
           <div
-            *ngFor="let step of [1, 2, 3, 4, 5, 6]; let i = index"
+            *ngFor="let step of [1, 2, 3, 4, 5, 6]"
             class="stepper-item"
             [class.completed]="isStepCompleted(step)"
             [class.active]="currentStep === step"
@@ -55,95 +47,60 @@
 
           <div class="form-grid">
             <!-- Applicant Type -->
-            <div class="form-group">
-              <label for="applicantType">Applicant Type *</label>
-              <select id="applicantType" formControlName="applicantType">
-                <option *ngFor="let type of applicantTypes" [value]="type">{{ applicantTypeLabels[type] }}</option>
-              </select>
-            </div>
+            <app-form-select
+              label="Applicant Type"
+              [options]="applicantTypeOptions"
+              formControlName="applicantType"
+              [required]="true"
+            ></app-form-select>
 
-            <!-- Road Selection -->
-            <div class="form-group full-width">
-              <label>Select Road *</label>
-
-              <!-- Selected Road Display -->
-              <div *ngIf="selectedRoad" class="selected-road">
-                <div class="road-info">
-                  <strong>{{ selectedRoad.name }}</strong>
-                  <span class="road-meta">
-                    {{ selectedRoad.roadNumber ? selectedRoad.roadNumber + ' • ' : '' }}
-                    {{ selectedRoad.region || '' }}
-                    {{ selectedRoad.district ? ' • ' + selectedRoad.district : '' }}
-                  </span>
-                </div>
-                <button type="button" class="btn-change" (click)="clearRoadSelection()">Change</button>
-              </div>
-
-              <!-- Road Search -->
-              <div *ngIf="!selectedRoad" class="road-search">
-                <input
-                  type="text"
-                  [(ngModel)]="roadSearchQuery"
-                  [ngModelOptions]="{standalone: true}"
-                  (input)="filterRoads()"
-                  placeholder="Search roads by name, number, or region..."
+            <!-- Road Selection Dropdown -->
+            <div class="form-field">
+              <label>Select Road <span class="required">*</span></label>
+              <div class="select-wrapper" [class.loading]="isLoadingRoads" [class.error]="roadsLoadError">
+                <select
                   [disabled]="isLoadingRoads"
-                />
-
-                <!-- Loading -->
-                <div *ngIf="isLoadingRoads" class="road-list-status">
-                  <span class="loading-text">Loading roads...</span>
-                </div>
-
-                <!-- Error -->
-                <div *ngIf="!isLoadingRoads && roadsLoadError" class="road-list-status error">
-                  <span>{{ roadsLoadError }}</span>
-                  <button type="button" class="btn-retry" (click)="loadRoads()">Retry</button>
-                </div>
-
-                <!-- Roads List -->
-                <div *ngIf="!isLoadingRoads && !roadsLoadError && filteredRoads.length > 0" class="road-list">
-                  <div
-                    *ngFor="let road of filteredRoads"
-                    class="road-item"
-                    (click)="selectRoad(road)"
-                  >
-                    <div class="road-name">{{ road.name }}</div>
-                    <div class="road-details">
-                      {{ road.roadNumber || '' }}
-                      {{ road.region ? '• ' + road.region : '' }}
-                      {{ road.currentClass ? '• ' + roadClassLabels[road.currentClass] : '' }}
-                    </div>
-                  </div>
-                </div>
-
-                <!-- No Results -->
-                <div *ngIf="!isLoadingRoads && !roadsLoadError && filteredRoads.length === 0 && roadSearchQuery" class="road-list-status">
-                  <span>No roads found matching "{{ roadSearchQuery }}"</span>
-                </div>
-
-                <!-- Empty -->
-                <div *ngIf="!isLoadingRoads && !roadsLoadError && roads.length === 0 && !roadSearchQuery" class="road-list-status">
-                  <span>No roads available</span>
-                </div>
+                  (change)="onRoadSelect($event)"
+                  [value]="selectedRoad?.id || ''"
+                >
+                  <option value="">{{ isLoadingRoads ? 'Loading roads...' : 'Select a road' }}</option>
+                  <option *ngFor="let road of roads" [value]="road.id">
+                    {{ road.name }} {{ road.roadNumber ? '(' + road.roadNumber + ')' : '' }} - {{ road.region || 'N/A' }}
+                  </option>
+                </select>
+                <svg class="select-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="6 9 12 15 18 9"/>
+                </svg>
               </div>
+              <span class="error-message" *ngIf="roadsLoadError">{{ roadsLoadError }} <a (click)="loadRoads()">Retry</a></span>
             </div>
 
             <!-- Auto-filled from selected road -->
-            <div class="form-group" *ngIf="selectedRoad">
-              <label for="startingPoint">Starting Point *</label>
-              <input type="text" id="startingPoint" formControlName="startingPoint" placeholder="Enter starting point" />
-            </div>
+            <ng-container *ngIf="selectedRoad">
+              <app-form-input
+                label="Starting Point"
+                formControlName="startingPoint"
+                placeholder="Enter starting point"
+                [required]="true"
+              ></app-form-input>
 
-            <div class="form-group" *ngIf="selectedRoad">
-              <label for="terminalPoint">Terminal Point *</label>
-              <input type="text" id="terminalPoint" formControlName="terminalPoint" placeholder="Enter terminal point" />
-            </div>
+              <app-form-input
+                label="Terminal Point"
+                formControlName="terminalPoint"
+                placeholder="Enter terminal point"
+                [required]="true"
+              ></app-form-input>
 
-            <div class="form-group" *ngIf="selectedRoad">
-              <label for="roadLength">Road Length (km) *</label>
-              <input type="number" id="roadLength" formControlName="roadLength" placeholder="0.0" step="0.1" min="0" />
-            </div>
+              <app-form-input
+                label="Road Length (km)"
+                type="number"
+                formControlName="roadLength"
+                placeholder="0.0"
+                [min]="0"
+                [step]="0.1"
+                [required]="true"
+              ></app-form-input>
+            </ng-container>
           </div>
         </div>
 
@@ -155,21 +112,21 @@
           </div>
 
           <div class="form-grid">
-            <div class="form-group">
-              <label for="currentClass">Current Classification *</label>
-              <select id="currentClass" formControlName="currentClass">
-                <option value="">Select current classification</option>
-                <option *ngFor="let cls of roadClasses" [value]="cls">{{ roadClassLabels[cls] }}</option>
-              </select>
-            </div>
+            <app-form-select
+              label="Current Classification"
+              placeholder="Select current classification"
+              [options]="roadClassOptions"
+              formControlName="currentClass"
+              [required]="true"
+            ></app-form-select>
 
-            <div class="form-group">
-              <label for="proposedClass">Proposed Classification *</label>
-              <select id="proposedClass" formControlName="proposedClass">
-                <option value="">Select proposed classification</option>
-                <option *ngFor="let cls of roadClasses" [value]="cls">{{ roadClassLabels[cls] }}</option>
-              </select>
-            </div>
+            <app-form-select
+              label="Proposed Classification"
+              placeholder="Select proposed classification"
+              [options]="roadClassOptions"
+              formControlName="proposedClass"
+              [required]="true"
+            ></app-form-select>
 
             <!-- Classification Change Preview -->
             <div class="form-group full-width" *ngIf="applicationForm.get('currentClass')?.value && applicationForm.get('proposedClass')?.value">
@@ -186,18 +143,18 @@
               </div>
             </div>
 
-            <div class="form-group full-width">
-              <label for="reclassificationReasons">Justification *</label>
-              <textarea
-                id="reclassificationReasons"
+            <div class="full-width">
+              <app-form-textarea
+                label="Justification"
                 formControlName="reclassificationReasons"
-                rows="4"
-                placeholder="Explain why this road should be reclassified (minimum 50 characters)..."
-                [class.error]="applicationForm.get('reclassificationReasons')?.invalid && applicationForm.get('reclassificationReasons')?.touched"
-              ></textarea>
-              <div class="char-count" [class.warning]="(applicationForm.get('reclassificationReasons')?.value?.length || 0) < 50">
-                {{ applicationForm.get('reclassificationReasons')?.value?.length || 0 }}/50 minimum
-              </div>
+                placeholder="Explain why this road should be reclassified..."
+                [rows]="4"
+                [required]="true"
+                [minLength]="50"
+                [showCharCount]="true"
+                [hasError]="!!(applicationForm.get('reclassificationReasons')?.invalid && applicationForm.get('reclassificationReasons')?.touched)"
+                errorMessage="Minimum 50 characters required"
+              ></app-form-textarea>
             </div>
           </div>
         </div>
@@ -210,39 +167,56 @@
           </div>
 
           <div class="form-grid">
-            <div class="form-group">
-              <label for="surfaceTypeCarriageway">Carriageway Surface Type *</label>
-              <select id="surfaceTypeCarriageway" formControlName="surfaceTypeCarriageway">
-                <option value="">Select surface type</option>
-                <option *ngFor="let surface of surfaceTypes" [value]="surface">{{ surface }}</option>
-              </select>
-            </div>
+            <app-form-select
+              label="Carriageway Surface Type"
+              placeholder="Select surface type"
+              [options]="surfaceTypeOptions"
+              formControlName="surfaceTypeCarriageway"
+              [required]="true"
+            ></app-form-select>
 
-            <div class="form-group">
-              <label for="surfaceTypeShoulders">Shoulders Surface Type</label>
-              <select id="surfaceTypeShoulders" formControlName="surfaceTypeShoulders">
-                <option value="">Select surface type (optional)</option>
-                <option *ngFor="let surface of surfaceTypes" [value]="surface">{{ surface }}</option>
-              </select>
-            </div>
+            <app-form-select
+              label="Shoulders Surface Type"
+              placeholder="Select surface type (optional)"
+              [options]="surfaceTypeOptions"
+              formControlName="surfaceTypeShoulders"
+            ></app-form-select>
 
-            <div class="form-group">
-              <label for="carriagewayWidth">Carriageway Width (m) *</label>
-              <input type="number" id="carriagewayWidth" formControlName="carriagewayWidth" placeholder="7.0" step="0.1" min="1" />
-              <span class="help-text">Paved road surface width</span>
-            </div>
+            <app-form-input
+              label="Carriageway Width"
+              type="number"
+              formControlName="carriagewayWidth"
+              placeholder="7.0"
+              suffix="meters"
+              helpText="Paved road surface width"
+              [min]="1"
+              [step]="0.1"
+              [required]="true"
+            ></app-form-input>
 
-            <div class="form-group">
-              <label for="formationWidth">Formation Width (m) *</label>
-              <input type="number" id="formationWidth" formControlName="formationWidth" placeholder="10.0" step="0.1" min="1" />
-              <span class="help-text">Including shoulders</span>
-            </div>
+            <app-form-input
+              label="Formation Width"
+              type="number"
+              formControlName="formationWidth"
+              placeholder="10.0"
+              suffix="meters"
+              helpText="Including shoulders"
+              [min]="1"
+              [step]="0.1"
+              [required]="true"
+            ></app-form-input>
 
-            <div class="form-group">
-              <label for="actualRoadReserveWidth">Road Reserve Width (m) *</label>
-              <input type="number" id="actualRoadReserveWidth" formControlName="actualRoadReserveWidth" placeholder="30.0" step="0.1" min="1" />
-              <span class="help-text">Gazetted reserve width</span>
-            </div>
+            <app-form-input
+              label="Road Reserve Width"
+              type="number"
+              formControlName="actualRoadReserveWidth"
+              placeholder="30.0"
+              suffix="meters"
+              helpText="Gazetted reserve width"
+              [min]="1"
+              [step]="0.1"
+              [required]="true"
+            ></app-form-input>
           </div>
         </div>
 
@@ -254,42 +228,67 @@
           </div>
 
           <div class="form-grid">
-            <div class="form-group">
-              <label for="trafficLevel">Traffic Level *</label>
-              <select id="trafficLevel" formControlName="trafficLevel">
-                <option value="">Select traffic level</option>
-                <option *ngFor="let level of trafficLevels" [value]="level">{{ level }}</option>
-              </select>
+            <app-form-select
+              label="Traffic Level"
+              placeholder="Select traffic level"
+              [options]="trafficLevelOptions"
+              formControlName="trafficLevel"
+              [required]="true"
+            ></app-form-select>
+
+            <app-form-input
+              label="Traffic Composition"
+              formControlName="trafficComposition"
+              placeholder="e.g., 60% light vehicles, 30% trucks..."
+              [required]="true"
+            ></app-form-input>
+
+            <div class="full-width">
+              <app-form-textarea
+                label="Towns/Villages Linked"
+                formControlName="townsVillagesLinked"
+                placeholder="List towns and villages connected by this road..."
+                [rows]="2"
+                [required]="true"
+              ></app-form-textarea>
             </div>
 
-            <div class="form-group">
-              <label for="trafficComposition">Traffic Composition *</label>
-              <input type="text" id="trafficComposition" formControlName="trafficComposition" placeholder="e.g., 60% light vehicles, 30% trucks..." />
+            <div class="full-width">
+              <app-form-textarea
+                label="Principal Nodes"
+                formControlName="principalNodes"
+                placeholder="Major junctions, terminals, markets (optional)"
+                [rows]="2"
+              ></app-form-textarea>
             </div>
 
-            <div class="form-group full-width">
-              <label for="townsVillagesLinked">Towns/Villages Linked *</label>
-              <textarea id="townsVillagesLinked" formControlName="townsVillagesLinked" rows="2" placeholder="List towns and villages connected by this road..."></textarea>
+            <div class="full-width">
+              <app-form-textarea
+                label="Bus Routes"
+                formControlName="busRoutes"
+                placeholder="Public transport routes using this road..."
+                [rows]="2"
+                [required]="true"
+              ></app-form-textarea>
             </div>
 
-            <div class="form-group full-width">
-              <label for="principalNodes">Principal Nodes</label>
-              <textarea id="principalNodes" formControlName="principalNodes" rows="2" placeholder="Major junctions, terminals, markets (optional)"></textarea>
+            <div class="full-width">
+              <app-form-textarea
+                label="Public Services"
+                formControlName="publicServices"
+                placeholder="Schools, hospitals, government offices along the road..."
+                [rows]="2"
+                [required]="true"
+              ></app-form-textarea>
             </div>
 
-            <div class="form-group full-width">
-              <label for="busRoutes">Bus Routes *</label>
-              <textarea id="busRoutes" formControlName="busRoutes" rows="2" placeholder="Public transport routes using this road..."></textarea>
-            </div>
-
-            <div class="form-group full-width">
-              <label for="publicServices">Public Services *</label>
-              <textarea id="publicServices" formControlName="publicServices" rows="2" placeholder="Schools, hospitals, government offices along the road..."></textarea>
-            </div>
-
-            <div class="form-group full-width">
-              <label for="alternativeRoutes">Alternative Routes</label>
-              <textarea id="alternativeRoutes" formControlName="alternativeRoutes" rows="2" placeholder="Other routes that could serve similar destinations (optional)"></textarea>
+            <div class="full-width">
+              <app-form-textarea
+                label="Alternative Routes"
+                formControlName="alternativeRoutes"
+                placeholder="Other routes that could serve similar destinations (optional)"
+                [rows]="2"
+              ></app-form-textarea>
             </div>
           </div>
         </div>
@@ -297,11 +296,16 @@
         <!-- Step 5: Eligibility Criteria -->
         <div *ngIf="currentStep === 5" class="form-step">
           <div class="step-header">
-            <h2>Eligibility Criteria</h2>
+            <h2>Eligibility Criteria for {{ applicationForm.get('proposedClass')?.value === 'TRUNK' ? 'Trunk' : 'Regional' }} Road</h2>
             <p>Select at least one criterion that applies to this road</p>
           </div>
 
-          <div class="criteria-list">
+          <!-- Show message if no proposed class selected -->
+          <div *ngIf="eligibilityCriteria.length === 0" class="criteria-status warning">
+            <span>Please select a proposed classification in Step 2 to see eligibility criteria</span>
+          </div>
+
+          <div class="criteria-list" *ngIf="eligibilityCriteria.length > 0">
             <div
               *ngFor="let criterion of eligibilityCriteria; let i = index"
               class="criterion-item"
@@ -320,7 +324,7 @@
             </div>
           </div>
 
-          <div class="criteria-status" [class.valid]="getSelectedCriteria().length > 0">
+          <div class="criteria-status" *ngIf="eligibilityCriteria.length > 0" [class.valid]="getSelectedCriteria().length > 0">
             <span *ngIf="getSelectedCriteria().length > 0">{{ getSelectedCriteria().length }} criteria selected</span>
             <span *ngIf="getSelectedCriteria().length === 0" class="warning">Please select at least one criterion</span>
           </div>
@@ -390,36 +394,26 @@
 
       <!-- Form Actions -->
       <div class="form-actions">
-        <button type="button" class="btn-cancel" (click)="cancel()">
-          Cancel
-        </button>
+        <app-button variant="ghost" (clicked)="cancel()">Cancel</app-button>
         <div class="action-buttons">
-          <button
-            type="button"
-            class="btn-secondary"
+          <app-button
+            variant="secondary"
             *ngIf="currentStep > 1"
-            (click)="previousStep()"
-          >
-            Previous
-          </button>
-          <button
-            type="button"
-            class="btn-primary"
+            (clicked)="previousStep()"
+          >Previous</app-button>
+          <app-button
+            variant="primary"
             *ngIf="currentStep < totalSteps"
-            (click)="nextStep()"
-          >
-            Next
-          </button>
-          <button
-            type="button"
-            class="btn-submit"
+            (clicked)="nextStep()"
+          >Next</app-button>
+          <app-button
+            variant="primary"
             *ngIf="currentStep === totalSteps"
-            (click)="submitApplication()"
-            [disabled]="!isFormComplete() || isSubmitting"
-          >
-            <span *ngIf="!isSubmitting">Save as Draft</span>
-            <span *ngIf="isSubmitting">Saving...</span>
-          </button>
+            (clicked)="submitApplication()"
+            [disabled]="!isFormComplete()"
+            [loading]="isSubmitting"
+            loadingText="Saving..."
+          >Save as Draft</app-button>
         </div>
       </div>
     </div>

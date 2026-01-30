@@ -37,20 +37,32 @@ export class ReviewerLayoutComponent {
 
   setReviewerLevel(): void {
     switch (this.currentUser?.role) {
-      case UserRole.DISTRICT_REVIEWER:
-        this.reviewerLevel = 'District Level';
+      case UserRole.SYSTEM_ADMINISTRATOR:
+        this.reviewerLevel = 'System Administrator';
         break;
-      case UserRole.REGIONAL_REVIEWER:
-        this.reviewerLevel = 'Regional Level';
+      case UserRole.REGIONAL_ADMINISTRATIVE_SECRETARY:
+        this.reviewerLevel = 'Regional Administrative Secretary';
         break;
-      case UserRole.NATIONAL_REVIEWER:
-        this.reviewerLevel = 'National Level';
+      case UserRole.REGIONAL_COMMISSIONER:
+        this.reviewerLevel = 'Regional Commissioner';
+        break;
+      case UserRole.REGIONAL_ROADS_BOARD_INITIATOR:
+        this.reviewerLevel = 'Regional Roads Board';
+        break;
+      case UserRole.MINISTER_OF_WORKS:
+        this.reviewerLevel = 'Minister of Works';
+        break;
+      case UserRole.NRCC_CHAIRPERSON:
+        this.reviewerLevel = 'NRCC Chairperson';
         break;
       case UserRole.NRCC_MEMBER:
-        this.reviewerLevel = 'NRCC Committee';
+        this.reviewerLevel = 'NRCC Member';
         break;
-      case UserRole.ADMIN:
-        this.reviewerLevel = 'System Administrator';
+      case UserRole.NRCC_SECRETARIAT:
+        this.reviewerLevel = 'NRCC Secretariat';
+        break;
+      case UserRole.MINISTRY_LAWYER:
+        this.reviewerLevel = 'Ministry Lawyer';
         break;
       default:
         this.reviewerLevel = 'Reviewer';
@@ -123,7 +135,7 @@ export class ReviewerLayoutComponent {
   }
 
   isAdmin(): boolean {
-    return this.currentUser?.role === UserRole.ADMIN;
+    return this.currentUser?.role === UserRole.SYSTEM_ADMINISTRATOR;
   }
 
   showComingSoon(feature: string): void {

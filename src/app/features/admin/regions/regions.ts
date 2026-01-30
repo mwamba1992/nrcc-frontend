@@ -124,6 +124,7 @@ export class RegionsComponent implements OnInit {
       error: (error) => {
         console.error('Error loading regions:', error);
         this.isLoading.set(false);
+        this.sweetAlertService.error('Error', 'Failed to load regions. Please try again.');
       }
     });
   }
@@ -166,11 +167,13 @@ export class RegionsComponent implements OnInit {
   createRegion() {
     this.regionService.createRegion(this.formData).subscribe({
       next: (response) => {
+        this.sweetAlertService.success('Success!', `Region "${this.formData.name}" has been created successfully.`);
         this.loadRegions();
         this.closeModal();
       },
       error: (error) => {
         console.error('Error creating region:', error);
+        this.sweetAlertService.error('Error', 'Failed to create region. Please try again.');
       }
     });
   }
@@ -181,11 +184,13 @@ export class RegionsComponent implements OnInit {
 
     this.regionService.updateRegion(regionId, this.formData).subscribe({
       next: (response) => {
+        this.sweetAlertService.success('Success!', `Region "${this.formData.name}" has been updated successfully.`);
         this.loadRegions();
         this.closeModal();
       },
       error: (error) => {
         console.error('Error updating region:', error);
+        this.sweetAlertService.error('Error', 'Failed to update region. Please try again.');
       }
     });
   }

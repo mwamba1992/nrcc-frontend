@@ -1,70 +1,55 @@
 <app-reviewer-layout>
-  <div class="queue-container">
+  <div class="applications-container">
     <!-- Page Header -->
-    <div class="queue-header">
+    <div class="page-header">
       <div class="header-content">
-        <div class="header-left">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-            <polyline points="14 2 14 8 20 8"/>
-            <line x1="16" y1="13" x2="8" y2="13"/>
-            <line x1="16" y1="17" x2="8" y2="17"/>
+        <h1>Applications Queue</h1>
+        <p class="subtitle">Review and process road reclassification applications</p>
+      </div>
+      <div class="header-stats">
+        <div class="stat-badge total">
+          <span class="count">{{ statusCounts().total }}</span>
+          <span class="label">Total</span>
+        </div>
+        <div class="stat-badge pending">
+          <span class="count">{{ statusCounts().pending }}</span>
+          <span class="label">Pending</span>
+        </div>
+        <div class="stat-badge in-progress">
+          <span class="count">{{ statusCounts().inProgress }}</span>
+          <span class="label">In Progress</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filters Bar -->
+    <div class="filters-bar">
+      <div class="filters-left">
+        <div class="filter-group">
+          <label>Status:</label>
+          <select [ngModel]="selectedFilter()" (ngModelChange)="filterApplications($event)">
+            <option value="all">All Applications</option>
+            <option value="pending">Pending Review</option>
+            <option value="in_progress">In Progress</option>
+            <option value="completed">Completed</option>
+          </select>
+        </div>
+        <button *ngIf="selectedFilter() !== 'all'"
+                class="btn-text"
+                (click)="filterApplications('all')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
           </svg>
-          <div>
-            <h1>Applications Queue</h1>
-            <p>Review and process road reclassification applications</p>
-          </div>
-        </div>
-        <div class="header-stats">
-          <div class="stat-badge total">
-            <span class="count">{{ statusCounts().total }}</span>
-            <span class="label">Total</span>
-          </div>
-          <div class="stat-badge pending">
-            <span class="count">{{ statusCounts().pending }}</span>
-            <span class="label">Pending</span>
-          </div>
-          <div class="stat-badge in-progress">
-            <span class="count">{{ statusCounts().inProgress }}</span>
-            <span class="label">In Progress</span>
-          </div>
-        </div>
+          Clear Filter
+        </button>
+      </div>
+      <div class="filters-right">
+        <span class="record-count">{{ filteredApplications().length }} application(s)</span>
       </div>
     </div>
 
-    <!-- Filters Section -->
-    <div class="filters-section">
-      <!-- Filter Buttons -->
-      <div class="filter-group">
-        <span class="filter-label">Status:</span>
-        <button
-          class="filter-btn"
-          [class.active]="selectedFilter() === 'all'"
-          (click)="filterApplications('all')">
-          All
-        </button>
-        <button
-          class="filter-btn"
-          [class.active]="selectedFilter() === 'pending'"
-          (click)="filterApplications('pending')">
-          Pending Review
-        </button>
-        <button
-          class="filter-btn"
-          [class.active]="selectedFilter() === 'in_progress'"
-          (click)="filterApplications('in_progress')">
-          In Progress
-        </button>
-        <button
-          class="filter-btn"
-          [class.active]="selectedFilter() === 'completed'"
-          (click)="filterApplications('completed')">
-          Completed
-        </button>
-      </div>
-    </div>
-
-    <!-- Applications Data Table -->
+    <!-- Professional Data Table -->
     <app-data-table
       [data]="filteredApplications()"
       [columns]="tableColumns"

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ModalComponent } from '../../../shared/components/modal/modal';
+import { FormInputComponent, FormSelectComponent, FormTextareaComponent, ButtonComponent, SelectOption } from '../../../shared/components/forms';
 import { ApplicationService } from '../../../core/services/application.service';
 import { RoadService } from '../../../core/services/road.service';
 import { SweetAlertService } from '../../../core/services/sweetalert.service';
@@ -34,7 +35,16 @@ interface EligibilityCriterion {
 @Component({
   selector: 'app-new-application',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, ModalComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    ModalComponent,
+    FormInputComponent,
+    FormSelectComponent,
+    FormTextareaComponent,
+    ButtonComponent
+  ],
   templateUrl: './new-application.html',
   styleUrl: './new-application.scss'
 })
@@ -60,10 +70,16 @@ export class NewApplicationComponent implements OnInit {
   // Applicant types
   applicantTypes = Object.keys(ApplicantType).filter(k => isNaN(Number(k)));
   applicantTypeLabels = ApplicantTypeLabels;
+  applicantTypeOptions: SelectOption[] = Object.keys(ApplicantType)
+    .filter(k => isNaN(Number(k)))
+    .map(key => ({ value: key, label: ApplicantTypeLabels[key] || key }));
 
   // Road classes
   roadClasses = Object.keys(RoadClass).filter(k => isNaN(Number(k)));
   roadClassLabels = RoadClassLabels;
+  roadClassOptions: SelectOption[] = Object.keys(RoadClass)
+    .filter(k => isNaN(Number(k)))
+    .map(key => ({ value: key, label: RoadClassLabels[key] || key }));
 
   // Surface types
   surfaceTypes = [
@@ -75,6 +91,7 @@ export class NewApplicationComponent implements OnInit {
     'Interlocking Blocks',
     'Other'
   ];
+  surfaceTypeOptions: SelectOption[] = this.surfaceTypes.map(s => ({ value: s, label: s }));
 
   // Traffic levels
   trafficLevels = [
@@ -84,18 +101,30 @@ export class NewApplicationComponent implements OnInit {
     'High (2000-5000 vpd)',
     'Very High (> 5000 vpd)'
   ];
+  trafficLevelOptions: SelectOption[] = this.trafficLevels.map(t => ({ value: t, label: t }));
 
-  // Eligibility criteria
-  eligibilityCriteria: EligibilityCriterion[] = [
-    { code: 'EC001', description: 'Road connects two or more districts', selected: false, details: '', evidenceDescription: '' },
-    { code: 'EC002', description: 'Road serves as a major transport corridor', selected: false, details: '', evidenceDescription: '' },
-    { code: 'EC003', description: 'Road has significant economic importance', selected: false, details: '', evidenceDescription: '' },
-    { code: 'EC004', description: 'Road connects to national/regional infrastructure', selected: false, details: '', evidenceDescription: '' },
-    { code: 'EC005', description: 'Road serves a population center of significant size', selected: false, details: '', evidenceDescription: '' },
-    { code: 'EC006', description: 'Road has strategic importance for national security', selected: false, details: '', evidenceDescription: '' },
-    { code: 'EC007', description: 'Road links to ports, airports, or border posts', selected: false, details: '', evidenceDescription: '' },
-    { code: 'EC008', description: 'Road serves tourism or heritage sites', selected: false, details: '', evidenceDescription: '' }
+  // Eligibility criteria for Regional Roads (R1-R7)
+  regionalCriteria: EligibilityCriterion[] = [
+    { code: 'R1', description: 'Road connects two or more districts within the region', selected: false, details: '', evidenceDescription: '' },
+    { code: 'R2', description: 'Road connects to a regional headquarters or major town', selected: false, details: '', evidenceDescription: '' },
+    { code: 'R3', description: 'Road serves significant agricultural or industrial areas', selected: false, details: '', evidenceDescription: '' },
+    { code: 'R4', description: 'Road has traffic volume exceeding district road standards', selected: false, details: '', evidenceDescription: '' },
+    { code: 'R5', description: 'Road connects to important social services (hospitals, schools)', selected: false, details: '', evidenceDescription: '' },
+    { code: 'R6', description: 'Road provides alternative route to trunk roads', selected: false, details: '', evidenceDescription: '' },
+    { code: 'R7', description: 'Road has strategic importance for regional development', selected: false, details: '', evidenceDescription: '' }
   ];
+
+  // Eligibility criteria for Trunk Roads (T1-T5)
+  trunkCriteria: EligibilityCriterion[] = [
+    { code: 'T1', description: 'Road connects to national road network or international borders', selected: false, details: '', evidenceDescription: '' },
+    { code: 'T2', description: 'Road links regional capitals or major economic centers', selected: false, details: '', evidenceDescription: '' },
+    { code: 'T3', description: 'Road connects to ports, airports, or railway terminals', selected: false, details: '', evidenceDescription: '' },
+    { code: 'T4', description: 'Road has high traffic volume meeting trunk road standards', selected: false, details: '', evidenceDescription: '' },
+    { code: 'T5', description: 'Road has national strategic or economic importance', selected: false, details: '', evidenceDescription: '' }
+  ];
+
+  // Active eligibility criteria (changes based on proposed class)
+  eligibilityCriteria: EligibilityCriterion[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -141,6 +170,27 @@ export class NewApplicationComponent implements OnInit {
       publicServices: ['', Validators.required],
       alternativeRoutes: ['']
     });
+
+    // Subscribe to proposedClass changes to update eligibility criteria
+    this.applicationForm.get('proposedClass')?.valueChanges.subscribe(value => {
+      this.updateEligibilityCriteria(value);
+    });
+  }
+
+  // Update eligibility criteria based on proposed classification
+  updateEligibilityCriteria(proposedClass: string): void {
+    // Reset all criteria selections
+    this.regionalCriteria.forEach(c => { c.selected = false; c.details = ''; c.evidenceDescription = ''; });
+    this.trunkCriteria.forEach(c => { c.selected = false; c.details = ''; c.evidenceDescription = ''; });
+
+    // Set active criteria based on proposed class
+    if (proposedClass === 'TRUNK') {
+      this.eligibilityCriteria = this.trunkCriteria;
+    } else if (proposedClass === 'REGIONAL') {
+      this.eligibilityCriteria = this.regionalCriteria;
+    } else {
+      this.eligibilityCriteria = [];
+    }
   }
 
   loadRoads(): void {
@@ -177,6 +227,20 @@ export class NewApplicationComponent implements OnInit {
         road.region?.toLowerCase().includes(query) ||
         road.district?.toLowerCase().includes(query)
       );
+    }
+  }
+
+  onRoadSelect(event: Event): void {
+    const selectElement = event.target as HTMLSelectElement;
+    const roadId = selectElement.value;
+
+    if (roadId) {
+      const road = this.roads.find(r => r.id.toString() === roadId);
+      if (road) {
+        this.selectRoad(road);
+      }
+    } else {
+      this.clearRoadSelection();
     }
   }
 
@@ -359,6 +423,10 @@ export class NewApplicationComponent implements OnInit {
       eligibilityCriteria: eligibilityCriteria
     };
 
+    // Debug: Print payload before sending
+    console.log('=== Application Create Payload ===');
+    console.log(JSON.stringify(request, null, 2));
+
     this.applicationService.createApplication(request).subscribe({
       next: (response) => {
         this.isSubmitting = false;
@@ -408,11 +476,18 @@ export class NewApplicationComponent implements OnInit {
     this.selectedRoad = null;
     this.roadSearchQuery = '';
     this.filteredRoads = [...this.roads];
-    this.eligibilityCriteria.forEach(c => {
+    // Reset all criteria arrays
+    this.regionalCriteria.forEach(c => {
       c.selected = false;
       c.details = '';
       c.evidenceDescription = '';
     });
+    this.trunkCriteria.forEach(c => {
+      c.selected = false;
+      c.details = '';
+      c.evidenceDescription = '';
+    });
+    this.eligibilityCriteria = [];
   }
 
   getStepIcon(step: number): string {

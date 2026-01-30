@@ -55,7 +55,8 @@ export class LoginComponent {
       const dashboardRoute = this.authService.getDashboardRoute();
       this.router.navigate([dashboardRoute]);
     } catch (error) {
-      this.errorMessage = error instanceof Error ? error.message : 'Login failed';
+      this.errorMessage = error instanceof Error ? error.message : 'Login failed. Please try again.';
+    } finally {
       this.isLoading = false;
     }
   }

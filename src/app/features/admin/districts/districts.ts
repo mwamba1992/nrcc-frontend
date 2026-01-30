@@ -129,6 +129,7 @@ export class DistrictsComponent implements OnInit {
       error: (error) => {
         console.error('Error loading districts:', error);
         this.isLoading.set(false);
+        this.sweetAlertService.error('Error', 'Failed to load districts. Please try again.');
       }
     });
   }
@@ -140,6 +141,7 @@ export class DistrictsComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error loading regions:', error);
+        this.sweetAlertService.error('Error', 'Failed to load regions for selection.');
       }
     });
   }
@@ -184,11 +186,13 @@ export class DistrictsComponent implements OnInit {
   createDistrict() {
     this.districtService.createDistrict(this.formData).subscribe({
       next: (response) => {
+        this.sweetAlertService.success('Success!', `District "${this.formData.name}" has been created successfully.`);
         this.loadDistricts();
         this.closeModal();
       },
       error: (error) => {
         console.error('Error creating district:', error);
+        this.sweetAlertService.error('Error', 'Failed to create district. Please try again.');
       }
     });
   }
@@ -199,11 +203,13 @@ export class DistrictsComponent implements OnInit {
 
     this.districtService.updateDistrict(districtId, this.formData).subscribe({
       next: (response) => {
+        this.sweetAlertService.success('Success!', `District "${this.formData.name}" has been updated successfully.`);
         this.loadDistricts();
         this.closeModal();
       },
       error: (error) => {
         console.error('Error updating district:', error);
+        this.sweetAlertService.error('Error', 'Failed to update district. Please try again.');
       }
     });
   }
