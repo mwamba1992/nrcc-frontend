@@ -16,68 +16,12 @@
         <h1>Action Plans</h1>
         <p class="subtitle">Manage annual action plans, targets, and activities</p>
       </div>
-      <button class="btn-primary btn-new-plan" (click)="openCreateModal()">
+      <button class="btn-primary" (click)="openCreateModal()">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
         </svg>
         New Action Plan
       </button>
-    </div>
-
-    <!-- KPI Cards -->
-    <div class="kpi-cards">
-      <div class="kpi-card total">
-        <div class="kpi-icon">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-            <polyline points="14 2 14 8 20 8"/>
-          </svg>
-        </div>
-        <div class="kpi-content">
-          <span class="kpi-value">{{ kpiStats().totalPlans }}</span>
-          <span class="kpi-label">Total Plans</span>
-        </div>
-      </div>
-
-      <div class="kpi-card active">
-        <div class="kpi-icon">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polygon points="5 3 19 12 5 21 5 3"/>
-          </svg>
-        </div>
-        <div class="kpi-content">
-          <span class="kpi-value">{{ kpiStats().activePlans }}</span>
-          <span class="kpi-label">Active Plans</span>
-        </div>
-      </div>
-
-      <div class="kpi-card budget">
-        <div class="kpi-icon">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="12" y1="1" x2="12" y2="23"/>
-            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
-          </svg>
-        </div>
-        <div class="kpi-content">
-          <span class="kpi-value budget-value">{{ formatCurrency(kpiStats().totalBudget) }}</span>
-          <span class="kpi-label">Total Budget (TZS)</span>
-        </div>
-      </div>
-
-      <div class="kpi-card progress">
-        <div class="kpi-icon">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
-          </svg>
-        </div>
-        <div class="kpi-content">
-          <span class="kpi-value">{{ kpiStats().avgProgress }}%</span>
-          <span class="kpi-label">Avg. Progress</span>
-          <div class="kpi-progress-bar">
-            <div class="kpi-progress-fill" [style.width.%]="kpiStats().avgProgress" [style.background]="getProgressColor(kpiStats().avgProgress)"></div>
-          </div>
-        </div>
-      </div>
     </div>
 
     <!-- Filters Bar -->
@@ -100,35 +44,12 @@
         </button>
       </div>
       <div class="filters-right">
-        <span class="plan-count"><strong>{{ filteredPlans().length }}</strong> plan(s)</span>
+        <span class="plan-count">{{ filteredPlans().length }} plan(s)</span>
       </div>
     </div>
 
-    <!-- Empty State with CTA -->
-    <div *ngIf="!isLoading() && filteredPlans().length === 0" class="empty-state-container">
-      <div class="empty-state-content">
-        <div class="empty-icon">
-          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-            <polyline points="14 2 14 8 20 8"/>
-            <line x1="12" y1="11" x2="12" y2="17"/>
-            <line x1="9" y1="14" x2="15" y2="14"/>
-          </svg>
-        </div>
-        <h3>No Action Plans Yet</h3>
-        <p>Get started by creating your first action plan to track targets and activities.</p>
-        <button class="btn-primary btn-lg" (click)="openCreateModal()">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-          </svg>
-          Create First Action Plan
-        </button>
-      </div>
-    </div>
-
-    <!-- Data Table (only show if there are plans) -->
+    <!-- Data Table -->
     <app-data-table
-      *ngIf="filteredPlans().length > 0"
       [data]="filteredPlans()"
       [columns]="tableColumns"
       [actions]="tableActions"

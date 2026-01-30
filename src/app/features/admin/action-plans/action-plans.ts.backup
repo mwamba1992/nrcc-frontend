@@ -63,25 +63,6 @@ export class ActionPlansComponent implements OnInit {
     return result;
   });
 
-  // KPI computed properties
-  kpiStats = computed(() => {
-    const plans = this.actionPlans();
-    const activePlans = plans.filter(p => p.status === 'IN_PROGRESS').length;
-    const totalBudget = plans.reduce((sum, p) => sum + (p.totalBudget || 0), 0);
-    const avgProgress = plans.length > 0
-      ? Math.round(plans.reduce((sum, p) => sum + (p.overallProgress || 0), 0) / plans.length)
-      : 0;
-    const completedPlans = plans.filter(p => p.status === 'COMPLETED').length;
-
-    return {
-      totalPlans: plans.length,
-      activePlans,
-      completedPlans,
-      totalBudget,
-      avgProgress
-    };
-  });
-
   // Form data
   formData: CreateActionPlanRequest = {
     financialYear: '',
@@ -240,20 +221,12 @@ export class ActionPlansComponent implements OnInit {
   ];
 
   tableConfig: DataTableConfig = {
-    searchPlaceholder: 'Search action plans by title, financial year...',
-    emptyMessage: 'No action plans found. Get started by creating your first plan!',
+    searchPlaceholder: 'Search action plans by title, year...',
+    emptyMessage: 'No action plans found',
     pageSize: 10,
     showPagination: true,
     showSearch: true
   };
-
-  // Helper for progress bar color
-  getProgressColor(progress: number): string {
-    if (progress >= 75) return '#22c55e';
-    if (progress >= 50) return '#f59e0b';
-    if (progress >= 25) return '#3b82f6';
-    return '#94a3b8';
-  }
 
   constructor(
     private actionPlanService: ActionPlanService,

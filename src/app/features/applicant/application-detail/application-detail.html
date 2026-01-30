@@ -47,8 +47,25 @@
 
       <div class="header-content">
         <div class="header-left">
-          <h1>{{ application.formData?.roadName }}</h1>
-          <p class="reference">{{ application.applicationNumber }}</p>
+          <div class="title-row">
+            <h1>{{ application.formData?.roadName }}</h1>
+            <span class="priority-badge" [class]="'priority-' + getPriority().level">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+              </svg>
+              {{ getPriority().label }} Priority
+            </span>
+          </div>
+          <div class="meta-row">
+            <p class="reference">{{ application.applicationNumber }}</p>
+            <span class="time-in-review">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+              {{ getTimeInReview() }} in review
+            </span>
+          </div>
           <span class="status-badge" [class]="getStatusClass(application.status)">
             {{ getStatusLabel(application.status) }}
           </span>
@@ -62,7 +79,7 @@
             </svg>
             Download Report
           </button>
-          <button class="btn-primary">
+          <button class="btn-primary" *ngIf="!isReviewerView">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
               <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
@@ -213,13 +230,14 @@
                 <div class="class-box current">
                   <div class="class-icon">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                      <path d="M9 11l3 3L22 4"/>
-                      <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+                      <rect x="3" y="3" width="18" height="18" rx="2"/>
+                      <line x1="9" y1="9" x2="15" y2="15"/>
+                      <line x1="15" y1="9" x2="9" y2="15"/>
                     </svg>
                   </div>
                   <span class="class-label">Current Classification</span>
                   <span class="class-value">{{ formatClassification(application.formData?.currentClass || '') }}</span>
-                  <span class="status-tag">From</span>
+                  <span class="status-tag current-tag">Current</span>
                 </div>
 
                 <div class="arrow-divider">
@@ -237,7 +255,73 @@
                   </div>
                   <span class="class-label">Proposed Classification</span>
                   <span class="class-value">{{ formatClassification(application.formData?.proposedClass || '') }}</span>
-                  <span class="status-tag">To</span>
+                  <span class="status-tag proposed-tag">Proposed</span>
+                </div>
+              </div>
+
+              <!-- Classification Comparison Table -->
+              <div class="criteria-comparison">
+                <h5 class="comparison-title">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+                    <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
+                  </svg>
+                  Criteria Comparison
+                </h5>
+                <table class="comparison-table">
+                  <thead>
+                    <tr>
+                      <th>Criteria</th>
+                      <th>{{ formatClassification(application.formData?.currentClass || '') }}</th>
+                      <th>{{ formatClassification(application.formData?.proposedClass || '') }}</th>
+                      <th>Road Specs</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Min. Carriageway Width</td>
+                      <td>{{ getCriteria(application.formData?.currentClass || '').minWidth }}m</td>
+                      <td>{{ getCriteria(application.formData?.proposedClass || '').minWidth }}m</td>
+                      <td [class.meets-criteria]="(application.formData?.carriagewayWidth || 0) >= getCriteria(application.formData?.proposedClass || '').minWidth"
+                          [class.below-criteria]="(application.formData?.carriagewayWidth || 0) < getCriteria(application.formData?.proposedClass || '').minWidth">
+                        {{ application.formData?.carriagewayWidth }}m
+                        <svg *ngIf="(application.formData?.carriagewayWidth || 0) >= getCriteria(application.formData?.proposedClass || '').minWidth" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                          <polyline points="20 6 9 17 4 12"/>
+                        </svg>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Min. Road Length</td>
+                      <td>{{ getCriteria(application.formData?.currentClass || '').minLength }}km</td>
+                      <td>{{ getCriteria(application.formData?.proposedClass || '').minLength }}km</td>
+                      <td [class.meets-criteria]="(application.formData?.roadLength || 0) >= getCriteria(application.formData?.proposedClass || '').minLength"
+                          [class.below-criteria]="(application.formData?.roadLength || 0) < getCriteria(application.formData?.proposedClass || '').minLength">
+                        {{ application.formData?.roadLength }}km
+                        <svg *ngIf="(application.formData?.roadLength || 0) >= getCriteria(application.formData?.proposedClass || '').minLength" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                          <polyline points="20 6 9 17 4 12"/>
+                        </svg>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Traffic Level</td>
+                      <td>{{ getCriteria(application.formData?.currentClass || '').trafficLevel }}</td>
+                      <td>{{ getCriteria(application.formData?.proposedClass || '').trafficLevel }}</td>
+                      <td>{{ application.formData?.trafficLevel || '-' }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div class="criteria-verdict" [class.meets]="meetsProposedCriteria()" [class.below]="!meetsProposedCriteria()">
+                  <svg *ngIf="meetsProposedCriteria()" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                    <polyline points="22 4 12 14.01 9 11.01"/>
+                  </svg>
+                  <svg *ngIf="!meetsProposedCriteria()" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                  </svg>
+                  <span *ngIf="meetsProposedCriteria()">Road meets proposed classification criteria</span>
+                  <span *ngIf="!meetsProposedCriteria()">Road may not meet all proposed classification criteria</span>
                 </div>
               </div>
             </div>
@@ -417,47 +501,88 @@
       <div *ngIf="activeTab === 'comments'" class="comments-content">
         <div class="comments-card">
           <div class="card-header">
-            <h3>Discussion</h3>
-            <p>{{ comments.length }} {{ comments.length === 1 ? 'comment' : 'comments' }}</p>
+            <h3>Discussion Thread</h3>
+            <p>{{ comments.length }} {{ comments.length === 1 ? 'message' : 'messages' }} in conversation</p>
           </div>
           <div class="card-body">
-            <!-- Comment List -->
-            <div class="comments-list">
-              <div *ngFor="let comment of comments" class="comment-item">
-                <div class="comment-avatar">
-                  {{ comment.author.charAt(0) }}
+            <!-- Comment List - Chat Style -->
+            <div class="comments-thread">
+              <div *ngIf="comments.length === 0" class="no-comments">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="1.5">
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                </svg>
+                <p>No comments yet. Start the conversation!</p>
+              </div>
+              <div *ngFor="let comment of comments; let i = index" class="comment-bubble" [class.same-author]="i > 0 && comments[i-1].author === comment.author">
+                <div class="bubble-avatar" *ngIf="i === 0 || comments[i-1].author !== comment.author">
+                  <span class="avatar-initial">{{ comment.author.charAt(0) }}</span>
                 </div>
-                <div class="comment-content">
-                  <div class="comment-header">
-                    <div>
-                      <h4>{{ comment.author }}</h4>
-                      <span class="role">{{ comment.role }}</span>
-                    </div>
-                    <span class="timestamp">{{ comment.timestamp | date:'short' }}</span>
+                <div class="bubble-content">
+                  <div class="bubble-meta" *ngIf="i === 0 || comments[i-1].author !== comment.author">
+                    <span class="author-name">{{ comment.author }}</span>
+                    <span class="author-role">{{ comment.role }}</span>
                   </div>
-                  <p class="comment-text">{{ comment.content }}</p>
+                  <div class="bubble-message">
+                    <p>{{ comment.content }}</p>
+                    <span class="bubble-time">{{ comment.timestamp | date:'short' }}</span>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <!-- Add Comment Form -->
-            <div class="add-comment">
-              <div class="comment-avatar">You</div>
-              <div class="comment-form">
+            <!-- Add Comment Form - Chat Input Style -->
+            <div class="chat-input-container">
+              <div class="chat-input">
                 <textarea
                   [(ngModel)]="newComment"
-                  placeholder="Add a comment..."
-                  rows="3"
+                  placeholder="Type your message..."
+                  rows="1"
                 ></textarea>
-                <div class="form-actions">
-                  <button class="btn-secondary-sm" (click)="newComment = ''">Cancel</button>
-                  <button class="btn-primary-sm" (click)="addComment()" [disabled]="!newComment.trim()">
-                    Post Comment
-                  </button>
-                </div>
+                <button class="send-btn" (click)="addComment()" [disabled]="!newComment.trim()">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="22" y1="2" x2="11" y2="13"/>
+                    <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                  </svg>
+                </button>
               </div>
+              <p class="chat-hint">Click the send button to post your message</p>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Floating Action Bar for Reviewers -->
+    <div *ngIf="isReviewerView" class="floating-action-bar">
+      <div class="action-bar-content">
+        <div class="action-bar-info">
+          <span class="app-ref">{{ application.applicationNumber }}</span>
+          <span class="app-status" [class]="getStatusClass(application.status)">{{ getStatusLabel(application.status) }}</span>
+        </div>
+        <div class="action-bar-buttons">
+          <button class="action-btn info" (click)="onRequestInfo()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+              <line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+            Request Info
+          </button>
+          <button class="action-btn reject" (click)="onReject()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="15" y1="9" x2="9" y2="15"/>
+              <line x1="9" y1="9" x2="15" y2="15"/>
+            </svg>
+            Reject
+          </button>
+          <button class="action-btn approve" (click)="onApprove()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+              <polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>
+            Approve
+          </button>
         </div>
       </div>
     </div>

@@ -76,7 +76,7 @@ export class ApplicationsQueueComponent implements OnInit {
       key: 'applicationNumber',
       label: 'Reference',
       sortable: true,
-      width: '130px',
+      width: '140px',
       class: 'reference-cell'
     },
     {
@@ -88,42 +88,42 @@ export class ApplicationsQueueComponent implements OnInit {
       key: 'applicantName',
       label: 'Applicant',
       sortable: true,
-      width: '140px'
+      width: '150px'
+    },
+    {
+      key: 'applicantType',
+      label: 'Type',
+      sortable: true,
+      width: '120px',
+      format: (value) => ApplicantTypeLabels[value] || value
     },
     {
       key: 'currentClass',
-      label: 'From',
+      label: 'Current',
       sortable: true,
-      width: '90px',
+      width: '110px',
       format: (value) => RoadClassLabels[value] || value
     },
     {
       key: 'proposedClass',
-      label: 'To',
+      label: 'Proposed',
       sortable: true,
-      width: '90px',
+      width: '110px',
       format: (value) => RoadClassLabels[value] || value
     },
     {
       key: 'status',
       label: 'Status',
       sortable: true,
-      width: '160px',
+      width: '180px',
       class: 'status-cell',
       format: (value) => ApplicationStatusLabels[value] || value
-    },
-    {
-      key: 'updatedAt',
-      label: 'Time in Stage',
-      sortable: true,
-      width: '120px',
-      format: (value) => this.getTimeInStage(value)
     },
     {
       key: 'submissionDate',
       label: 'Submitted',
       sortable: true,
-      width: '100px',
+      width: '110px',
       format: (value) => value ? new Date(value).toLocaleDateString() : '-'
     }
   ];
@@ -478,78 +478,5 @@ export class ApplicationsQueueComponent implements OnInit {
 
   getStatusColor(status: string): { bg: string; text: string } {
     return ApplicationStatusColors[status] || { bg: '#f1f5f9', text: '#475569' };
-  }
-
-  // Calculate time in current stage
-  getTimeInStage(updatedAt: string): string {
-    if (!updatedAt) return '-';
-
-    const updated = new Date(updatedAt);
-    const now = new Date();
-    const diffMs = now.getTime() - updated.getTime();
-    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-    const diffHours = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-
-    if (diffDays > 30) {
-      const months = Math.floor(diffDays / 30);
-      return `${months}mo`;
-    } else if (diffDays > 0) {
-      return `${diffDays}d`;
-    } else if (diffHours > 0) {
-      return `${diffHours}h`;
-    } else {
-      return 'Just now';
-    }
-  }
-
-  // Get urgency class based on time in stage
-  getUrgencyClass(updatedAt: string): string {
-    if (!updatedAt) return '';
-
-    const updated = new Date(updatedAt);
-    const now = new Date();
-    const diffDays = Math.floor((now.getTime() - updated.getTime()) / (1000 * 60 * 60 * 24));
-
-    if (diffDays > 14) return 'urgency-critical';
-    if (diffDays > 7) return 'urgency-warning';
-    return 'urgency-normal';
-  }
-
-  // Export applications to CSV
-  exportToCSV(): void {
-    const apps = this.filteredApplications();
-    if (apps.length === 0) {
-      this.sweetAlertService.warning('No Data', 'No applications to export.');
-      return;
-    }
-
-    const headers = ['Reference', 'Road Name', 'Applicant', 'From Class', 'To Class', 'Status', 'Submitted Date', 'Time in Stage'];
-    const rows = apps.map(app => [
-      app.applicationNumber,
-      app.roadName,
-      app.applicantName,
-      RoadClassLabels[app.currentClass] || app.currentClass,
-      RoadClassLabels[app.proposedClass] || app.proposedClass,
-      ApplicationStatusLabels[app.status] || app.status,
-      app.submissionDate ? new Date(app.submissionDate).toLocaleDateString() : '-',
-      this.getTimeInStage(app.updatedAt)
-    ]);
-
-    const csvContent = [headers, ...rows]
-      .map(row => row.map(cell => `"${cell}"`).join(','))
-      .join('\n');
-
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = `applications-queue-${new Date().toISOString().split('T')[0]}.csv`;
-    link.click();
-
-    this.sweetAlertService.success('Exported!', `${apps.length} applications exported to CSV.`);
-  }
-
-  // Filter by clicking status card
-  filterByCard(filter: string): void {
-    this.selectedFilter.set(filter);
   }
 }

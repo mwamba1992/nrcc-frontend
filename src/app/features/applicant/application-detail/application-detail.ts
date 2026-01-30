@@ -50,6 +50,28 @@ export class ApplicationDetailComponent implements OnInit {
 
   ApplicationStatus = ApplicationStatus;
 
+  // Classification requirements for comparison table
+  classificationCriteria = {
+    TRUNK: {
+      minWidth: 7,
+      minLength: 50,
+      trafficLevel: 'High',
+      description: 'National importance, connects major cities'
+    },
+    REGIONAL: {
+      minWidth: 6,
+      minLength: 20,
+      trafficLevel: 'Medium-High',
+      description: 'Regional significance, connects districts'
+    },
+    DISTRICT: {
+      minWidth: 5,
+      minLength: 10,
+      trafficLevel: 'Medium',
+      description: 'Local importance, connects towns'
+    }
+  };
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -312,5 +334,68 @@ export class ApplicationDetailComponent implements OnInit {
       'TRUNK': 'Trunk Road'
     };
     return classMap[value] || value;
+  }
+
+  // Get priority based on various factors
+  getPriority(): { level: 'high' | 'medium' | 'low'; label: string } {
+    if (!this.application) return { level: 'low', label: 'Low' };
+
+    // High priority: Trunk road changes or long roads
+    const proposedClass = this.application.formData?.proposedClass;
+    const roadLength = this.application.formData?.roadLength || 0;
+
+    if (proposedClass === 'TRUNK' || roadLength > 100) {
+      return { level: 'high', label: 'High' };
+    }
+    if (proposedClass === 'REGIONAL' || roadLength > 30) {
+      return { level: 'medium', label: 'Medium' };
+    }
+    return { level: 'low', label: 'Low' };
+  }
+
+  // Get time since submission
+  getTimeInReview(): string {
+    if (!this.application?.submissionDate) return '-';
+    const submitted = new Date(this.application.submissionDate);
+    const now = new Date();
+    const diffMs = now.getTime() - submitted.getTime();
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+    if (diffDays > 30) return `${Math.floor(diffDays / 30)} months`;
+    if (diffDays > 0) return `${diffDays} days`;
+    return 'Today';
+  }
+
+  // Get criteria for a classification
+  getCriteria(classType: string): { minWidth: number; minLength: number; trafficLevel: string; description: string } {
+    return this.classificationCriteria[classType as keyof typeof this.classificationCriteria] ||
+           { minWidth: 0, minLength: 0, trafficLevel: '-', description: '-' };
+  }
+
+  // Check if road meets proposed classification
+  meetsProposedCriteria(): boolean {
+    if (!this.application?.formData) return false;
+    const proposed = this.application.formData.proposedClass;
+    const criteria = this.getCriteria(proposed);
+    const width = this.application.formData.carriagewayWidth || 0;
+    const length = this.application.formData.roadLength || 0;
+
+    return width >= criteria.minWidth && length >= criteria.minLength;
+  }
+
+  // Reviewer action handlers
+  onApprove(): void {
+    console.log('Approve action triggered');
+    // This would trigger the appropriate workflow action
+  }
+
+  onRequestInfo(): void {
+    console.log('Request more info triggered');
+    // This would open a dialog for requesting additional information
+  }
+
+  onReject(): void {
+    console.log('Reject action triggered');
+    // This would trigger rejection workflow
   }
 }

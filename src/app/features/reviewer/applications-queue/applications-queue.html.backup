@@ -1,0 +1,62 @@
+<app-reviewer-layout>
+  <div class="applications-container">
+    <!-- Page Header -->
+    <div class="page-header">
+      <div class="header-content">
+        <h1>Applications Queue</h1>
+        <p class="subtitle">Review and process road reclassification applications</p>
+      </div>
+      <div class="header-stats">
+        <div class="stat-badge total">
+          <span class="count">{{ statusCounts().total }}</span>
+          <span class="label">Total</span>
+        </div>
+        <div class="stat-badge pending">
+          <span class="count">{{ statusCounts().pending }}</span>
+          <span class="label">Pending</span>
+        </div>
+        <div class="stat-badge in-progress">
+          <span class="count">{{ statusCounts().inProgress }}</span>
+          <span class="label">In Progress</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filters Bar -->
+    <div class="filters-bar">
+      <div class="filters-left">
+        <div class="filter-group">
+          <label>Status:</label>
+          <select [ngModel]="selectedFilter()" (ngModelChange)="filterApplications($event)">
+            <option value="all">All Applications</option>
+            <option value="pending">Pending Review</option>
+            <option value="in_progress">In Progress</option>
+            <option value="completed">Completed</option>
+          </select>
+        </div>
+        <button *ngIf="selectedFilter() !== 'all'"
+                class="btn-text"
+                (click)="filterApplications('all')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+          Clear Filter
+        </button>
+      </div>
+      <div class="filters-right">
+        <span class="record-count">{{ filteredApplications().length }} application(s)</span>
+      </div>
+    </div>
+
+    <!-- Professional Data Table -->
+    <app-data-table
+      [data]="filteredApplications()"
+      [columns]="tableColumns"
+      [actions]="tableActions"
+      [loading]="isLoading()"
+      [config]="tableConfig"
+      [showSerialNumber]="true">
+    </app-data-table>
+  </div>
+</app-reviewer-layout>

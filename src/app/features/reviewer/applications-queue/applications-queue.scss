@@ -1,4 +1,4 @@
-// Applications Queue - Consistent with User Management styling
+// Applications Queue - Enhanced UI based on Gemini suggestions
 
 .applications-container {
   padding: 2rem;
@@ -11,9 +11,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
   flex-wrap: wrap;
-  gap: 1.5rem;
+  gap: 1rem;
 
   .header-content {
     h1 {
@@ -30,49 +30,152 @@
     }
   }
 
-  .header-stats {
+  .header-actions {
     display: flex;
     gap: 0.75rem;
+  }
+}
 
-    .stat-badge {
+// Export Button
+.btn-export {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1rem;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  color: #475569;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+    color: #1e293b;
+  }
+
+  svg {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+// Clickable Status Cards
+.status-cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+
+  .status-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.25rem;
+    background: white;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    &.active {
+      border-width: 2px;
+    }
+
+    .card-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      border-radius: 10px;
+      flex-shrink: 0;
+
+      svg {
+        width: 24px;
+        height: 24px;
+      }
+    }
+
+    .card-content {
       display: flex;
       flex-direction: column;
-      align-items: center;
-      padding: 0.75rem 1rem;
-      border-radius: 8px;
-      min-width: 80px;
 
-      .count {
-        font-size: 1.25rem;
+      .card-count {
+        font-size: 1.75rem;
         font-weight: 700;
+        line-height: 1.2;
       }
 
-      .label {
-        font-size: 0.6875rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
+      .card-label {
+        font-size: 0.8125rem;
+        font-weight: 500;
+        color: #64748b;
+        margin-top: 0.25rem;
       }
+    }
 
-      &.total {
-        background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
-        border: 1px solid #cbd5e1;
-        .count { color: #475569; }
-        .label { color: #64748b; }
+    // Total Card
+    &.total {
+      .card-icon {
+        background: #f1f5f9;
+        color: #475569;
       }
+      .card-count { color: #1e293b; }
 
-      &.pending {
-        background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
-        border: 1px solid #bfdbfe;
-        .count { color: #1e40af; }
-        .label { color: #3b82f6; }
+      &.active, &:hover {
+        border-color: #94a3b8;
+        background: #f8fafc;
       }
+    }
 
-      &.in-progress {
-        background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-        border: 1px solid #fcd34d;
-        .count { color: #92400e; }
-        .label { color: #b45309; }
+    // Pending Card
+    &.pending {
+      .card-icon {
+        background: #eff6ff;
+        color: #3b82f6;
+      }
+      .card-count { color: #1d4ed8; }
+
+      &.active, &:hover {
+        border-color: #3b82f6;
+        background: #eff6ff;
+      }
+    }
+
+    // In Progress Card
+    &.in-progress {
+      .card-icon {
+        background: #fef3c7;
+        color: #d97706;
+      }
+      .card-count { color: #b45309; }
+
+      &.active, &:hover {
+        border-color: #f59e0b;
+        background: #fffbeb;
+      }
+    }
+
+    // Completed Card
+    &.completed {
+      .card-icon {
+        background: #dcfce7;
+        color: #16a34a;
+      }
+      .card-count { color: #15803d; }
+
+      &.active, &:hover {
+        border-color: #22c55e;
+        background: #f0fdf4;
       }
     }
   }
@@ -84,8 +187,8 @@
   justify-content: space-between;
   align-items: center;
   padding: 1rem 1.5rem;
-  background: var(--bg-secondary, #f8fafc);
-  border: 1px solid var(--border-color, #e2e8f0);
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
   border-radius: 8px;
   margin-bottom: 1rem;
   gap: 1rem;
@@ -112,17 +215,17 @@
     label {
       font-size: 0.875rem;
       font-weight: 500;
-      color: var(--text-secondary, #64748b);
+      color: #64748b;
       white-space: nowrap;
     }
 
     select {
       padding: 0.5rem 2rem 0.5rem 0.75rem;
-      border: 1px solid var(--border-color, #e2e8f0);
+      border: 1px solid #e2e8f0;
       border-radius: 6px;
       background: white;
       font-size: 0.875rem;
-      color: var(--text-primary, #1e293b);
+      color: #1e293b;
       cursor: pointer;
       min-width: 160px;
       appearance: none;
@@ -133,7 +236,7 @@
 
       &:focus {
         outline: none;
-        border-color: var(--primary-color, #22c55e);
+        border-color: #22c55e;
         box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
       }
     }
@@ -146,15 +249,15 @@
     padding: 0.5rem 0.75rem;
     background: none;
     border: none;
-    color: var(--text-secondary, #64748b);
+    color: #64748b;
     font-size: 0.875rem;
     cursor: pointer;
     border-radius: 6px;
     transition: all 0.2s;
 
     &:hover {
-      background: var(--bg-hover, #f1f5f9);
-      color: var(--text-primary, #1e293b);
+      background: #f1f5f9;
+      color: #1e293b;
     }
 
     svg {
@@ -165,8 +268,17 @@
 
   .record-count {
     font-size: 0.875rem;
-    color: var(--text-secondary, #64748b);
-    font-weight: 500;
+    color: #64748b;
+
+    strong {
+      color: #1e293b;
+      font-weight: 600;
+    }
+
+    .filter-indicator {
+      color: #3b82f6;
+      font-style: italic;
+    }
   }
 }
 
@@ -188,10 +300,76 @@
     font-family: 'SF Mono', 'Monaco', 'Courier New', monospace;
     font-size: 0.8125rem;
     color: #3b82f6;
+    font-weight: 500;
+  }
+
+  // Time in stage urgency colors
+  .urgency-critical {
+    color: #dc2626 !important;
+    font-weight: 600;
+  }
+
+  .urgency-warning {
+    color: #d97706 !important;
+    font-weight: 500;
+  }
+
+  .urgency-normal {
+    color: #16a34a;
+  }
+
+  // Larger action buttons with better tooltips
+  .actions-cell {
+    .action-btn {
+      width: 32px;
+      height: 32px;
+      padding: 6px;
+
+      svg {
+        width: 18px;
+        height: 18px;
+      }
+
+      // Tooltip styling
+      &[title] {
+        position: relative;
+
+        &::after {
+          content: attr(title);
+          position: absolute;
+          bottom: 100%;
+          left: 50%;
+          transform: translateX(-50%);
+          padding: 0.5rem 0.75rem;
+          background: #1e293b;
+          color: white;
+          font-size: 0.75rem;
+          white-space: nowrap;
+          border-radius: 6px;
+          opacity: 0;
+          visibility: hidden;
+          transition: all 0.2s;
+          pointer-events: none;
+          z-index: 100;
+        }
+
+        &:hover::after {
+          opacity: 1;
+          visibility: visible;
+          bottom: calc(100% + 8px);
+        }
+      }
+    }
   }
 }
 
 // Responsive Design
+@media (max-width: 1200px) {
+  .status-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 @media (max-width: 768px) {
   .applications-container {
     padding: 1rem;
@@ -201,9 +379,40 @@
     flex-direction: column;
     align-items: flex-start;
 
-    .header-stats {
+    .header-actions {
       width: 100%;
-      justify-content: space-between;
+
+      .btn-export {
+        flex: 1;
+        justify-content: center;
+      }
+    }
+  }
+
+  .status-cards {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+
+    .status-card {
+      padding: 1rem;
+
+      .card-icon {
+        width: 40px;
+        height: 40px;
+
+        svg {
+          width: 20px;
+          height: 20px;
+        }
+      }
+
+      .card-count {
+        font-size: 1.5rem;
+      }
+
+      .card-label {
+        font-size: 0.75rem;
+      }
     }
   }
 
@@ -223,5 +432,11 @@
         width: 100%;
       }
     }
+  }
+}
+
+@media (max-width: 480px) {
+  .status-cards {
+    grid-template-columns: 1fr;
   }
 }
