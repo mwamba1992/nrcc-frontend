@@ -11,18 +11,26 @@ import { filter } from 'rxjs';
   styleUrl: './app.scss'
 })
 export class App {
-  showHeader = true;
+  showHeader = false;
 
   constructor(private router: Router) {
-    // Hide header on dashboard pages
+    // Check initial URL
+    this.checkHeaderVisibility(this.router.url);
+
+    // Listen for route changes
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe((event: any) => {
-      const url = event.url;
-      this.showHeader = !url.includes('/applicant/') &&
-                        !url.includes('/reviewer/') &&
-                        !url.includes('/nrcc/') &&
-                        !url.includes('/admin/');
+      this.checkHeaderVisibility(event.url);
     });
+  }
+
+  private checkHeaderVisibility(url: string): void {
+    // Hide header on landing page (has integrated header) and dashboard pages (have layouts)
+    this.showHeader = url !== '/' &&
+                      !url.includes('/applicant/') &&
+                      !url.includes('/reviewer/') &&
+                      !url.includes('/nrcc/') &&
+                      !url.includes('/admin/');
   }
 }

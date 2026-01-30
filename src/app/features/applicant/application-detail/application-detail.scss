@@ -1027,164 +1027,296 @@
 
 // DOCUMENTS CONTENT
 .documents-content {
-  .documents-card {
+  .documents-split-view {
+    display: grid;
+    grid-template-columns: 360px 1fr;
+    gap: $spacing-5;
+    min-height: 600px;
+
+    @include respond-to-max('lg') {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  // Documents List Panel
+  .documents-list-panel {
     background: $white;
     border-radius: $radius-xl;
     border: 1.5px solid #e5e7eb;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
 
-    &:hover {
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-      border-color: #d1d5db;
+    &.collapsed {
+      @include respond-to-max('lg') {
+        display: none;
+      }
     }
 
-    .card-header {
-      padding: $spacing-6 $spacing-6 $spacing-5;
-      border-bottom: 1.5px solid #f3f4f6;
+    .panel-header {
+      padding: $spacing-5;
+      border-bottom: 1px solid #e5e7eb;
       display: flex;
       justify-content: space-between;
       align-items: center;
 
       h3 {
-        font-size: 19px;
+        font-size: 16px;
         font-weight: $font-weight-bold;
         color: $text-primary;
         margin: 0;
-        letter-spacing: -0.01em;
       }
 
       .btn-primary-sm {
         display: inline-flex;
         align-items: center;
-        gap: $spacing-2;
-        padding: 9px $spacing-4;
+        gap: 6px;
+        padding: 8px 12px;
         background: $primary-green;
         color: $white;
         border: none;
-        border-radius: $radius-lg;
-        font-size: 13px;
+        border-radius: $radius-md;
+        font-size: 12px;
         font-weight: $font-weight-semibold;
         cursor: pointer;
-        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: 0 1px 2px rgba($black, 0.05);
+        transition: all 0.2s;
 
         &:hover {
           background: darken($primary-green, 5%);
-          transform: translateY(-1px);
-          box-shadow: 0 6px 12px rgba($primary-green, 0.3);
-        }
-
-        &:active {
-          transform: translateY(0);
         }
 
         svg {
-          flex-shrink: 0;
-          width: 16px;
-          height: 16px;
+          width: 14px;
+          height: 14px;
         }
       }
     }
 
-    .card-body {
-      padding: $spacing-6;
+    .documents-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: $spacing-3;
+
+      .document-item {
+        display: flex;
+        align-items: center;
+        gap: $spacing-3;
+        padding: $spacing-3 $spacing-4;
+        border-radius: $radius-lg;
+        cursor: pointer;
+        transition: all 0.2s;
+        border: 1.5px solid transparent;
+        margin-bottom: $spacing-2;
+
+        &:hover {
+          background: #f8fafc;
+        }
+
+        &.active {
+          background: rgba($primary-green, 0.08);
+          border-color: rgba($primary-green, 0.3);
+
+          .doc-icon {
+            background: $primary-green;
+            color: white;
+          }
+        }
+
+        .doc-icon {
+          width: 42px;
+          height: 42px;
+          border-radius: $radius-md;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+
+          svg {
+            width: 22px;
+            height: 22px;
+          }
+
+          &.pdf {
+            background: rgba(#dc2626, 0.1);
+            color: #dc2626;
+          }
+
+          &.zip {
+            background: rgba(#f59e0b, 0.1);
+            color: #f59e0b;
+          }
+        }
+
+        .doc-info {
+          flex: 1;
+          min-width: 0;
+
+          h4 {
+            font-size: 13px;
+            font-weight: $font-weight-semibold;
+            color: $text-primary;
+            margin: 0 0 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+
+          p {
+            font-size: 11px;
+            color: #6b7280;
+            margin: 0;
+          }
+        }
+
+        .doc-actions {
+          display: flex;
+          gap: 4px;
+          opacity: 0;
+          transition: opacity 0.2s;
+
+          .btn-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: $radius-md;
+            border: none;
+            background: transparent;
+            color: #6b7280;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+
+            &:hover {
+              background: #e5e7eb;
+              color: $text-primary;
+            }
+
+            &.view:hover {
+              background: rgba($primary-green, 0.1);
+              color: $primary-green;
+            }
+          }
+        }
+
+        &:hover .doc-actions {
+          opacity: 1;
+        }
+      }
     }
   }
 
-  .documents-list {
+  // Document Viewer Panel
+  .document-viewer-panel {
+    background: $white;
+    border-radius: $radius-xl;
+    border: 1.5px solid #e5e7eb;
     display: flex;
     flex-direction: column;
-    gap: $spacing-3;
+    overflow: hidden;
+    min-height: 600px;
 
-    .document-item {
+    @include respond-to-max('lg') {
+      display: none;
+
+      &.active {
+        display: flex;
+        position: fixed;
+        inset: 0;
+        z-index: 100;
+        border-radius: 0;
+        margin: 0;
+      }
+    }
+
+    .viewer-placeholder {
+      flex: 1;
       display: flex;
+      flex-direction: column;
       align-items: center;
-      gap: $spacing-4;
-      padding: $spacing-5;
-      background: #f9fafb;
-      border-radius: $radius-lg;
-      border: 1.5px solid transparent;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      justify-content: center;
+      text-align: center;
+      padding: $spacing-8;
 
-      &:hover {
-        background: $white;
-        border-color: rgba($primary-green, 0.3);
-        box-shadow: 0 4px 12px rgba($black, 0.08);
-        transform: translateY(-1px);
-
-        .btn-icon {
-          background: $primary-green;
-          border-color: $primary-green;
-          color: $white;
-          transform: scale(1.05);
-        }
+      svg {
+        margin-bottom: $spacing-4;
       }
 
-      .doc-icon {
-        width: 52px;
-        height: 52px;
-        border-radius: $radius-lg;
+      h4 {
+        font-size: 16px;
+        font-weight: $font-weight-semibold;
+        color: $text-primary;
+        margin: 0 0 8px;
+      }
+
+      p {
+        font-size: 14px;
+        color: #6b7280;
+        margin: 0;
+      }
+    }
+
+    .viewer-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .viewer-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: $spacing-4 $spacing-5;
+      border-bottom: 1px solid #e5e7eb;
+      background: #f8fafc;
+
+      .viewer-title {
         display: flex;
         align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-        transition: all 0.2s ease;
+        gap: $spacing-3;
+        font-size: 14px;
+        font-weight: $font-weight-semibold;
+        color: $text-primary;
 
         svg {
-          width: 26px;
-          height: 26px;
-        }
-
-        &.pdf {
-          background: rgba(#dc2626, 0.1);
           color: #dc2626;
         }
-
-        &.image {
-          background: rgba(#3b82f6, 0.1);
-          color: #3b82f6;
-        }
       }
 
-      .doc-info {
-        flex: 1;
-
-        h4 {
-          font-size: 15px;
-          font-weight: $font-weight-semibold;
-          color: $text-primary;
-          margin: 0 0 4px;
-          line-height: 1.4;
-        }
-
-        p {
-          font-size: 13px;
-          color: #6b7280;
-          margin: 0;
-          line-height: 1.4;
-        }
-      }
-
-      .btn-icon {
-        width: 40px;
-        height: 40px;
-        border-radius: $radius-lg;
-        border: 1.5px solid #e5e7eb;
-        background: $white;
-        color: #6b7280;
+      .viewer-actions {
         display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-        flex-shrink: 0;
+        gap: $spacing-2;
 
-        svg {
-          flex-shrink: 0;
-          width: 18px;
-          height: 18px;
+        .btn-icon {
+          width: 36px;
+          height: 36px;
+          border-radius: $radius-md;
+          border: 1px solid #e5e7eb;
+          background: $white;
+          color: #6b7280;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          transition: all 0.2s;
+
+          &:hover {
+            background: #f1f5f9;
+            color: $text-primary;
+          }
         }
+      }
+    }
+
+    .viewer-iframe-container {
+      flex: 1;
+      background: #525659;
+      padding: $spacing-2;
+
+      iframe {
+        border: none;
+        border-radius: $radius-md;
+        background: white;
       }
     }
   }

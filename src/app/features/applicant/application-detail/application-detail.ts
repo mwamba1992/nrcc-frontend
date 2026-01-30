@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ApplicantLayoutComponent } from '../../../shared/components/applicant-layout/applicant-layout';
 import { ReviewerLayoutComponent } from '../../../shared/components/reviewer-layout/reviewer-layout';
+import { SafePipe } from '../../../shared/pipes/safe.pipe';
 import { AuthService } from '../../../core/services/auth.service';
 import { ApplicationService } from '../../../core/services/application.service';
 import { SweetAlertService } from '../../../core/services/sweetalert.service';
@@ -31,7 +32,7 @@ interface ApprovalStep {
 @Component({
   selector: 'app-application-detail',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, ApplicantLayoutComponent, ReviewerLayoutComponent],
+  imports: [CommonModule, FormsModule, RouterModule, ApplicantLayoutComponent, ReviewerLayoutComponent, SafePipe],
   templateUrl: './application-detail.html',
   styleUrl: './application-detail.scss'
 })
@@ -47,6 +48,15 @@ export class ApplicationDetailComponent implements OnInit {
   comments: Comment[] = [];
   approvalSteps: ApprovalStep[] = [];
   newComment: string = '';
+
+  // Document viewer
+  selectedDocument: { name: string; url: string; type: string } | null = null;
+  documents = [
+    { id: 1, name: 'Traffic Assessment Report', size: '2.4 MB', type: 'pdf', date: 'Jan 3, 2026', url: '/assets/documents/sample.pdf' },
+    { id: 2, name: 'Environmental Impact Assessment', size: '3.1 MB', type: 'pdf', date: 'Jan 3, 2026', url: '/assets/documents/sample.pdf' },
+    { id: 3, name: 'Road Condition Survey', size: '1.8 MB', type: 'pdf', date: 'Jan 5, 2026', url: '/assets/documents/sample.pdf' },
+    { id: 4, name: 'Road Condition Photos', size: '5.2 MB', type: 'zip', date: 'Jan 3, 2026', url: '/assets/documents/photos.zip' }
+  ];
 
   ApplicationStatus = ApplicationStatus;
 
@@ -326,6 +336,19 @@ export class ApplicationDetailComponent implements OnInit {
     // Implement download logic
   }
 
+  viewDocument(doc: { name: string; url: string; type: string }): void {
+    if (doc.type === 'pdf') {
+      this.selectedDocument = doc;
+    } else {
+      // For non-PDF files, trigger download
+      this.downloadDocument(doc.name);
+    }
+  }
+
+  closeDocumentViewer(): void {
+    this.selectedDocument = null;
+  }
+
   // Helper for template
   formatClassification(value: string): string {
     const classMap: Record<string, string> = {
@@ -384,18 +407,198 @@ export class ApplicationDetailComponent implements OnInit {
   }
 
   // Reviewer action handlers
-  onApprove(): void {
-    console.log('Approve action triggered');
-    // This would trigger the appropriate workflow action
+  async onApprove(): Promise<void> {
+    if (!this.application) return;
+
+    const user = this.authService.currentUser();
+    const role = user?.role || '';
+    const status = this.application.status;
+
+    // Minister final decision
+    if (role === 'MINISTER_OF_WORKS' && status === 'RECOMMENDATION_SUBMITTED') {
+      const result = await this.sweetAlertService.decisionDialog(
+        'Minister Decision',
+        `Make a final decision on road reclassification for <strong>${this.application.formData?.roadName}</strong>.`
+      );
+
+      if (result.confirmed && result.decision) {
+        this.applicationService.recordMinisterDecision(this.application.id, {
+          decision: result.decision,
+          reason: result.reason
+        }).subscribe({
+          next: () => {
+            if (result.decision === 'APPROVE') {
+              this.sweetAlertService.success('Approved!', 'Application has been approved.');
+            } else {
+              this.sweetAlertService.success('Decision Recorded', 'Application has been disapproved.');
+            }
+            this.loadApplicationDetails();
+          },
+          error: (error) => {
+            console.error('Error recording decision:', error);
+            this.sweetAlertService.error('Error', 'Failed to record decision. Please try again.');
+          }
+        });
+      }
+    }
+    // Forward to next stage
+    else if (role === 'MINISTER_OF_WORKS' && status === 'UNDER_MINISTER_REVIEW') {
+      const result = await this.sweetAlertService.confirmWithComment(
+        'Forward to NRCC',
+        `Forward application <strong>${this.application.applicationNumber}</strong> to NRCC Chair for verification?`,
+        'Enter your comments for NRCC review...',
+        'Forward',
+        'Cancel',
+        '#3b82f6',
+        false
+      );
+
+      if (result.confirmed) {
+        this.applicationService.forwardToNrccChair(this.application.id, {
+          comments: result.comment || 'Forwarded by Minister'
+        }).subscribe({
+          next: () => {
+            this.sweetAlertService.success('Forwarded!', 'Application forwarded to NRCC Chair.');
+            this.loadApplicationDetails();
+          },
+          error: (error) => {
+            console.error('Error forwarding:', error);
+            this.sweetAlertService.error('Error', 'Failed to forward application.');
+          }
+        });
+      }
+    }
+    // RAS approve
+    else if (role === 'REGIONAL_ADMINISTRATIVE_SECRETARY' && status === 'UNDER_RAS_REVIEW') {
+      const result = await this.sweetAlertService.confirmWithComment(
+        'Forward to RC',
+        `Forward application <strong>${this.application.applicationNumber}</strong> to Regional Commissioner?`,
+        'Enter your review comments...',
+        'Approve & Forward',
+        'Cancel',
+        '#22c55e',
+        false
+      );
+
+      if (result.confirmed) {
+        this.applicationService.rasApprove(this.application.id, {
+          comments: result.comment || 'Approved by RAS'
+        }).subscribe({
+          next: () => {
+            this.sweetAlertService.success('Forwarded!', 'Application forwarded to RC.');
+            this.loadApplicationDetails();
+          },
+          error: (error) => {
+            console.error('Error forwarding:', error);
+            this.sweetAlertService.error('Error', 'Failed to forward application.');
+          }
+        });
+      }
+    }
+    // RC approve
+    else if (role === 'REGIONAL_COMMISSIONER' && status === 'UNDER_RC_REVIEW') {
+      const result = await this.sweetAlertService.confirmWithComment(
+        'Forward to Minister',
+        `Forward application <strong>${this.application.applicationNumber}</strong> to Minister of Works?`,
+        'Enter your review comments...',
+        'Approve & Forward',
+        'Cancel',
+        '#22c55e',
+        false
+      );
+
+      if (result.confirmed) {
+        this.applicationService.rcApprove(this.application.id, {
+          comments: result.comment || 'Approved by RC'
+        }).subscribe({
+          next: () => {
+            this.sweetAlertService.success('Forwarded!', 'Application forwarded to Minister.');
+            this.loadApplicationDetails();
+          },
+          error: (error) => {
+            console.error('Error forwarding:', error);
+            this.sweetAlertService.error('Error', 'Failed to forward application.');
+          }
+        });
+      }
+    }
+    // NRCC Chair submit recommendation
+    else if (role === 'NRCC_CHAIRPERSON' && status === 'NRCC_REVIEW_MEETING') {
+      const result = await this.sweetAlertService.confirmWithComment(
+        'Submit Recommendation',
+        `Submit NRCC recommendation for <strong>${this.application.applicationNumber}</strong> to Minister?`,
+        'Enter the NRCC recommendation...',
+        'Submit',
+        'Cancel',
+        '#3b82f6',
+        true
+      );
+
+      if (result.confirmed) {
+        this.applicationService.submitRecommendation(this.application.id, {
+          comments: result.comment
+        }).subscribe({
+          next: () => {
+            this.sweetAlertService.success('Submitted!', 'Recommendation submitted to Minister.');
+            this.loadApplicationDetails();
+          },
+          error: (error) => {
+            console.error('Error submitting:', error);
+            this.sweetAlertService.error('Error', 'Failed to submit recommendation.');
+          }
+        });
+      }
+    }
   }
 
-  onRequestInfo(): void {
-    console.log('Request more info triggered');
-    // This would open a dialog for requesting additional information
+  async onRequestInfo(): Promise<void> {
+    if (!this.application) return;
+
+    const result = await this.sweetAlertService.confirmWithComment(
+      'Request More Information',
+      `Request additional information from the applicant for <strong>${this.application.applicationNumber}</strong>?`,
+      'Specify what information is needed...',
+      'Send Request',
+      'Cancel',
+      '#3b82f6',
+      true
+    );
+
+    if (result.confirmed) {
+      // For now, this uses return for correction - could be a separate endpoint
+      this.applicationService.returnForCorrection(this.application.id, {
+        comments: `Information Request: ${result.comment}`
+      }).subscribe({
+        next: () => {
+          this.sweetAlertService.success('Request Sent!', 'Information request sent to applicant.');
+          this.loadApplicationDetails();
+        },
+        error: (error) => {
+          console.error('Error sending request:', error);
+          this.sweetAlertService.error('Error', 'Failed to send request.');
+        }
+      });
+    }
   }
 
-  onReject(): void {
-    console.log('Reject action triggered');
-    // This would trigger rejection workflow
+  async onReject(): Promise<void> {
+    if (!this.application) return;
+
+    const result = await this.sweetAlertService.returnForCorrectionDialog(this.application.applicationNumber);
+
+    if (result.confirmed) {
+      this.applicationService.returnForCorrection(this.application.id, {
+        comments: result.comments
+      }).subscribe({
+        next: () => {
+          this.sweetAlertService.success('Returned!', 'Application returned for correction.');
+          this.loadApplicationDetails();
+        },
+        error: (error) => {
+          console.error('Error returning:', error);
+          this.sweetAlertService.error('Error', 'Failed to return application.');
+        }
+      });
+    }
   }
 }

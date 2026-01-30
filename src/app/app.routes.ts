@@ -8,6 +8,10 @@ export const routes: Routes = [
     path: '',
     loadComponent: () => import('./features/landing/landing').then(m => m.LandingComponent)
   },
+  {
+    path: 'login',
+    loadComponent: () => import('./features/auth/login/login').then(m => m.LoginComponent)
+  },
   // Applicant Routes (PUBLIC_APPLICANT and MEMBER_OF_PARLIAMENT can access)
   {
     path: 'applicant/dashboard',

@@ -5,13 +5,12 @@ import { AuthService } from '../../../core/services/auth.service';
 import { SweetAlertService } from '../../../core/services/sweetalert.service';
 import { User, UserRole } from '../../../core/models/user.model';
 import { NotificationCenterComponent, Notification } from '../notification-center/notification-center';
-import { GlobalSearchComponent } from '../global-search/global-search';
 import { BreadcrumbsComponent, Breadcrumb } from '../breadcrumbs/breadcrumbs';
 
 @Component({
   selector: 'app-reviewer-layout',
   standalone: true,
-  imports: [CommonModule, RouterModule, NotificationCenterComponent, GlobalSearchComponent, BreadcrumbsComponent],
+  imports: [CommonModule, RouterModule, NotificationCenterComponent, BreadcrumbsComponent],
   templateUrl: './reviewer-layout.html',
   styleUrl: './reviewer-layout.scss'
 })
@@ -126,12 +125,6 @@ export class ReviewerLayoutComponent {
 
   onClearAllNotifications(): void {
     this.notifications = [];
-  }
-
-  onSearch(query: string): void {
-    console.log('Search query:', query);
-    // Implement search functionality
-    this.router.navigate(['/reviewer/search'], { queryParams: { q: query } });
   }
 
   isAdmin(): boolean {

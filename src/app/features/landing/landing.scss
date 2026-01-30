@@ -1,829 +1,850 @@
 @import '../../../styles/variables';
 @import '../../../styles/mixins';
 
+// Variables
+$landing-primary: #1EB53A;
+$landing-primary-dark: #178a2c;
+$landing-bg: #f8fafc;
+$landing-card-bg: #ffffff;
+$landing-text: #1e293b;
+$landing-text-secondary: #64748b;
+$landing-border: #e2e8f0;
+
 .landing-page {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  background: $landing-bg;
 }
 
-// Hero Section - Compact (30% height reduction)
-.hero-section {
-  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 50%, #f0f8f4 100%);
-  padding: $spacing-8 0 $spacing-6;
-  position: relative;
-  overflow: hidden;
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
 
-  // Background image overlay for hero-with-image
-  &.hero-with-image {
-    // Use Unsplash placeholder for Tanzania road landscape
-    // Alternative: Replace with your own image in /public/hero-road.jpg
-    background:
-      linear-gradient(180deg,
-        rgba(255, 255, 255, 0.1) 0%,
-        rgba(255, 255, 255, 0.85) 40%,
-        rgba(255, 255, 255, 0.9) 100%
-      ),
-      url('https://images.unsplash.com/photo-1563656157432-67560011e209?w=1600&q=80') center/cover,
-      linear-gradient(to bottom, #87CEEB, #228B22);
-    background-size: cover, cover, cover;
-    background-position: center;
-    min-height: 420px;
-
-    @include respond-to-max('md') {
-      min-height: 380px;
-    }
-
-    // Fallback if image doesn't load
-    .hero-content {
-      position: relative;
-      z-index: 2;
-    }
+  @media (max-width: 640px) {
+    padding: 0 16px;
   }
+}
 
-  .hero-background {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
+// ==================== HEADER ====================
+.landing-header {
+  background: $landing-card-bg;
+  border-bottom: 1px solid $landing-border;
+  position: sticky;
+  top: 0;
+  z-index: 100;
 
-    .gradient-orb {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(60px);
-      opacity: 0.2;
-
-      &.orb-1 {
-        width: 300px;
-        height: 300px;
-        background: radial-gradient(circle, rgba($primary-green, 0.4), transparent);
-        top: -80px;
-        right: -80px;
-      }
-
-      &.orb-2 {
-        width: 350px;
-        height: 350px;
-        background: radial-gradient(circle, rgba($primary-blue, 0.3), transparent);
-        bottom: -100px;
-        left: -100px;
-      }
-    }
-  }
-
-  .hero-content {
-    text-align: center;
-    max-width: 800px;
-    margin: 0 auto;
-    position: relative;
-    z-index: 1;
-  }
-
-  .hero-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: $spacing-2;
-    padding: $spacing-1 $spacing-3;
-    background: rgba($primary-green, 0.08);
-    border: 1px solid rgba($primary-green, 0.2);
-    border-radius: $radius-full;
-    color: $primary-green;
-    font-size: $font-size-xs;
-    font-weight: $font-weight-medium;
-    margin-bottom: $spacing-3;
-  }
-
-  .hero-title {
-    font-size: clamp(1.75rem, 3.5vw, 2.25rem);
-    font-weight: $font-weight-bold;
-    color: $text-primary;
-    margin-bottom: $spacing-2;
-    line-height: 1.2;
-
-    .hero-subtitle {
-      display: block;
-      font-size: clamp(1.125rem, 2.5vw, 1.5rem);
-      background: $gradient-success;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      margin-top: $spacing-1;
-    }
-  }
-
-  .hero-description {
-    font-size: $font-size-sm;
-    color: $text-secondary;
-    line-height: $line-height-normal;
-    margin-bottom: $spacing-5;
-    max-width: 650px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  // Process Flow Section - Compact Modern Design
-  .process-flow {
+  .header-inner {
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: $spacing-1;
-    margin-bottom: $spacing-4;
-    padding: $spacing-3 0;
+    justify-content: space-between;
+    padding: 16px 0;
+    gap: 24px;
+  }
 
-    @include respond-to-max('md') {
-      flex-wrap: wrap;
-      gap: $spacing-2;
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    .brand-emblem {
+      width: 48px;
+      height: 48px;
+      object-fit: contain;
     }
 
-    .process-step {
+    .brand-text {
       display: flex;
       flex-direction: column;
-      align-items: center;
-      gap: $spacing-2;
 
-      @include respond-to-max('md') {
-        flex: 1 1 90px;
+      .brand-title {
+        font-size: 16px;
+        font-weight: 700;
+        color: $landing-text;
+        line-height: 1.2;
       }
 
-      .step-circle {
-        position: relative;
-        width: 64px;
-        height: 64px;
-        border-radius: 50%;
-        @include flex-center;
-        flex-direction: column;
-        background: linear-gradient(135deg, rgba($primary-green, 0.1), rgba($primary-blue, 0.05));
-        border: 2px solid rgba($primary-green, 0.2);
-        box-shadow: 0 2px 8px rgba($primary-green, 0.1);
-
-        .step-number {
-          position: absolute;
-          top: -5px;
-          right: -5px;
-          width: 22px;
-          height: 22px;
-          @include flex-center;
-          background: $primary-green;
-          color: $white;
-          border-radius: 50%;
-          font-size: 11px;
-          font-weight: $font-weight-bold;
-          border: 2px solid $white;
-        }
-
-        .step-icon {
-          color: $primary-green;
-
-          svg {
-            width: 24px;
-            height: 24px;
-          }
-        }
-
-        @include respond-to-max('md') {
-          width: 56px;
-          height: 56px;
-
-          .step-icon svg {
-            width: 20px;
-            height: 20px;
-          }
-
-          .step-number {
-            width: 20px;
-            height: 20px;
-            font-size: 10px;
-          }
-        }
-      }
-
-      .step-label {
-        text-align: center;
-
-        h5 {
-          font-size: $font-size-xs;
-          font-weight: $font-weight-semibold;
-          color: $text-primary;
-          margin: 0 0 2px;
-        }
-
-        p {
-          font-size: 11px;
-          color: $text-muted;
-          margin: 0;
-        }
-
-        @include respond-to-max('md') {
-          h5 {
-            font-size: 11px;
-          }
-
-          p {
-            font-size: 9px;
-          }
-        }
-      }
-
-      // Color variations for each step
-      &.step-1 .step-circle {
-        background: linear-gradient(135deg, rgba(#1EB53A, 0.12), rgba(#1EB53A, 0.05));
-      }
-
-      &.step-2 .step-circle {
-        background: linear-gradient(135deg, rgba(#00A3DD, 0.12), rgba(#00A3DD, 0.05));
-      }
-
-      &.step-3 .step-circle {
-        background: linear-gradient(135deg, rgba(#FCD116, 0.15), rgba(#FCD116, 0.05));
-
-        .step-icon {
-          color: darken(#FCD116, 20%);
-        }
-      }
-    }
-
-    .process-connector {
-      display: flex;
-      align-items: center;
-      color: $primary-green;
-      opacity: 0.35;
-      margin: 0 -$spacing-1;
-
-      @include respond-to-max('md') {
-        display: none;
-      }
-
-      svg {
-        stroke: currentColor;
-        width: 32px;
-        height: 20px;
+      .brand-subtitle {
+        font-size: 12px;
+        color: $landing-text-secondary;
       }
     }
   }
 
-  .hero-actions {
+  .nav-links {
     display: flex;
-    gap: $spacing-3;
-    justify-content: center;
-    margin-bottom: $spacing-6;
-    flex-wrap: wrap;
+    align-items: center;
+    gap: 32px;
 
-    button {
-      @include flex-center;
-      gap: $spacing-2;
-      padding: $spacing-3 $spacing-6;
-      font-size: $font-size-sm;
-      font-weight: $font-weight-semibold;
-      border-radius: $radius-lg;
-      cursor: pointer;
-      transition: all 0.2s ease-out;
-      border: none;
-
-      // Accessibility: Focus state
-      &:focus-visible {
-        outline: 3px solid $primary-green;
-        outline-offset: 3px;
-      }
-
-      &:active {
-        transform: scale(0.98);
-      }
-
-      // Reduced motion for accessibility
-      @media (prefers-reduced-motion: reduce) {
-        transition: background-color 0.2s ease-out, color 0.2s ease-out, box-shadow 0.2s ease-out;
-
-        &:hover,
-        &:active {
-          transform: none;
-        }
-      }
+    @media (max-width: 900px) {
+      display: none;
     }
 
-    .btn-primary {
-      background: $gradient-success;
-      color: $white;
-      box-shadow: 0 4px 16px rgba($primary-green, 0.35);
-      padding: $spacing-4 $spacing-8;
-      font-size: $font-size-base;
-      font-weight: $font-weight-bold;
+    a {
+      font-size: 14px;
+      font-weight: 500;
+      color: $landing-text-secondary;
+      text-decoration: none;
+      transition: color 0.2s;
 
       &:hover {
-        box-shadow: 0 6px 20px rgba($primary-green, 0.45);
-        transform: translateY(-1px);
+        color: $landing-primary;
       }
     }
+  }
 
-    .btn-secondary {
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    @media (max-width: 900px) {
+      display: none;
+    }
+
+    .btn-ghost {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 12px;
       background: transparent;
-      color: $text-secondary;
-      border: 1px solid $border-medium;
-      padding: $spacing-3 $spacing-5;
-      font-size: $font-size-sm;
+      border: none;
+      color: $landing-text-secondary;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: color 0.2s;
 
       &:hover {
-        background: rgba($primary-green, 0.05);
-        border-color: $primary-green;
-        color: $primary-green;
+        color: $landing-primary;
       }
-    }
-  }
-
-  .trust-badges {
-    display: flex;
-    gap: $spacing-5;
-    justify-content: center;
-    flex-wrap: wrap;
-
-    .badge-item {
-      display: flex;
-      align-items: center;
-      gap: $spacing-2;
-      font-size: $font-size-xs;
-      color: $text-muted;
 
       svg {
-        color: $primary-green;
         width: 16px;
         height: 16px;
       }
     }
+
+    .btn-outline {
+      padding: 8px 16px;
+      background: transparent;
+      border: 1.5px solid $landing-border;
+      border-radius: 8px;
+      color: $landing-text;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+
+      &:hover {
+        border-color: $landing-primary;
+        color: $landing-primary;
+      }
+    }
+
+    .btn-primary {
+      padding: 8px 20px;
+      background: $landing-primary;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+
+      &:hover {
+        background: $landing-primary-dark;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba($landing-primary, 0.3);
+      }
+    }
+  }
+
+  .mobile-menu-btn {
+    display: none;
+    padding: 8px;
+    background: transparent;
+    border: none;
+    color: $landing-text;
+    cursor: pointer;
+
+    @media (max-width: 900px) {
+      display: block;
+    }
   }
 }
 
-// Services Section - Compact
-.services-section {
-  padding: $spacing-10 0;
-  background: $white;
+// ==================== HERO - COMPACT ====================
+.hero {
+  position: relative;
+  padding: 40px 0 48px;
+  overflow: hidden;
 
-  .section-header {
+  @media (max-width: 768px) {
+    padding: 28px 0 36px;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+
+    .hero-gradient {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, #f0fdf4 0%, #ecfeff 50%, #f0f9ff 100%);
+    }
+
+    .hero-pattern {
+      position: absolute;
+      inset: 0;
+      opacity: 0.4;
+      background-image: radial-gradient(circle at 1px 1px, #e2e8f0 1px, transparent 0);
+      background-size: 40px 40px;
+    }
+  }
+
+  .hero-grid {
+    position: relative;
+    display: block;
+  }
+
+  .hero-content {
+    max-width: 720px;
+    margin: 0 auto;
     text-align: center;
-    margin-bottom: $spacing-6;
 
-    h2 {
-      font-size: $font-size-2xl;
-      font-weight: $font-weight-bold;
-      color: $text-primary;
-      margin-bottom: $spacing-2;
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 12px;
+      background: rgba($landing-primary, 0.1);
+      border: 1px solid rgba($landing-primary, 0.2);
+      border-radius: 50px;
+      font-size: 12px;
+      font-weight: 500;
+      color: $landing-primary-dark;
+      margin-bottom: 16px;
+
+      .badge-dot {
+        width: 6px;
+        height: 6px;
+        background: $landing-primary;
+        border-radius: 50%;
+        animation: pulse 2s infinite;
+      }
     }
 
-    p {
-      font-size: $font-size-sm;
-      color: $text-secondary;
-      margin: 0;
+    .hero-title {
+      font-size: clamp(28px, 4vw, 40px);
+      font-weight: 800;
+      color: $landing-text;
+      line-height: 1.1;
+      margin: 0 0 12px;
+      letter-spacing: -0.02em;
+
+      .text-gradient {
+        display: inline;
+        background: linear-gradient(135deg, $landing-primary 0%, #00A3DD 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
     }
+
+    .hero-description {
+      font-size: 15px;
+      color: $landing-text-secondary;
+      line-height: 1.5;
+      margin: 0 auto 20px;
+      max-width: 520px;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 24px;
+      justify-content: center;
+      flex-wrap: wrap;
+
+      .btn-hero-primary,
+      .btn-hero-secondary {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        border: none;
+
+        svg {
+          width: 16px;
+          height: 16px;
+        }
+      }
+
+      .btn-hero-primary {
+        background: $landing-primary;
+        color: white;
+        box-shadow: 0 4px 14px rgba($landing-primary, 0.35);
+
+        &:hover {
+          background: $landing-primary-dark;
+          transform: translateY(-2px);
+          box-shadow: 0 6px 20px rgba($landing-primary, 0.4);
+        }
+      }
+
+      .btn-hero-secondary {
+        background: $landing-card-bg;
+        color: $landing-text;
+        border: 1.5px solid $landing-border;
+
+        &:hover {
+          border-color: $landing-primary;
+          color: $landing-primary;
+          background: rgba($landing-primary, 0.05);
+        }
+      }
+    }
+
+    .hero-stats {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 32px;
+
+      @media (max-width: 640px) {
+        gap: 20px;
+      }
+
+      .stat-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .stat-value {
+          font-size: 22px;
+          font-weight: 800;
+          color: $landing-text;
+          line-height: 1;
+        }
+
+        .stat-label {
+          font-size: 11px;
+          color: $landing-text-secondary;
+          margin-top: 2px;
+        }
+      }
+
+      .stat-divider {
+        width: 1px;
+        height: 28px;
+        background: $landing-border;
+
+        @media (max-width: 640px) {
+          display: none;
+        }
+      }
+    }
+  }
+
+  .hero-visual {
+    display: none;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+// ==================== SERVICES ====================
+.services {
+  padding: 40px 0;
+  background: $landing-bg;
+
+  @media (max-width: 768px) {
+    padding: 32px 0;
   }
 
   .services-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: $spacing-4;
-    max-width: 1100px;
-    margin: 0 auto;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
 
-    @include respond-to-max('md') {
+    @media (max-width: 900px) {
       grid-template-columns: 1fr;
-      max-width: 400px;
+      max-width: 380px;
+      margin: 0 auto;
     }
   }
 
   .service-card {
-    background: $white;
-    border: 1px solid $border-light;
-    border-radius: $radius-xl;
-    padding: $spacing-6;
-    transition: all 0.2s ease-out;
+    background: $landing-card-bg;
+    border: 1.5px solid $landing-border;
+    border-radius: 12px;
+    padding: 20px;
     cursor: pointer;
+    transition: all 0.25s;
     position: relative;
-
-    &::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 3px;
-      background: $gradient-primary;
-      border-radius: $radius-xl $radius-xl 0 0;
-      transform: scaleX(0);
-      transition: transform 0.2s ease-out;
-    }
-
-    // Accessibility: Focus state for keyboard navigation
-    &:focus-visible {
-      outline: 3px solid $primary-green;
-      outline-offset: 2px;
-    }
 
     &:hover {
       transform: translateY(-2px);
-      box-shadow: $shadow-lg;
-      border-color: $primary-blue;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+      border-color: $landing-primary;
 
-      &::before {
-        transform: scaleX(1);
-      }
-
-      .service-icon {
-        transform: scale(1.05);
-        background: linear-gradient(135deg, rgba($primary-green, 0.2), rgba($primary-blue, 0.2));
-        box-shadow: 0 4px 12px rgba($primary-green, 0.15);
-      }
-    }
-
-    &:active {
-      transform: translateY(0);
-    }
-
-    // Reduced motion for accessibility
-    @media (prefers-reduced-motion: reduce) {
-      transition: none;
-
-      &::before {
-        transition: none;
-      }
-
-      &:hover {
-        transform: none;
-      }
-
-      .service-icon {
-        transition: none;
-        transform: none !important;
-      }
-    }
-
-    &.featured {
-      border-color: $primary-green;
-      box-shadow: 0 2px 12px rgba($primary-green, 0.1);
-
-      .service-icon {
-        background: $gradient-success;
-
-        svg {
-          color: $white;
-        }
-      }
-
-      .badge.official {
-        background: $primary-green;
-        color: $white;
-      }
-    }
-
-    .card-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: $spacing-4;
-    }
-
-    .service-icon {
-      width: 48px;
-      height: 48px;
-      background: linear-gradient(135deg, rgba($primary-green, 0.15), rgba($primary-blue, 0.15));
-      border-radius: $radius-lg;
-      @include flex-center;
-      transition: all 0.2s ease-out;
-      box-shadow: 0 2px 8px rgba($primary-green, 0.08);
-
-      svg {
-        color: $primary-green;
-      }
-    }
-
-    .badge {
-      padding: $spacing-1 $spacing-2;
-      font-size: 10px;
-      font-weight: $font-weight-semibold;
-      text-transform: uppercase;
-      border-radius: $radius-sm;
-      letter-spacing: 0.03em;
-
-      &.popular {
-        background: rgba($primary-blue, 0.1);
-        color: $primary-blue;
-      }
-
-      &.official {
-        background: rgba($primary-green, 0.1);
-        color: $primary-green;
-      }
-
-      &.members {
-        background: rgba($primary-gold, 0.1);
-        color: darken($primary-gold, 15%);
-      }
-    }
-
-    h3 {
-      font-size: $font-size-lg;
-      font-weight: $font-weight-semibold;
-      color: $text-primary;
-      margin-bottom: $spacing-2;
-    }
-
-    p {
-      font-size: $font-size-sm;
-      color: $text-secondary;
-      line-height: $line-height-relaxed;
-      margin-bottom: $spacing-4;
-      min-height: 40px;
-    }
-
-    .card-button {
-      @include flex-center;
-      justify-content: space-between;
-      width: 100%;
-      padding: $spacing-2 $spacing-4;
-      background: $bg-secondary;
-      border: none;
-      border-radius: $radius-md;
-      color: $primary-green;
-      font-size: $font-size-sm;
-      font-weight: $font-weight-medium;
-      cursor: pointer;
-      transition: all 0.2s ease-out;
-
-      svg {
-        transition: transform 0.2s ease-out;
-      }
-
-      // Accessibility: Focus state
-      &:focus-visible {
-        outline: 2px solid $primary-green;
-        outline-offset: 2px;
-      }
-
-      &:hover {
-        background: $primary-green;
-        color: $white;
+      .service-btn {
+        background: $landing-primary;
+        color: white;
 
         svg {
           transform: translateX(4px);
         }
       }
+    }
 
-      &:active {
-        transform: scale(0.98);
+    &.featured {
+      border-color: $landing-primary;
+      box-shadow: 0 4px 16px rgba($landing-primary, 0.15);
+
+      .featured-tag {
+        position: absolute;
+        top: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 4px 12px;
+        background: $landing-primary;
+        color: white;
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        border-radius: 20px;
       }
 
-      // Reduced motion for accessibility
-      @media (prefers-reduced-motion: reduce) {
-        transition: background-color 0.2s ease-out, color 0.2s ease-out;
+      .service-icon.regional {
+        background: $landing-primary;
+        color: white;
+      }
+    }
+
+    .service-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 12px;
+      transition: all 0.2s;
+
+      svg {
+        width: 24px;
+        height: 24px;
+      }
+
+      &.public {
+        background: linear-gradient(135deg, rgba(#3b82f6, 0.15), rgba(#3b82f6, 0.05));
+        color: #3b82f6;
+      }
+
+      &.regional {
+        background: linear-gradient(135deg, rgba($landing-primary, 0.15), rgba($landing-primary, 0.05));
+        color: $landing-primary;
+      }
+
+      &.nrcc {
+        background: linear-gradient(135deg, rgba(#8b5cf6, 0.15), rgba(#8b5cf6, 0.05));
+        color: #8b5cf6;
+      }
+    }
+
+    .service-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      margin-bottom: 12px;
+
+      &.popular {
+        background: rgba(#3b82f6, 0.1);
+        color: #3b82f6;
+      }
+
+      &.official {
+        background: rgba($landing-primary, 0.1);
+        color: $landing-primary;
+      }
+
+      &.members {
+        background: rgba(#8b5cf6, 0.1);
+        color: #8b5cf6;
+      }
+    }
+
+    h3 {
+      font-size: 16px;
+      font-weight: 700;
+      color: $landing-text;
+      margin: 0 0 6px;
+    }
+
+    > p {
+      font-size: 13px;
+      color: $landing-text-secondary;
+      line-height: 1.4;
+      margin: 0 0 12px;
+      min-height: 36px;
+    }
+
+    .service-features {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 14px;
+
+      span {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12px;
+        color: $landing-text-secondary;
 
         svg {
-          transition: none;
-          transform: none !important;
+          color: $landing-primary;
+          flex-shrink: 0;
+          width: 12px;
+          height: 12px;
         }
+      }
+    }
+
+    .service-btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 10px 14px;
+      background: $landing-bg;
+      border: none;
+      border-radius: 8px;
+      color: $landing-primary;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+
+      svg {
+        transition: transform 0.2s;
       }
     }
   }
 }
 
-// Footer - Enhanced with Tanzania Green Theme
-.landing-footer {
-  margin-top: auto;
-  background: linear-gradient(to bottom, #0a3d1f 0%, #05200f 100%);
-  color: rgba($white, 0.7);
+// ==================== LOGIN MODAL ====================
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
 
-  .footer-top {
-    padding: $spacing-10 0 $spacing-8;
-    border-bottom: 1px solid rgba($white, 0.1);
+.login-modal {
+  background: $landing-card-bg;
+  border: 1px solid $landing-border;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 460px;
+  padding: 40px 44px;
+  position: relative;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+  animation: modalFadeIn 0.2s ease-out;
+
+  @media (max-width: 500px) {
+    padding: 32px 24px;
+    margin: 16px;
+  }
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: transparent;
+  border: none;
+  color: $landing-text-secondary;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+  line-height: 0;
+  transition: all 0.2s;
+
+  &:hover {
+    background: #f1f5f9;
+    color: $landing-text;
+  }
+}
+
+.modal-header {
+  text-align: center;
+  margin-bottom: 28px;
+
+  .modal-emblem {
+    width: 72px;
+    height: 72px;
+    margin-bottom: 16px;
   }
 
-  .footer-grid {
-    display: grid;
-    grid-template-columns: 1.3fr 1.7fr;
-    gap: $spacing-10;
+  h2 {
+    font-size: 26px;
+    font-weight: 700;
+    color: $landing-text;
+    margin: 0 0 6px;
+  }
 
-    @include respond-to-max('lg') {
-      grid-template-columns: 1fr;
-      gap: $spacing-8;
+  p {
+    font-size: 15px;
+    color: $landing-text-secondary;
+    margin: 0;
+  }
+}
+
+.modal-form {
+  .error-alert {
+    padding: 12px 14px;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    margin-bottom: 20px;
+
+    span {
+      font-size: 14px;
+      color: #dc2626;
     }
   }
 
-  .footer-about {
-    .footer-logo {
-      display: flex;
-      align-items: center;
-      gap: $spacing-3;
-      margin-bottom: $spacing-4;
+  .form-group {
+    margin-bottom: 18px;
 
-      .logo-text {
-        h3 {
-          color: $white;
-          font-size: $font-size-lg;
-          font-weight: $font-weight-bold;
-          margin: 0 0 $spacing-1;
-        }
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: $landing-text;
+      margin-bottom: 8px;
+    }
 
-        p {
-          color: rgba($white, 0.5);
-          font-size: $font-size-xs;
-          margin: 0;
-          text-transform: uppercase;
-          letter-spacing: 0.05em;
-        }
+    input {
+      width: 100%;
+      padding: 14px 16px;
+      border: 1.5px solid $landing-border;
+      border-radius: 8px;
+      font-size: 15px;
+      color: $landing-text;
+      background: white;
+      transition: all 0.2s;
+
+      &::placeholder {
+        color: #9ca3af;
+      }
+
+      &:focus {
+        outline: none;
+        border-color: $landing-primary;
+        box-shadow: 0 0 0 3px rgba($landing-primary, 0.1);
+      }
+
+      &.error {
+        border-color: #dc2626;
       }
     }
 
-    .footer-description {
-      color: rgba($white, 0.65);
-      font-size: $font-size-sm;
-      line-height: $line-height-relaxed;
-      margin-bottom: $spacing-5;
-      max-width: 400px;
-    }
+    .password-field {
+      position: relative;
 
-    .footer-social {
-      display: flex;
-      gap: $spacing-2;
+      input {
+        padding-right: 48px;
+      }
 
-      a {
-        width: 40px;
-        height: 40px;
-        @include flex-center;
-        background: rgba($white, 0.08);
-        border: 1px solid rgba($white, 0.12);
-        border-radius: $radius-lg;
-        color: rgba($white, 0.6);
-        transition: all 0.2s ease-out;
+      .toggle-btn {
+        position: absolute;
+        right: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        color: $landing-text-secondary;
+        cursor: pointer;
+        padding: 2px;
+        line-height: 0;
+        transition: color 0.2s;
 
         &:hover {
-          background: $primary-green;
-          border-color: $primary-green;
-          color: $white;
-          transform: translateY(-2px);
-          box-shadow: 0 4px 12px rgba($primary-green, 0.3);
-        }
-
-        &:focus-visible {
-          outline: 2px solid $primary-green;
-          outline-offset: 2px;
-        }
-
-        // Reduced motion for accessibility
-        @media (prefers-reduced-motion: reduce) {
-          transition: background-color 0.2s ease-out, color 0.2s ease-out, box-shadow 0.2s ease-out;
-
-          &:hover {
-            transform: none;
-          }
+          color: $landing-primary;
         }
       }
     }
   }
 
-  .footer-links-group {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: $spacing-6;
+  .btn-login {
+    width: 100%;
+    padding: 14px;
+    margin-top: 8px;
+    background: $landing-primary;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 2px 8px rgba($landing-primary, 0.25);
 
-    @include respond-to-max('md') {
-      grid-template-columns: 1fr;
-      gap: $spacing-6;
+    &:hover:not(:disabled) {
+      background: $landing-primary-dark;
+      box-shadow: 0 4px 12px rgba($landing-primary, 0.3);
+    }
+
+    &:disabled {
+      background: #94a3b8;
+      cursor: not-allowed;
+      box-shadow: none;
     }
   }
 
-  .footer-column {
-    h4 {
-      color: $white;
-      font-size: $font-size-sm;
-      font-weight: $font-weight-bold;
-      margin-bottom: $spacing-4;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
+  .modal-footer-text {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+    color: $landing-text-secondary;
+
+    a {
+      color: $landing-primary;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+// ==================== FOOTER - COMPACT ====================
+.landing-footer {
+  margin-top: auto;
+  background: #0f172a;
+  color: rgba(white, 0.7);
+  padding: 20px 0;
+
+  .footer-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid rgba(white, 0.1);
+
+    @media (max-width: 768px) {
+      flex-wrap: wrap;
+      justify-content: center;
+      text-align: center;
+    }
+  }
+
+  .footer-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    img {
+      width: 32px;
+      height: 32px;
+      object-fit: contain;
     }
 
-    ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
+    span {
+      font-size: 14px;
+      font-weight: 600;
+      color: white;
+    }
+  }
 
-      li {
-        margin-bottom: $spacing-2;
+  .footer-contact {
+    display: flex;
+    align-items: center;
+    gap: 20px;
 
-        a {
-          display: inline-block;
-          color: rgba($white, 0.65);
-          font-size: $font-size-sm;
-          text-decoration: none;
-          transition: all 0.2s ease-out;
-          position: relative;
+    @media (max-width: 640px) {
+      flex-direction: column;
+      gap: 8px;
+    }
 
-          &::before {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 1px;
-            background: $primary-green;
-            transition: width 0.2s ease-out;
-          }
+    span {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: rgba(white, 0.6);
 
-          &:hover {
-            color: $white;
-            padding-left: $spacing-2;
-
-            &::before {
-              width: 20px;
-            }
-          }
-
-          &:focus-visible {
-            outline: 2px solid $primary-green;
-            outline-offset: 2px;
-            color: $white;
-          }
-
-          // Reduced motion for accessibility
-          @media (prefers-reduced-motion: reduce) {
-            transition: color 0.2s ease-out;
-
-            &::before {
-              transition: none;
-            }
-
-            &:hover {
-              padding-left: 0;
-
-              &::before {
-                width: 0;
-              }
-            }
-          }
-        }
+      svg {
+        color: $landing-primary;
       }
+    }
+  }
 
-      &.contact-list li {
-        display: flex;
-        align-items: flex-start;
-        gap: $spacing-2;
-        margin-bottom: $spacing-3;
+  .footer-links {
+    display: flex;
+    align-items: center;
+    gap: 16px;
 
-        svg {
-          color: $primary-green;
-          flex-shrink: 0;
-          margin-top: 2px;
-        }
+    a {
+      font-size: 13px;
+      color: rgba(white, 0.6);
+      text-decoration: none;
+      transition: color 0.2s;
 
-        span {
-          color: rgba($white, 0.7);
-          font-size: $font-size-sm;
-          line-height: 1.4;
-        }
+      &:hover {
+        color: $landing-primary;
       }
     }
   }
 
   .footer-bottom {
-    padding: $spacing-5 0;
-    background: rgba($black, 0.4);
+    padding-top: 12px;
+    text-align: center;
 
-    .footer-bottom-content {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: $spacing-4;
-
-      @include respond-to-max('md') {
-        flex-direction: column;
-        text-align: center;
-      }
-
-      p {
-        color: rgba($white, 0.5);
-        font-size: $font-size-xs;
-        margin: 0;
-      }
-
-      .footer-legal {
-        display: flex;
-        align-items: center;
-        gap: $spacing-3;
-        font-size: $font-size-xs;
-
-        a {
-          color: rgba($white, 0.5);
-          text-decoration: none;
-          transition: color 0.2s ease-out;
-
-          &:hover {
-            color: $primary-green;
-          }
-
-          &:focus-visible {
-            outline: 2px solid $primary-green;
-            outline-offset: 2px;
-          }
-        }
-
-        .separator {
-          color: rgba($white, 0.3);
-        }
-      }
+    p {
+      font-size: 12px;
+      color: rgba(white, 0.4);
+      margin: 0;
     }
   }
 }
